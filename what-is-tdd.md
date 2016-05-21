@@ -20,6 +20,8 @@ There are a few different schools TDD, and this site follows the London school. 
 - **Outside-in Testing**: referring to the fact that you first test the outside of your system the way a user interacts with it, then you test individual classes inside your system.
 - **Behavior-Driven Development** (BDD): referring to the mindset being less about testing for correctness and more about specifying the behavior of the system. However, BDD includes a broader scope than the testing this site addresses, such as interacting with the client via user stories.
 
+For more information on the different schools of TDD, see [Approaches to Testing: A Survey](http://codingitwrong.com/2016/02/08/approaches-to-testing-a-survey.html).
+
 ## Resources
 
 * [The Wikipedia article](https://en.wikipedia.org/wiki/Test-driven_development) on TDD
