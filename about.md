@@ -21,3 +21,7 @@ Learning TDD is great if you:
 - Want to learn best-practices for how to approach TDD in a framework.
 
 Sound good? Then [pick a framework](/) and let's get started!
+
+## About Me
+
+I'm Josh, and I love TDD and helping people learn. You can learn more about me at [my personal coding blog](https://codingitwrong.com).
