@@ -6,7 +6,7 @@
 # 'jekyll serve'. If you change this file, please restart the server process.
 
 # Site settings
-title: Learn TDD In…
+title: Learn TDD
 email: tdd@need-bee.com
 description: > # this means to ignore newlines until "baseurl:"
   Learn test-driven development in your framework of choice.
