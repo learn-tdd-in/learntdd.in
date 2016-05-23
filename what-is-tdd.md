@@ -11,6 +11,17 @@ The order of steps is usually described is:
 * Green: write just enough production code to make it pass.
 * Refactor: look over your code to see if there's anything you can do to improve it.
 
+## Why Use TDD?
+
+Kent Beck, the creator of TDD, lists a number of [reasons to use it](https://m.facebook.com/notes/kent-beck/rip-tdd/750840194948847/):
+
+* Helps prevent over-engineering by guiding you to just the functionality you need.
+* Provides feedback on how it feels to use the code you're writing.
+* Catches logic errors.
+* Serves as documentation for how code should be used.
+* Prevents feelings of being overwhelmed. If you can't figure out how to implement what you need, all you have to do to start is write a test.
+* Separates your thinking about the interface for your classes from its implementation.
+
 ## This Site's Approach
 
 There are a few different schools TDD, and this site follows the London school. There are a few closely-related terms.
