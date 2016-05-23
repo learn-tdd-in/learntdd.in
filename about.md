@@ -4,23 +4,16 @@ title: About
 permalink: /about/
 ---
 
-The goal of this site is to make it easy for anyone to learn Test-Driven Development in their framework of choice. The [classic](http://www.amazon.com/Test-Driven-Development-Kent-Beck/dp/0321146530) [works](http://www.informit.com/store/growing-object-oriented-software-guided-by-tests-9780321503626) on test-driven development are written in Java. This means that if you want to do Test-Driven Development from the start of using a new framework, you may need to learn:
-
-- The framework itself.
-- The language the framework is in.
-- Java.
-- The concepts of Test-Driven Development.
-- How to apply these concepts in the framework.
-
-That's a lot at once! But if someone can walk you through an example of test-driven development in the framework you're learning, that's a lot easier to get started.
-
-Learning TDD is great if you:
+The goal of this site is to make it easy for anyone to learn Test-Driven Development in their framework of choice. This is great if you:
 
 - Are new to programming and want to learn good testing practices from the start.
-- Want to evaluate a framework to see how conducive it is to do TDD.
+- Want to be able to easily try out TDD to see its value without having to learn a separate programming language.
+- Want to evaluate a framework to see how conducive it is to TDD.
 - Want to learn best-practices for how to approach TDD in a framework.
 
 Sound good? Then [pick a framework](/) and let's get started!
+
+The [classic](http://www.amazon.com/Test-Driven-Development-Kent-Beck/dp/0321146530) [works](http://www.informit.com/store/growing-object-oriented-software-guided-by-tests-9780321503626) on test-driven development can't be surpassed when it comes to theory. But their examples are written in Java, which can make it difficult to figure out how to apply TDD to other languages and frameworks. Once you've seen TDD in action, you'll be ready to drill more into the theory.
 
 ## About Me
 
