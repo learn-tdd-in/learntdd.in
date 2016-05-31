@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Contribute
+title: Contribute | Learn TDD
 ---
 
 You can contribute to Learn TDD by:
