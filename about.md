@@ -17,4 +17,6 @@ The [classic](http://www.amazon.com/Test-Driven-Development-Kent-Beck/dp/0321146
 
 ## About Me
 
-I'm Josh, and I love TDD and helping people learn. You can learn more about me at [my personal coding blog](https://codingitwrong.com).
+I'm Josh, and I love TDD and helping people learn. I work at [Big Nerd Ranch](https://bignerdranch.com), where we develop custom web and mobile apps, as well as teaching and writing books on development. If we can help you or your company, [let me know!](mailto:tdd@need-bee.com)
+
+You can learn more about me at [my personal coding blog](http://codingitwrong.com).
