@@ -3,9 +3,9 @@ layout: page
 title: Learn TDD in Rails
 ---
 
-To help you learn TDD in Rails, we've created a sample project that walks you through the TDD process. Because it's a Git repository, the commits show the process step-by-step.
+To help you learn Test-Driven Development in Rails, we've created a sample project that walks you through the TDD process. Because it's a Git repository, the commits show the process step-by-step.
 
-[Check out the TDD in Rails project!](https://github.com/learntdd/learn-tdd-in-rails)
+[Check out the Learn TDD in Rails project!](https://github.com/learntdd/learn-tdd-in-rails)
 
 ---
 
