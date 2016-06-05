@@ -389,4 +389,8 @@ Sure enough, we're on to the next error. The test is now able to load the form p
 
 We haven't finished our feature yet, but at this point we've illustrated the main process of TDD. So rather than finish this feature together, I'd encourage you to try it out yourself! Download [a repo of the code up until this point](https://github.com/learntdd/learn-tdd-in-rails/tree/in-progress) and then try to implement the rest of this feature, as specified in the acceptance test, using TDD. The `in-progress` branch leaves off where this article does, and the `master` branch shows the rest of the steps.
 
+## More Resources
+
+To learn more about TDD, I recommend reading [*Growing Object-Oriented Software, Guided by Tests*](http://www.informit.com/store/growing-object-oriented-software-guided-by-tests-9780321503626). It's the original work on the style of TDD we describe here, mockist TDD.
+
 If you have any questions or suggestions, reach out to [@learn_tdd](https://twitter.com/learn_tdd) on Twitter or <tdd@need-bee.com> and we'll be glad to help!
