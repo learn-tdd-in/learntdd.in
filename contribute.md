@@ -12,4 +12,4 @@ You can contribute to Learn TDD by:
   - Updating to a newer version of the framework.
 - Creating a Learn TDD Git repo that walks through building a simple CRUD feature using TDD.
 
-If you have any questions, reach out on Twitter at [@learn_tdd](https://twitter.com/learn_tdd) or via email at <tdd@need-bee.com>!
+If you have any questions, reach out on Twitter at [@CodingItWrong](https://twitter.com/CodingItWrong) or via email at <tdd@need-bee.com>!

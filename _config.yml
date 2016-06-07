@@ -12,7 +12,7 @@ description: > # this means to ignore newlines until "baseurl:"
   Learn test-driven development in your framework of choice.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "http://learntdd.in" # the base hostname & protocol for your site
-twitter_username: learn_tdd
+twitter_username: CodingItWrong
 github_username:  learntdd
 
 # Build settings

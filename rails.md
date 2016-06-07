@@ -393,4 +393,4 @@ We haven't finished our feature yet, but at this point we've illustrated the mai
 
 To learn more about TDD, I recommend reading [*Growing Object-Oriented Software, Guided by Tests*](http://www.informit.com/store/growing-object-oriented-software-guided-by-tests-9780321503626). It's the original work on the style of TDD we describe here, mockist TDD.
 
-If you have any questions or suggestions, reach out to [@learn_tdd](https://twitter.com/learn_tdd) on Twitter or <tdd@need-bee.com> and we'll be glad to help!
+If you have any questions or suggestions, reach out to [@CodingItWrong](https://twitter.com/CodingItWrong) on Twitter or <tdd@need-bee.com> and we'll be glad to help!
