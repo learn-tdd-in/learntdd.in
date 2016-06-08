@@ -5,7 +5,7 @@ title: Learn TDD in Rails
 
 Test-Driven Development (TDD) is an approach to automated software testing that involves writing a failing test before writing the production code to make it pass. TDD helps you develop a robust test suite to catch bugs, as well as guiding you to more modular, flexible code.
 
-To see how TDD works in Rails, let's walk through a simple real-world example of building a feature. We'll be using RSpec, one of the most popular test frameworks for Ruby. You can follow along in this article, or take a look at the [Git repository](https://github.com/learntdd/learn-tdd-in-rails) that shows the process step-by-step.
+To see how TDD works in Rails, let's walk through a simple real-world example of building a feature. We'll be using RSpec, one of the most popular test frameworks for Ruby. You can follow along in this article, or take a look at the [Git repository](https://github.com/learn-tdd-in/rails) that shows the process step-by-step.
 
 The feature we'll build is the age-old tutorial feature: creating a blog post. Right away we run into a question:
 
