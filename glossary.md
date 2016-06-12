@@ -11,7 +11,7 @@ title: Glossary
 * **Classical TDD**: the original form of TDD proposed by Kent Beck. It focused on middle-out testing, unit tests against real collaborators, stubbing, verifying state, and "test case" and "assertion" terminology.
 * **Collaborate**: for an object to work with another object to accomplish its goals.
 * **Dependency**: knowledge that an object has about another object. An object must have some dependencies on its collaborators, but it's possible for an object to have more dependencies on another object that necessary.
-* **Discovery Testing**: a refinement of Mockist TDD proposed by Justin Searls. In discovery testing, instead of refactoring, a class is implemented with the desired final design, and when changes need to be made, the class and all its descendants are rewritten.
+* **Dummy**: a test double that is not actually used for anything other than to fill in an argument list.
 * **End-to-End Test**: a test that accesses the entire system from the outside, e.g. through the user interface or HTTP requests. Often used to accomplish acceptance testing.
 * **Example**: the "spec"-style equivalent of a test case. An example writes out something a piece of code should do, and can be run to determine whether the system actually does it.
 * **Expectation**: the "spec"-style testing equivalent of an assertion. Indicates that a certain condition is expected to be true. When the spec is run, if the condition is not true, an error will be shown.
@@ -36,8 +36,19 @@ title: Glossary
 * **Stub**: a test double with hard-coded method responses.
 * **Subject**: the object being tested in a given context.
 * **Test Case**: the smallest unit of a test suite that can be run on its own.
-* **Test Double**: an object that stands in for a production object during testing. Includes fakes, mocks, spies, and stubs.
+* **Test Double**: an object that stands in for a production object during testing. Includes dummies, fakes, mocks, spies, and stubs.
 * **Test Suite**: a collection of test cases.
 * **Unit Test**: multiple usages:
 	* A test that exercises only one production class; equivalent to "isolation test." This is the definition used in Mockist TDD.
 	* A test of a class and all its real collaborators. Called a "unit" test because it can be run in isolation without affecting or being affected by any other tests. This is he definition used in Classical TDD.
+
+---
+
+##  References
+
+* [*Growing Object-Oriented Software, Guided by Tests*](http://www.informit.com/store/growing-object-oriented-software-guided-by-tests-9780321503626)
+* ["Introducing BDD"](https://dannorth.net/introducing-bdd/), DanNorth.net
+* ["Mocks Aren't Stubs"](http://martinfowler.com/articles/mocksArentStubs.html), MartinFowler.com
+* [*Practical Object-Oriented Design in Ruby*](http://www.poodr.com/)
+* ["Test Doubles"](http://www.martinfowler.com/bliki/TestDouble.html), MartinFowler.com
+* [*Test-Driven Development by Example*](https://www.amazon.com/Test-Driven-Development-Kent-Beck/dp/0321146530)
