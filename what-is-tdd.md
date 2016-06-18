@@ -13,14 +13,11 @@ The order of steps is usually described is:
 
 ## Why Use TDD?
 
-Kent Beck, the creator of TDD, lists a number of [reasons to use it](https://m.facebook.com/notes/kent-beck/rip-tdd/750840194948847/):
+Test-Driven Development has a number of benefits:
 
-* Helps prevent over-engineering by guiding you to just the functionality you need.
-* Provides feedback on how it feels to use the code you're writing.
-* Catches logic errors.
-* Serves as documentation for how code should be used.
-* Prevents feelings of being overwhelmed. If you can't figure out how to implement what you need, all you have to do to start is write a test.
-* Separates your thinking about the interface for your classes from its implementation.
+- **Focus**: TDD helps you stick to working on a single user-visible feature at a time. This helps you deliver features more quickly to get feedback, in contrast to a waterfall approach of working on one layer at a time. It also helps prevent Big Design Up-Front and building features You Aren't Gonna Need.
+- **Design**: TDD helps guide you toward creating reusable components, because using them in a test *is* a form of reuse. Tests guide you to components with a clear propose (high cohesion) and well-defined dependencies (low coupling).
+- **Adaptability**: when you have a suite of tests creates via TDD, you can be confident you aren't breaking existing features as you add new ones. You're also free to refactor your code to account for changing needs, preventing your code from getting bogged down in history.
 
 ## This Site's Approach
 
