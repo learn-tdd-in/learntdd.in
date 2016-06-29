@@ -9,13 +9,13 @@ To see how TDD works in Ember, let's walk through a simple real-world example of
 
 The feature we'll build is the age-old tutorial feature: creating a blog post.
 
-## Specify the feature for creating a blog post
+### Specify the feature for creating a blog post
 
 Red: The URL '/posts/new' did not match any routes in your application
 
 We set up the entire acceptance test at once. This test will guide us through the rest of the unit testing and implementation of the feature.
 
-### tests/acceptance/creating-a-blog-post-test.js
+#### tests/acceptance/creating-a-blog-post-test.js
 
 ```diff
 @@ -0,0 +1,36 @@
@@ -57,7 +57,7 @@ We set up the entire acceptance test at once. This test will guide us through th
 +});
 ```
 
-## Add new blog post route
+### Add new blog post route
 
 Red: Element .post-title-input not found.
 
@@ -65,7 +65,7 @@ We only change enough code to get to the next error message. Getting past the "n
 
 The next error is simple: no `.post-title-input` field is found to fill text into.
 
-### app/router.js
+#### app/router.js
 
 ```diff
 @@ -6,6 +6,9 @@ const Router = Ember.Router.extend({
@@ -81,7 +81,7 @@ The next error is simple: no `.post-title-input` field is found to fill text int
 ```
 
 
-### app/routes/posts/new.js
+#### app/routes/posts/new.js
 
 ```diff
 @@ -0,0 +1,4 @@
@@ -92,7 +92,7 @@ The next error is simple: no `.post-title-input` field is found to fill text int
 ```
 
 
-### app/templates/posts/new.hbs
+#### app/templates/posts/new.hbs
 
 ```diff
 @@ -0,0 +1 @@
@@ -100,7 +100,7 @@ The next error is simple: no `.post-title-input` field is found to fill text int
 ```
 
 
-### tests/unit/routes/posts/new-test.js
+#### tests/unit/routes/posts/new-test.js
 
 ```diff
 @@ -0,0 +1,21 @@
@@ -127,7 +127,7 @@ The next error is simple: no `.post-title-input` field is found to fill text int
 +);
 ```
 
-## Add form component and unit test
+### Add form component and unit test
 
 Inner red: expected 0 to equal 1
 
@@ -135,7 +135,7 @@ Rather than just getting the test to pass by putting a form input on the route's
 
 We create the component, then create a unit tests for it that reproduce the acceptance test error. The default error message isn't the same because the Ember component tests use a different framework than acceptance tests, so we write a custom error message to match more closely.
 
-### app/components/post-form.js
+#### app/components/post-form.js
 
 ```diff
 @@ -0,0 +1,4 @@
@@ -146,7 +146,7 @@ We create the component, then create a unit tests for it that reproduce the acce
 ```
 
 
-### app/templates/components/post-form.hbs
+#### app/templates/components/post-form.hbs
 
 ```diff
 @@ -0,0 +1 @@
@@ -154,7 +154,7 @@ We create the component, then create a unit tests for it that reproduce the acce
 ```
 
 
-### app/templates/posts/new.hbs
+#### app/templates/posts/new.hbs
 
 ```diff
 @@ -1 +1,3 @@
@@ -165,7 +165,7 @@ We create the component, then create a unit tests for it that reproduce the acce
 ```
 
 
-### tests/integration/components/post-form-test.js
+#### tests/integration/components/post-form-test.js
 
 ```diff
 @@ -0,0 +1,25 @@
@@ -196,13 +196,13 @@ We create the component, then create a unit tests for it that reproduce the acce
 +);
 ```
 
-## Add form component markup
+### Add form component markup
 
 Inner green; outer test hangs after submitting form
 
 Now that we're rendering markup for the component, its unit test is able to find the title field and fill it in. The acceptance test also gets past the point of filling in the title, and now it hangs after clicking the save button. I'm not sure why, but I think it has to do with the fact that, since that form isn't wired up to any Ember behavior, the form is actually submitted in the browser, which closes down the Ember app. In any case, we need to get Ember handling the form submission.
 
-### app/templates/components/post-form.hbs
+#### app/templates/components/post-form.hbs
 
 ```diff
 @@ -1 +1,8 @@
@@ -217,7 +217,7 @@ Now that we're rendering markup for the component, its unit test is able to find
 +</form>
 ```
 
-## Specify the component should call the save action
+### Specify the component should call the save action
 
 Inner test hangs after submitting form
 
@@ -225,7 +225,7 @@ We reproduce the acceptance test error at the component level, which is unfortun
 
 In order to get clear test output from the component test, we temporarily disable the acceptance test so it's only the component test causing the suite to hang.
 
-### tests/acceptance/creating-a-blog-post-test.js
+#### tests/acceptance/creating-a-blog-post-test.js
 
 ```diff
 @@ -1,11 +1,11 @@
@@ -276,7 +276,7 @@ In order to get clear test output from the component test, we temporarily disabl
 ```
 
 
-### tests/integration/components/post-form-test.js
+#### tests/integration/components/post-form-test.js
 
 ```diff
 @@ -21,5 +21,19 @@ describeComponent(
@@ -301,7 +301,7 @@ In order to get clear test output from the component test, we temporarily disabl
  );
 ```
 
-## Call save handler from post form
+### Call save handler from post form
 
 Outer red: undefined is not a constructor (evaluating 'this.get('save')()')
 
@@ -309,7 +309,7 @@ We make the component test pass by setting the form to run the `save` action upo
 
 We also re-enable the acceptance test, and confirm that it's no longer hanging. Now it errors out because we aren't passing a save action closure into the component.
 
-### app/components/post-form.js
+#### app/components/post-form.js
 
 ```diff
 @@ -1,4 +1,9 @@
@@ -325,7 +325,7 @@ We also re-enable the acceptance test, and confirm that it's no longer hanging. 
 ```
 
 
-### app/templates/components/post-form.hbs
+#### app/templates/components/post-form.hbs
 
 ```diff
 @@ -4,5 +4,5 @@
@@ -338,7 +338,7 @@ We also re-enable the acceptance test, and confirm that it's no longer hanging. 
 ```
 
 
-### tests/acceptance/creating-a-blog-post-test.js
+#### tests/acceptance/creating-a-blog-post-test.js
 
 ```diff
 @@ -1,11 +1,11 @@
@@ -388,13 +388,13 @@ We also re-enable the acceptance test, and confirm that it's no longer hanging. 
  });
 ```
 
-## Add new post controller for save action
+### Add new post controller for save action
 
 Outer red: The route posts.show was not found
 
 We implement a save handler by adding a new post controller to put it in, adding the handler, then passing it into the form component. Now the acceptance test successfully attempts to transition to the `posts.show` route, but it doesn't yet exist.
 
-### app/controllers/posts/new.js
+#### app/controllers/posts/new.js
 
 ```diff
 @@ -0,0 +1,9 @@
@@ -410,7 +410,7 @@ We implement a save handler by adding a new post controller to put it in, adding
 ```
 
 
-### app/templates/posts/new.hbs
+#### app/templates/posts/new.hbs
 
 ```diff
 @@ -1,3 +1,3 @@
@@ -421,7 +421,7 @@ We implement a save handler by adding a new post controller to put it in, adding
 ```
 
 
-### tests/unit/controllers/posts/new-test.js
+#### tests/unit/controllers/posts/new-test.js
 
 ```diff
 @@ -0,0 +1,22 @@
@@ -449,13 +449,13 @@ We implement a save handler by adding a new post controller to put it in, adding
 +);
 ```
 
-## Add posts.show route
+### Add posts.show route
 
 Outer red: expected '' to equal 'Test Post'
 
 Now the acceptance test is able to display the `posts.show` route, but it can't find the post's title on the page, because we aren't rendering anything to the screen yet.
 
-### app/router.js
+#### app/router.js
 
 ```diff
 @@ -8,6 +8,7 @@ const Router = Ember.Router.extend({
@@ -469,7 +469,7 @@ Now the acceptance test is able to display the `posts.show` route, but it can't 
 ```
 
 
-### app/routes/posts/show.js
+#### app/routes/posts/show.js
 
 ```diff
 @@ -0,0 +1,4 @@
@@ -480,7 +480,7 @@ Now the acceptance test is able to display the `posts.show` route, but it can't 
 ```
 
 
-### app/templates/posts/show.hbs
+#### app/templates/posts/show.hbs
 
 ```diff
 @@ -0,0 +1 @@
@@ -488,7 +488,7 @@ Now the acceptance test is able to display the `posts.show` route, but it can't 
 ```
 
 
-### tests/unit/routes/posts/show-test.js
+#### tests/unit/routes/posts/show-test.js
 
 ```diff
 @@ -0,0 +1,21 @@
@@ -515,13 +515,13 @@ Now the acceptance test is able to display the `posts.show` route, but it can't 
 +);
 ```
 
-## Add detail component and unit test
+### Add detail component and unit test
 
 Inner red: expected '' to equal 'Test Title'
 
 Again, instead of making the acceptance test pass as quickly as possible, we "write the code we wish we had": a post display component. We create it and add a component test that reproduces the acceptance test error; we specify that the component displays the post's title.
 
-### app/components/post-detail.js
+#### app/components/post-detail.js
 
 ```diff
 @@ -0,0 +1,4 @@
@@ -532,7 +532,7 @@ Again, instead of making the acceptance test pass as quickly as possible, we "wr
 ```
 
 
-### app/templates/components/post-detail.hbs
+#### app/templates/components/post-detail.hbs
 
 ```diff
 @@ -0,0 +1 @@
@@ -540,7 +540,7 @@ Again, instead of making the acceptance test pass as quickly as possible, we "wr
 ```
 
 
-### app/templates/posts/show.hbs
+#### app/templates/posts/show.hbs
 
 ```diff
 @@ -1 +1,3 @@
@@ -551,7 +551,7 @@ Again, instead of making the acceptance test pass as quickly as possible, we "wr
 ```
 
 
-### tests/integration/components/post-detail-test.js
+#### tests/integration/components/post-detail-test.js
 
 ```diff
 @@ -0,0 +1,23 @@
@@ -580,13 +580,13 @@ Again, instead of making the acceptance test pass as quickly as possible, we "wr
 +);
 ```
 
-## Add post detail display markup
+### Add post detail display markup
 
 Inner green; outer red: expected '' to equal 'Test Post'
 
 We make the component test pass by adding markup to display the post, but the acceptance test still has the same error, because we aren't passing the model into the component.
 
-### app/templates/components/post-detail.hbs
+#### app/templates/components/post-detail.hbs
 
 ```diff
 @@ -1 +1,3 @@
@@ -596,7 +596,7 @@ We make the component test pass by adding markup to display the post, but the ac
 +</div>
 ```
 
-## Hook routes into post model
+### Hook routes into post model
 
 Outer red: No model was found for 'post'
 
@@ -604,7 +604,7 @@ This acceptance test error drives a lot of logic: to display the post's title on
 
 With this logic added, the acceptance test errors out quickly: there _is_ no `post` model.
 
-### app/controllers/posts/new.js
+#### app/controllers/posts/new.js
 
 ```diff
 @@ -2,8 +2,11 @@ import Ember from 'ember';
@@ -624,7 +624,7 @@ With this logic added, the acceptance test errors out quickly: there _is_ no `po
 ```
 
 
-### app/router.js
+#### app/router.js
 
 ```diff
 @@ -8,7 +8,7 @@ const Router = Ember.Router.extend({
@@ -639,7 +639,7 @@ With this logic added, the acceptance test errors out quickly: there _is_ no `po
 ```
 
 
-### app/routes/posts/show.js
+#### app/routes/posts/show.js
 
 ```diff
 @@ -1,4 +1,7 @@
@@ -652,13 +652,13 @@ With this logic added, the acceptance test errors out quickly: there _is_ no `po
  });
 ```
 
-## Add post model
+### Add post model
 
 Outer red: Your Ember app tried to POST '/posts', but there was no route defined to handle this request. Define a route that matches this path in your mirage/config.js file.
 
 We add the Ember Data `post` model, and next we get an error from Mirage, our fake server. It needs a corresponding post creation endpoint created.
 
-### app/models/post.js
+#### app/models/post.js
 
 ```diff
 @@ -0,0 +1,7 @@
@@ -672,7 +672,7 @@ We add the Ember Data `post` model, and next we get an error from Mirage, our fa
 ```
 
 
-### tests/unit/models/post-test.js
+#### tests/unit/models/post-test.js
 
 ```diff
 @@ -0,0 +1,20 @@
@@ -698,13 +698,13 @@ We add the Ember Data `post` model, and next we get an error from Mirage, our fa
 +);
 ```
 
-## Add mirage create post route
+### Add mirage create post route
 
 Outer red: Pretender intercepted POST /posts but encountered an error: Mirage: The route handler for /posts is trying to access the post model, but that model doesn't exist. Create it using 'ember g mirage-model post'.
 
 Now that Mirage has an endpoint, it returns another error: a Mirage model for `post` needs to be added too.
 
-### mirage/config.js
+#### mirage/config.js
 
 ```diff
 @@ -1,26 +1,5 @@
@@ -737,13 +737,13 @@ Now that Mirage has an endpoint, it returns another error: a Mirage model for `p
  }
 ```
 
-## Add mirage model
+### Add mirage model
 
 Outer red: Pretender intercepted POST /posts but encountered an error: Mirage: You're using a shorthand or #normalizedRequestAttrs, but your serializer's normalize function did not return a valid JSON:API document. http://www.ember-cli-mirage.com/docs/v0.2.0-beta.9/serializers/#normalizejson
 
 When we add the Mirage `post` model, the next error is pretty obscure. What's happening is that no attributes are being sent in the create request, and Mirage is erroring out right away. We do want the `title` attribute to be sent, so this is a valid error situation.
 
-### mirage/models/post.js
+#### mirage/models/post.js
 
 ```diff
 @@ -0,0 +1,4 @@
@@ -753,13 +753,13 @@ When we add the Mirage `post` model, the next error is pretty obscure. What's ha
 +});
 ```
 
-## Specify the form data shound be sent to save action
+### Specify the form data shound be sent to save action
 
 Inner red: undefined is not an object (evaluating 'post.title')
 
 This is another case where we're reproducing the acceptance test situation, if not the actual error message. We specify that the post form component should pass the data for the model to the save action closure. We check that a title field comes back on that object, but since no value comes back at all, we get an error that it's not an object.
 
-### tests/integration/components/post-form-test.js
+#### tests/integration/components/post-form-test.js
 
 ```diff
 @@ -22,10 +22,11 @@ describeComponent(
@@ -778,7 +778,7 @@ This is another case where we're reproducing the acceptance test situation, if n
        this.render(hbs`{{post-form save=(action verifySaveHandlerCalled)}}`);
 ```
 
-## Send post form data to save action
+### Send post form data to save action
 
 Inner green; outer red: Pretender intercepted POST /posts but encountered an error: Mirage: You're using a shorthand or #normalizedRequestAttrs, but your serializer's normalize function did not return a valid JSON:API document. http://www.ember-cli-mirage.com/docs/v0.2.0-beta.9/serializers/#normalizejson
 
@@ -786,7 +786,7 @@ We get the component test to pass by making the input an Ember input helper, ret
 
 Now the acceptance test still gives the same error, and in this case the tests aren't that helpful to guide us to why. What's going on is that the Ember Data `post` model doesn't have a title field, so it isn't saved and retrieved by the show page.
 
-### app/components/post-form.js
+#### app/components/post-form.js
 
 ```diff
 @@ -2,8 +2,9 @@ import Ember from 'ember';
@@ -804,7 +804,7 @@ Now the acceptance test still gives the same error, and in this case the tests a
 ```
 
 
-### app/templates/components/post-form.hbs
+#### app/templates/components/post-form.hbs
 
 ```diff
 @@ -1,7 +1,7 @@
@@ -818,13 +818,13 @@ Now the acceptance test still gives the same error, and in this case the tests a
    <button class="save-post" {{action 'save'}}>Save</button>
 ```
 
-## Add title field to post model
+### Add title field to post model
 
 Outer red: Your Ember app tried to GET '/posts/1', but there was no route defined to handle this request. Define a route that matches this path in your mirage/config.js file.
 
 We add the title field to the post model, so now it's saved by the new page. The next error is in Mirage again: we now get to the post show page, but Mirage isn't configured to retrieve a post by ID.
 
-### app/models/post.js
+#### app/models/post.js
 
 ```diff
 @@ -1,7 +1,7 @@
@@ -839,13 +839,13 @@ We add the title field to the post model, so now it's saved by the new page. The
  });
 ```
 
-## Add mirage get post route
+### Add mirage get post route
 
 Outer green
 
 We configure Mirage to return a post retrieved by ID, and the acceptance test passes. We've successfully let our acceptance test drive out the behavior of this feature!
 
-### mirage/config.js
+#### mirage/config.js
 
 ```diff
 @@ -1,5 +1,6 @@

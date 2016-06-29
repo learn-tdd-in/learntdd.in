@@ -9,7 +9,7 @@ To see how TDD works in Laravel, let's walk through a simple real-world example 
 
 The feature we'll build is the age-old tutorial feature: creating a blog post.
 
-## Specify the feature for creating a blog post
+### Specify the feature for creating a blog post
 
 Red: A request to [http://localhost/blog-posts/create] failed. Received status code [404].
 
@@ -19,7 +19,7 @@ We also configure the testing environment to use a different database than the d
 
 The first error we get is that there is no `blog-posts/create` route.
 
-### .env.testing
+#### .env.testing
 
 ```diff
 @@ -0,0 +1,26 @@
@@ -52,7 +52,7 @@ The first error we get is that there is no `blog-posts/create` route.
 ```
 
 
-### tests/features/CreatingABlogPostTest.php
+#### tests/features/CreatingABlogPostTest.php
 
 ```diff
 @@ -0,0 +1,28 @@
@@ -86,13 +86,13 @@ The first error we get is that there is no `blog-posts/create` route.
 +}
 ```
 
-## Add blog posts resource route
+### Add blog posts resource route
 
 Red: Class App\Http\Controllers\BlogPostsController does not exist
 
 We add the route, but we don't just write the simplest code possible to get the test to pass; we "write the code we wish we had." In this case, we wish we had a blog posts controller, so we create a resource route and point to that controller by name. The next error we get is that that controller doesn't exist.
 
-### app/Http/routes.php
+#### app/Http/routes.php
 
 ```diff
 @@ -14,3 +14,5 @@
@@ -103,7 +103,7 @@ We add the route, but we don't just write the simplest code possible to get the 
 +Route::resource('blog-posts', 'BlogPostsController');
 ```
 
-## Add empty blog posts controller
+### Add empty blog posts controller
 
 Red: Method App\Http\Controllers\BlogPostsController::create() does not exist
 
@@ -111,7 +111,7 @@ We add an empty controller that inherits from our app's base controller class. W
 
 The acceptance test can now find the controller, but not a create action on it.
 
-### app/Http/Controllers/BlogPostsController.php
+#### app/Http/Controllers/BlogPostsController.php
 
 ```diff
 @@ -0,0 +1,7 @@
@@ -124,13 +124,13 @@ The acceptance test can now find the controller, but not a create action on it.
 +}
 ```
 
-## Add `create` action to blog posts controller
+### Add `create` action to blog posts controller
 
 Red: Nothing matched the filter [Title] CSS query provided
 
 Laravel is now able to render the create page, but when the test looks for a "Title" field to fill in, it can't find one, because we haven't rendered any output yet.
 
-### app/Http/Controllers/BlogPostsController.php
+#### app/Http/Controllers/BlogPostsController.php
 
 ```diff
 @@ -3,5 +3,9 @@
@@ -146,7 +146,7 @@ Laravel is now able to render the create page, but when the test looks for a "Ti
  }
 ```
 
-## Add form template with fields and submit button
+### Add form template with fields and submit button
 
 Red: Undefined variable: post
 
@@ -154,7 +154,7 @@ Instead of just adding the title field, we go ahead and add the entire form, inc
 
 The next error we get is that the `$post` variable we attempt to pass into the form doesn't exist.
 
-### app/Http/Controllers/BlogPostsController.php
+#### app/Http/Controllers/BlogPostsController.php
 
 ```diff
 @@ -5,7 +5,7 @@
@@ -169,7 +169,7 @@ The next error we get is that the `$post` variable we attempt to pass into the f
 ```
 
 
-### composer.json
+#### composer.json
 
 ```diff
 @@ -6,7 +6,8 @@
@@ -185,7 +185,7 @@ The next error we get is that the `$post` variable we attempt to pass into the f
 ```
 
 
-### composer.lock
+#### composer.lock
 
 ```diff
 @@ -4,8 +4,8 @@
@@ -263,7 +263,7 @@ The next error we get is that the `$post` variable we attempt to pass into the f
 ```
 
 
-### config/app.php
+#### config/app.php
 
 ```diff
 @@ -156,6 +156,10 @@
@@ -292,7 +292,7 @@ The next error we get is that the `$post` variable we attempt to pass into the f
 ```
 
 
-### resources/views/blog-posts/create.blade.php
+#### resources/views/blog-posts/create.blade.php
 
 ```diff
 @@ -0,0 +1,11 @@
@@ -309,13 +309,13 @@ The next error we get is that the `$post` variable we attempt to pass into the f
 +{!! Form::close() !!}
 ```
 
-## Add blog post variable assignment in controller
+### Add blog post variable assignment in controller
 
 Red: Class 'App\BlogPost' not found
 
 We pass a `$post` variable into the view from the controller, sending it a `BlogPost` instance. Next we get an error that the `BlogPost` class doesn't exist yet.
 
-### app/Http/Controllers/BlogPostsController.php
+#### app/Http/Controllers/BlogPostsController.php
 
 ```diff
 @@ -1,11 +1,12 @@
@@ -334,13 +334,13 @@ We pass a `$post` variable into the view from the controller, sending it a `Blog
  }
 ```
 
-## Add blog post model
+### Add blog post model
 
 Red: Method App\Http\Controllers\BlogPostsController::store() does not exist
 
 Now that the BlogPost model exists, the controller is able to render the view, and the test is able to submit the form to the `store` route. The next error is that there is no `store` action configured on the controller.
 
-### app/BlogPost.php
+#### app/BlogPost.php
 
 ```diff
 @@ -0,0 +1,10 @@
@@ -356,13 +356,13 @@ Now that the BlogPost model exists, the controller is able to render the view, a
 +}
 ```
 
-## Add store method to blog posts controller
+### Add store method to blog posts controller
 
 Red: The current node list is empty.
 
 There is now a `store` action on the controller, but when the test attempts to look for content on the page, there is no content rendered.
 
-### app/Http/Controllers/BlogPostsController.php
+#### app/Http/Controllers/BlogPostsController.php
 
 ```diff
 @@ -9,4 +9,8 @@ function create() {
@@ -376,7 +376,7 @@ There is now a `store` action on the controller, but when the test attempts to l
  }
 ```
 
-## Render store page
+### Render store page
 
 Red: Failed asserting that the page contains the HTML [Hello, World!]
 
@@ -384,7 +384,7 @@ We do just enough to get past the current error: we add a store view with some d
 
 Now that content is showing up, the test fails when it can't find the post title on the page.
 
-### app/Http/Controllers/BlogPostsController.php
+#### app/Http/Controllers/BlogPostsController.php
 
 ```diff
 @@ -10,7 +10,7 @@ function create() {
@@ -399,20 +399,20 @@ Now that content is showing up, the test fails when it can't find the post title
 ```
 
 
-### resources/views/blog-posts/store.blade.php
+#### resources/views/blog-posts/store.blade.php
 
 ```diff
 @@ -0,0 +1 @@
 +hi
 ```
 
-## Render blog post on store page
+### Render blog post on store page
 
 Red: Undefined variable: blogPost
 
 We add markup to output the blog post's title and body, but we get an error that there is no `$blogPost` variable sent to the view template.
 
-### resources/views/blog-posts/store.blade.php
+#### resources/views/blog-posts/store.blade.php
 
 ```diff
 @@ -1 +1,5 @@
@@ -424,13 +424,13 @@ We add markup to output the blog post's title and body, but we get an error that
 +</div>
 ```
 
-## Creates blog post for the view
+### Creates blog post for the view
 
 Red: Illuminate\Database\Eloquent\MassAssignmentException: title
 
 We create a BlogPost instance with the submitted form data and pass it to the view. We do mass assignment since that's the most convenient approach, but the model throws an exception because by default it disallows mass assignment for all fields.
 
-### app/Http/Controllers/BlogPostsController.php
+#### app/Http/Controllers/BlogPostsController.php
 
 ```diff
 @@ -1,6 +1,7 @@
@@ -455,13 +455,13 @@ We create a BlogPost instance with the submitted form data and pass it to the vi
  }
 ```
 
-## Specify the model should allow mass assignment
+### Specify the model should allow mass assignment
 
 Inner Red: Illuminate\Database\Eloquent\MassAssignmentException: title
 
 Since enabling fields for mass assignment is a logic change to the BlogPost class, we create a unit test for it to specify this behavior. We reproduce the error happening at the acceptance level.
 
-### tests/models/BlogPostTest.php
+#### tests/models/BlogPostTest.php
 
 ```diff
 @@ -0,0 +1,19 @@
@@ -486,13 +486,13 @@ Since enabling fields for mass assignment is a logic change to the BlogPost clas
 +}
 ```
 
-## Allow title and body to be mass-assigned
+### Allow title and body to be mass-assigned
 
 Inner green; outer red: PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'laravel-tdd-testing.blog_posts' doesn't exist
 
 We add mass assignment support for the title and body fields, satisfying the unit test. Now the acceptance test throws an exception that the table for the model is not found. We're finally hitting the database!
 
-### app/BlogPost.php
+#### app/BlogPost.php
 
 ```diff
 @@ -6,5 +6,5 @@
@@ -505,7 +505,7 @@ We add mass assignment support for the title and body fields, satisfying the uni
 ```
 
 
-### tests/models/BlogPostTest.php
+#### tests/models/BlogPostTest.php
 
 ```diff
 @@ -1,9 +1,11 @@
@@ -522,13 +522,13 @@ We add mass assignment support for the title and body fields, satisfying the uni
    public function itAllowsAssigningAllPublicFields()
 ```
 
-## Create blog posts table
+### Create blog posts table
 
 Outer red: Trying to get property of non-object
 
 Now that the acceptance test is able to access a `blog_posts` table, it gives this unhelpful message. What's going on is that the `BlogPost::first()` call returns null, because no post is actually saved to the database.
 
-### database/migrations/2016_06_10_205256_create_blog_posts_table.php
+#### database/migrations/2016_06_10_205256_create_blog_posts_table.php
 
 ```diff
 @@ -0,0 +1,34 @@
@@ -568,13 +568,13 @@ Now that the acceptance test is able to access a `blog_posts` table, it gives th
 +}
 ```
 
-## Save blog post to database
+### Save blog post to database
 
 Outer green
 
 We change the `store` action to not only instantiate a `BlogPost`, but also save it to the database. With that, all our tests are passing and our feature is done. We've successfully used an acceptance test to drive our design of this feature!
 
-### app/Http/Controllers/BlogPostsController.php
+#### app/Http/Controllers/BlogPostsController.php
 
 ```diff
 @@ -11,7 +11,7 @@ function create() {
