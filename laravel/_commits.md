@@ -1,37 +1,4 @@
-### Specify the feature for creating a blog post [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/eb338bbad7e41cb0972acc2469a0eb189a658d2c)
-
-#### .env.testing
-
-```diff
-@@ -0,0 +1,26 @@
-+APP_ENV=local
-+APP_DEBUG=true
-+APP_KEY=base64:mpiRgjLlPqdGpsLxSLazw/w7a5TpAEzsUHglECLOfUk=
-+APP_URL=http://localhost
-+
-+DB_CONNECTION=mysql
-+DB_HOST=127.0.0.1
-+DB_PORT=3306
-+DB_DATABASE=laravel-tdd-testing
-+DB_USERNAME=homestead
-+DB_PASSWORD=secret
-+
-+CACHE_DRIVER=file
-+SESSION_DRIVER=file
-+QUEUE_DRIVER=sync
-+
-+REDIS_HOST=127.0.0.1
-+REDIS_PASSWORD=null
-+REDIS_PORT=6379
-+
-+MAIL_DRIVER=smtp
-+MAIL_HOST=mailtrap.io
-+MAIL_PORT=2525
-+MAIL_USERNAME=null
-+MAIL_PASSWORD=null
-+MAIL_ENCRYPTION=null
-```
-
+### Specify the feature for creating a blog post [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/b0777fb9e0e358025fc0a43f1ceff5e17d7db6f9)
 
 #### tests/features/CreatingABlogPostTest.php
 
@@ -71,12 +38,10 @@ Red: A request to [http://localhost/blog-posts/create] failed. Received status c
 
 We start by writing out an acceptance test for the full feature we want to implement. In this case, we want to visit a blog post creation page, enter a title and body, save it, and then see on the results page that title and body, as well as confirming it's in the database.
 
-We also configure the testing environment to use a different database than the development environment, so that it won't overwrite development data.
-
 The first error we get is that there is no `blog-posts/create` route.
 
 
-### Add blog posts resource route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/8aeb8dd17e9112ca726a82b4208ffdbc34004b4b)
+### Add blog posts resource route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/936f16b0246fc7fceedf58f9e0c440ace70525b5)
 
 #### app/Http/routes.php
 
@@ -94,7 +59,7 @@ Red: Class App\Http\Controllers\BlogPostsController does not exist
 We add the route, but we don't just write the simplest code possible to get the test to pass; we "write the code we wish we had." In this case, we wish we had a blog posts controller, so we create a resource route and point to that controller by name. The next error we get is that that controller doesn't exist.
 
 
-### Add empty blog posts controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/4f4d2579f54c6565a7c4930ee05c629db108798f)
+### Add empty blog posts controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/8a0f9bc59a5acab57a1948551476e27882f4994c)
 
 #### app/Http/Controllers/BlogPostsController.php
 
@@ -116,7 +81,7 @@ We add an empty controller that inherits from our app's base controller class. W
 The acceptance test can now find the controller, but not a create action on it.
 
 
-### Add `create` action to blog posts controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/ea3991e6f9ee2f507b1df92df479e95b9a920500)
+### Add `create` action to blog posts controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/2ec29866538a62229d736a720f6fe49afee004cf)
 
 #### app/Http/Controllers/BlogPostsController.php
 
@@ -139,7 +104,7 @@ Red: Nothing matched the filter [Title] CSS query provided
 Laravel is now able to render the create page, but when the test looks for a "Title" field to fill in, it can't find one, because we haven't rendered any output yet.
 
 
-### Add form template with fields and submit button [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/01554c412ad384d4044ce386dc55f21a46d64fe7)
+### Add form template with fields and submit button [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/e67c029be8a86f2818ea0b7be5a3d44fa3f7ed59)
 
 #### app/Http/Controllers/BlogPostsController.php
 
@@ -169,84 +134,6 @@ Laravel is now able to render the create page, but when the test looks for a "Ti
      },
      "require-dev": {
          "fzaninotto/faker": "~1.4",
-```
-
-
-#### composer.lock
-
-```diff
-@@ -4,8 +4,8 @@
-         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
-         "This file is @generated automatically"
-     ],
--    "hash": "c284a9c122da36c99a8b6597bdce7aa6",
--    "content-hash": "8b1485987e7c5949da82435d403e52e8",
-+    "hash": "e9a8339d51c94a365c1193414479294f",
-+    "content-hash": "0feb6af5bef0e094e776fba476c27e7c",
-     "packages": [
-         {
-             "name": "classpreloader/classpreloader",
-@@ -436,6 +436,60 @@
-             "time": "2016-06-06 15:18:48"
-         },
-         {
-+            "name": "laravelcollective/html",
-+            "version": "v5.2.4",
-+            "source": {
-+                "type": "git",
-+                "url": "https://github.com/LaravelCollective/html.git",
-+                "reference": "3a312d39ffe37da0f57b602618b61fd07c1fcec5"
-+            },
-+            "dist": {
-+                "type": "zip",
-+                "url": "https://api.github.com/repos/LaravelCollective/html/zipball/3a312d39ffe37da0f57b602618b61fd07c1fcec5",
-+                "reference": "3a312d39ffe37da0f57b602618b61fd07c1fcec5",
-+                "shasum": ""
-+            },
-+            "require": {
-+                "illuminate/http": "5.2.*",
-+                "illuminate/routing": "5.2.*",
-+                "illuminate/session": "5.2.*",
-+                "illuminate/support": "5.2.*",
-+                "illuminate/view": "5.2.*",
-+                "php": ">=5.5.9"
-+            },
-+            "require-dev": {
-+                "illuminate/database": "5.2.*",
-+                "mockery/mockery": "~0.9",
-+                "phpunit/phpunit": "~4.0"
-+            },
-+            "type": "library",
-+            "autoload": {
-+                "psr-4": {
-+                    "Collective\\Html\\": "src/"
-+                },
-+                "files": [
-+                    "src/helpers.php"
-+                ]
-+            },
-+            "notification-url": "https://packagist.org/downloads/",
-+            "license": [
-+                "MIT"
-+            ],
-+            "authors": [
-+                {
-+                    "name": "Taylor Otwell",
-+                    "email": "taylorotwell@gmail.com"
-+                },
-+                {
-+                    "name": "Adam Engebretson",
-+                    "email": "adam@laravelcollective.com"
-+                }
-+            ],
-+            "description": "HTML and Form Builders for the Laravel Framework",
-+            "homepage": "http://laravelcollective.com",
-+            "time": "2016-01-27 22:29:54"
-+        },
-+        {
-             "name": "league/flysystem",
-             "version": "1.0.24",
-             "source": {
 ```
 
 
@@ -303,7 +190,7 @@ Instead of just adding the title field, we go ahead and add the entire form, inc
 The next error we get is that the `$post` variable we attempt to pass into the form doesn't exist.
 
 
-### Add blog post variable assignment in controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/b0342f94cf6ec9207bbc747a4a12894113078340)
+### Add blog post variable assignment in controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/27dc161694d34f118300fc2f0f304553f5f20732)
 
 #### app/Http/Controllers/BlogPostsController.php
 
@@ -329,7 +216,7 @@ Red: Class 'App\BlogPost' not found
 We pass a `$post` variable into the view from the controller, sending it a `BlogPost` instance. Next we get an error that the `BlogPost` class doesn't exist yet.
 
 
-### Add blog post model [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/985ddcb8e908c76ed6f71173d4f6114c2b253c40)
+### Add blog post model [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/e4898970df3032269b9bb8ec792c1dca394034b2)
 
 #### app/BlogPost.php
 
@@ -352,7 +239,7 @@ Red: Method App\Http\Controllers\BlogPostsController::store() does not exist
 Now that the BlogPost model exists, the controller is able to render the view, and the test is able to submit the form to the `store` route. The next error is that there is no `store` action configured on the controller.
 
 
-### Add store method to blog posts controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/9d69e40315259ef9e554201a3d6460c5289f3a35)
+### Add store method to blog posts controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/8ce1dc27efa6e88fa60198cf55d80333f65d2ad3)
 
 #### app/Http/Controllers/BlogPostsController.php
 
@@ -373,7 +260,7 @@ Red: The current node list is empty.
 There is now a `store` action on the controller, but when the test attempts to look for content on the page, there is no content rendered.
 
 
-### Render store page [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/d925ed9f2ffd71790201bd2c41db4161b24a9c1f)
+### Render store page [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/fcaa6b0249af755f4e36f83e94c30b71a4236d38)
 
 #### app/Http/Controllers/BlogPostsController.php
 
@@ -404,7 +291,7 @@ We do just enough to get past the current error: we add a store view with some d
 Now that content is showing up, the test fails when it can't find the post title on the page.
 
 
-### Render blog post on store page [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/57437cfa62d2f5d7f6e8f1d1bd1b70fc0ea81efe)
+### Render blog post on store page [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/a10118cd49de340d3a936c13942e007903d9671b)
 
 #### resources/views/blog-posts/store.blade.php
 
@@ -423,7 +310,7 @@ Red: Undefined variable: blogPost
 We add markup to output the blog post's title and body, but we get an error that there is no `$blogPost` variable sent to the view template.
 
 
-### Creates blog post for the view [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/b253d9bbe22a5112ff74ff6ec4b068637626b34c)
+### Creates blog post for the view [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/80027bcb1ee88519ab251f7f7261af7b95358289)
 
 #### app/Http/Controllers/BlogPostsController.php
 
@@ -455,7 +342,7 @@ Red: Illuminate\Database\Eloquent\MassAssignmentException: title
 We create a BlogPost instance with the submitted form data and pass it to the view. We do mass assignment since that's the most convenient approach, but the model throws an exception because by default it disallows mass assignment for all fields.
 
 
-### Specify the model should allow mass assignment [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/557d697bb6a0d6c209b98b1d521c46773edc979c)
+### Specify the model should allow mass assignment [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/bfedbfc863a854d399c446260fb92c50f3dc5bce)
 
 #### tests/models/BlogPostTest.php
 
@@ -487,7 +374,7 @@ Inner Red: Illuminate\Database\Eloquent\MassAssignmentException: title
 Since enabling fields for mass assignment is a logic change to the BlogPost class, we create a unit test for it to specify this behavior. We reproduce the error happening at the acceptance level.
 
 
-### Allow title and body to be mass-assigned [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/1ff43118e76fe33058c929959bc57f1f22181685)
+### Allow title and body to be mass-assigned [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/197e5133cc1bf7aa249e77449201f580409d4a00)
 
 #### app/BlogPost.php
 
@@ -524,7 +411,7 @@ Inner green; outer red: PDOException: SQLSTATE[42S02]: Base table or view not fo
 We add mass assignment support for the title and body fields, satisfying the unit test. Now the acceptance test throws an exception that the table for the model is not found. We're finally hitting the database!
 
 
-### Create blog posts table [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/979b7fe0de7b30a613d350d4a47ce3b6674b1b02)
+### Create blog posts table [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/37e90adbf24ee71186c0590c6094f6d7ba26e4ec)
 
 #### database/migrations/2016_06_10_205256_create_blog_posts_table.php
 
@@ -571,7 +458,7 @@ Outer red: Trying to get property of non-object
 Now that the acceptance test is able to access a `blog_posts` table, it gives this unhelpful message. What's going on is that the `BlogPost::first()` call returns null, because no post is actually saved to the database.
 
 
-### Save blog post to database [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/6f79261d7624799a6f87297ff8f1cf926513fe74)
+### Save blog post to database [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/laravel/commit/75e2edc442e180613d0c8349f7b1747ff9cf08fc)
 
 #### app/Http/Controllers/BlogPostsController.php
 
