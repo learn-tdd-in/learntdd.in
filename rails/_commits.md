@@ -1,8 +1,4 @@
-### [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/22ab5a326159a638c11ff9132c4be966ff654022) Specify the feature for creating a blog post
-
-Red: No route matches [GET] "/blog_posts/new"
-
-We set up the entire acceptance test at once. This test will guide us through the rest of the unit testing and implementation of the feature.
+### Specify the feature for creating a blog post [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/22ab5a326159a638c11ff9132c4be966ff654022)
 
 #### spec/features/creating_a_blog_post_spec.rb
 
@@ -32,13 +28,12 @@ We set up the entire acceptance test at once. This test will guide us through th
 +end
 ```
 
-### [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/9b417136c921c120a88ea6f2898009678b054251) Add blog posts resource route
+Red: No route matches [GET] "/blog_posts/new"
 
-Red: uninitialized constant BlogPostsController
+We set up the entire acceptance test at once. This test will guide us through the rest of the unit testing and implementation of the feature.
 
-We only change enough code to get to the next error message. Getting past the "no route" error only requires creating the route in the routes file.
 
-Rails allows you to "unit test" routes, but for trivial configuration like this, it's fine to let the acceptance test cover it without stepping down to the unit level.
+### Add blog posts resource route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/9b417136c921c120a88ea6f2898009678b054251)
 
 #### config/routes.rb
 
@@ -50,11 +45,14 @@ Rails allows you to "unit test" routes, but for trivial configuration like this,
  end
 ```
 
-### [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/5e0200a8fe01ba9a568b639f19b6eea3ab0d31a0) Add empty blog posts controller
+Red: uninitialized constant BlogPostsController
 
-Red: The action 'new' could not be found for BlogPostsController
+We only change enough code to get to the next error message. Getting past the "no route" error only requires creating the route in the routes file.
 
-We didn't technically need to subclass ApplicationController to get the test to pass; all we needed was a BlogPostsController class. But since we're sure that BlogPostsController will extend ApplicationController, we can safely go ahead and add that code as well.
+Rails allows you to "unit test" routes, but for trivial configuration like this, it's fine to let the acceptance test cover it without stepping down to the unit level.
+
+
+### Add empty blog posts controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/5e0200a8fe01ba9a568b639f19b6eea3ab0d31a0)
 
 #### app/controllers/blog_posts_controller.rb
 
@@ -65,13 +63,12 @@ We didn't technically need to subclass ApplicationController to get the test to 
 +end
 ```
 
-### [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/5b7ca108387fe1cee435a7c09ea8da7b7cda85cb) Add `new` action to blog posts controller
+Red: The action 'new' could not be found for BlogPostsController
 
-Red: Missing template blog_posts/new
+We didn't technically need to subclass ApplicationController to get the test to pass; all we needed was a BlogPostsController class. But since we're sure that BlogPostsController will extend ApplicationController, we can safely go ahead and add that code as well.
 
-Again, we only add enough code to get the test to pass.
 
-Even though we didn't ask to render a template, Rails' default behavior for a controller action is to render a corresponding template, so that's the error it's running across next.
+### Add `new` action to blog posts controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/5b7ca108387fe1cee435a7c09ea8da7b7cda85cb)
 
 #### app/controllers/blog_posts_controller.rb
 
@@ -84,11 +81,14 @@ Even though we didn't ask to render a template, Rails' default behavior for a co
  end
 ```
 
-### [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/eb329b9cf22f4eb9145929ccfd9826c42a562912) Add new blog post template
+Red: Missing template blog_posts/new
 
-Red: Unable to find field "Title"
+Again, we only add enough code to get the test to pass.
 
-The acceptance test is finally able to successfully `visit '/blog_posts/new'` and move on to attempt the next step, which is `fill_in 'Title', with: 'Hello, World!'`.
+Even though we didn't ask to render a template, Rails' default behavior for a controller action is to render a corresponding template, so that's the error it's running across next.
+
+
+### Add new blog post template [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/eb329b9cf22f4eb9145929ccfd9826c42a562912)
 
 #### app/views/blog_posts/new.html.erb
 
@@ -97,15 +97,12 @@ The acceptance test is finally able to successfully `visit '/blog_posts/new'` an
 +<%# app/views/blog_posts/new.html.erb %>
 ```
 
-### [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/696bf4aaa62790b117df931197334a8f00d5186d) Add fields and submit button to form template
+Red: Unable to find field "Title"
 
-Red: First argument in form cannot contain nil or be empty
+The acceptance test is finally able to successfully `visit '/blog_posts/new'` and move on to attempt the next step, which is `fill_in 'Title', with: 'Hello, World!'`.
 
-<%= form_for @blog_post do |f| %>
 
-In other words, @blog_post is nil but needs to be a model.
-
-This is another case where all we needed to add to get the test to pass was the title field. But this is a reasonable case where you know what the form will consist of, so you can go ahead and create it all. Plus, your tests will never drive out the full markup of your templates, so you'll need to do that by hand anyway.
+### Add fields and submit button to form template [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/696bf4aaa62790b117df931197334a8f00d5186d)
 
 #### app/views/blog_posts/new.html.erb
 
@@ -125,11 +122,16 @@ This is another case where all we needed to add to get the test to pass was the 
 +<% end %>
 ```
 
-### [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/3a63ed0cb5b12aa9f9bccaa0ca3c979a9482614c) Specify controller should assign a blog post variable
+Red: First argument in form cannot contain nil or be empty
 
-Inner red: uninitialized constant BlogPost
+<%= form_for @blog_post do |f| %>
 
-We're mocking the `new` method on the actual BlogPost constant, so we need that constant to exist.
+In other words, @blog_post is nil but needs to be a model.
+
+This is another case where all we needed to add to get the test to pass was the title field. But this is a reasonable case where you know what the form will consist of, so you can go ahead and create it all. Plus, your tests will never drive out the full markup of your templates, so you'll need to do that by hand anyway.
+
+
+### Specify controller should assign a blog post variable [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/3a63ed0cb5b12aa9f9bccaa0ca3c979a9482614c)
 
 #### spec/controllers/blog_posts_controller_spec.rb
 
@@ -152,16 +154,12 @@ We're mocking the `new` method on the actual BlogPost constant, so we need that 
 +end
 ```
 
-### [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/f253bcec6b92abbd51b4635f139c7e2e0a2e854a) Create blog post model and table
+Inner red: uninitialized constant BlogPost
 
-Red: expected: #<InstanceDouble(BlogPost) (anonymous)>
-          got: nil
+We're mocking the `new` method on the actual BlogPost constant, so we need that constant to exist.
 
-expect(assigns[:blog_post]).to eq(blog_post)
 
-In other words, a @blog_post instance variable is not available in the view template, because it wasn't assigned in the controller action.
-
-The reason we don't create a model spec is because it's often not recommended to test-drive trivial features of your model, such as fields and validations. Your acceptance specs should cover these, and there's no need to use unit tests to drive their design, because there's little to no design involved. Model specs are useful for custom validators and other custom methods on the model, including calculated fields and business logic methods.
+### Create blog post model and table [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/f253bcec6b92abbd51b4635f139c7e2e0a2e854a)
 
 #### app/models/blog_post.rb
 
@@ -195,13 +193,13 @@ The reason we don't create a model spec is because it's often not recommended to
 @@ -11,9 +11,14 @@
  #
  # It's strongly recommended that you check this file into your version control system.
-
+ 
 -ActiveRecord::Schema.define(version: 0) do
 +ActiveRecord::Schema.define(version: 20160223100510) do
-
+ 
    # These are extensions that must be enabled in order to support this database
    enable_extension "plpgsql"
-
+ 
 +  create_table "blog_posts", force: :cascade do |t|
 +    t.string "title"
 +    t.text   "body"
@@ -210,13 +208,17 @@ The reason we don't create a model spec is because it's often not recommended to
  end
 ```
 
-### [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/1e17d89f646a264480e1703970a8e2743e9d309a) Add blog post variable assignment to controller
+Red: expected: #<InstanceDouble(BlogPost) (anonymous)>
+          got: nil
 
-This makes the controller spec pass, and moves the acceptance spec on to the next error:
+expect(assigns[:blog_post]).to eq(blog_post)
 
-Outer Red: The action 'create' could not be found for BlogPostsController
+In other words, a @blog_post instance variable is not available in the view template, because it wasn't assigned in the controller action.
 
-The acceptance spec now gets to the point of clicking on the 'Create Blog Post' button, but the `create` action the form attempts to submit to doesn't exist.
+The reason we don't create a model spec is because it's often not recommended to test-drive trivial features of your model, such as fields and validations. Your acceptance specs should cover these, and there's no need to use unit tests to drive their design, because there's little to no design involved. Model specs are useful for custom validators and other custom methods on the model, including calculated fields and business logic methods.
+
+
+### Add blog post variable assignment to controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/1e17d89f646a264480e1703970a8e2743e9d309a)
 
 #### app/controllers/blog_posts_controller.rb
 
@@ -230,9 +232,14 @@ The acceptance spec now gets to the point of clicking on the 'Create Blog Post' 
  end
 ```
 
-### [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/a4d88c0acb02a2fe8ddfcaedb3d829a47a52f37d) Add create method to blog post controller
+This makes the controller spec pass, and moves the acceptance spec on to the next error:
 
-Outer red: Missing template blog_posts/create
+Outer Red: The action 'create' could not be found for BlogPostsController
+
+The acceptance spec now gets to the point of clicking on the 'Create Blog Post' button, but the `create` action the form attempts to submit to doesn't exist.
+
+
+### Add create method to blog post controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/a4d88c0acb02a2fe8ddfcaedb3d829a47a52f37d)
 
 #### app/controllers/blog_posts_controller.rb
 
@@ -247,7 +254,17 @@ Outer red: Missing template blog_posts/create
  end
 ```
 
-### [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/137476286b73930c84e51e20bc109260eb00c2e5) Add blog post create template
+Outer red: Missing template blog_posts/create
+
+
+### Add blog post create template [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/137476286b73930c84e51e20bc109260eb00c2e5)
+
+#### app/views/blog_posts/create.html.erb
+
+```diff
+@@ -0,0 +1 @@
++<%# app/views/blog_posts/create.html.erb %>
+```
 
 Outer red: undefined method `title' for nil:NilClass
 
@@ -257,20 +274,8 @@ In other words, the blog post was not found in the database.
 
 Note that usually a create method would redirect to a show page, but for the sake of simplicity in this example we're just going to have the create method render the show page directly.
 
-#### app/views/blog_posts/create.html.erb
 
-```diff
-@@ -0,0 +1 @@
-+<%# app/views/blog_posts/create.html.erb %>
-```
-
-### [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/e0b217c778073f44836f141f0d3b6cd7084bb98e) Specify controller should create blog post record
-
-Inner Red: BlogPost.create
-           expected: 1 time with arguments: ({:title=>"My Title", :body=>"My Body"})
-           received: 0 times
-
-We specified the `create` method on the `BlogPost` that the controller nees to call to actually create the blog post, but it's not yet called.
+### Specify controller should create blog post record [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/e0b217c778073f44836f141f0d3b6cd7084bb98e)
 
 #### spec/controllers/blog_posts_controller_spec.rb
 
@@ -278,7 +283,7 @@ We specified the `create` method on the `BlogPost` that the controller nees to c
 @@ -12,4 +12,16 @@
      end
    end
-
+ 
 +  describe '#create' do
 +    it 'creates a blog post record' do
 +      expect(BlogPost).to receive(:create).with(title: 'My Title',
@@ -294,7 +299,26 @@ We specified the `create` method on the `BlogPost` that the controller nees to c
  end
 ```
 
-### [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/d3669d95aa8f0f919cc8fc386cffcb42181c0234) Create blog post record directly from params
+Inner Red: BlogPost.create
+           expected: 1 time with arguments: ({:title=>"My Title", :body=>"My Body"})
+           received: 0 times
+
+We specified the `create` method on the `BlogPost` that the controller nees to call to actually create the blog post, but it's not yet called.
+
+
+### Create blog post record directly from params [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/d3669d95aa8f0f919cc8fc386cffcb42181c0234)
+
+#### app/controllers/blog_posts_controller.rb
+
+```diff
+@@ -5,5 +5,6 @@ def new
+   end
+ 
+   def create
++    BlogPost.create(params[:blog_post])
+   end
+ end
+```
 
 This makes the controller spec pass, but the acceptance spec has a related error:
 
@@ -302,32 +326,15 @@ Outer red: ActiveModel::ForbiddenAttributesError
 
 Because the controller spec passes a plain `Hash` in, it passes, but when the real parameters object is passed in from the Rails framework, Rails' security prevents it from being used to set fields on the model unless strong parameters are configured to allow fields through.
 
-#### app/controllers/blog_posts_controller.rb
 
-```diff
-@@ -5,5 +5,6 @@ def new
-   end
-
-   def create
-+    BlogPost.create(params[:blog_post])
-   end
- end
-```
-
-### [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/aec1e0b46a3e023e7bd3950065ebe4b8cdc29400) Switch to strong params for blog post creation
-
-Outer red: expected to find text "Hello, World!" in ""
-
-expect(page).to have_content('Hello, World!')
-
-This adds strong params whitelisting to the title and body attributes, which allows the model to be saved and the acceptance spec to proceed past the model checks. Next it checks the output on the page, which is not yet present.
+### Switch to strong params for blog post creation [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/aec1e0b46a3e023e7bd3950065ebe4b8cdc29400)
 
 #### app/controllers/blog_posts_controller.rb
 
 ```diff
 @@ -5,6 +5,12 @@ def new
    end
-
+ 
    def create
 -    BlogPost.create(params[:blog_post])
 +    BlogPost.create(blog_post_params)
@@ -341,13 +348,14 @@ This adds strong params whitelisting to the title and body attributes, which all
  end
 ```
 
-### [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/314b9ee198cd2c6cbbb673ad4ab2a580b327d793) Render blog post on create page
+Outer red: expected to find text "Hello, World!" in ""
 
-Outer red: undefined method `title' for nil:NilClass
+expect(page).to have_content('Hello, World!')
 
-<h1><%= @blog_post.title %></h1>
+This adds strong params whitelisting to the title and body attributes, which allows the model to be saved and the acceptance spec to proceed past the model checks. Next it checks the output on the page, which is not yet present.
 
-In other words, the @blog_post variable is not available in the view template because it was not assigned in the controller action.
+
+### Render blog post on create page [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/314b9ee198cd2c6cbbb673ad4ab2a580b327d793)
 
 #### app/views/blog_posts/create.html.erb
 
@@ -361,14 +369,14 @@ In other words, the @blog_post variable is not available in the view template be
 +</div>
 ```
 
-### [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/75cfb6e014996c4871de8273128de15d454f58d1) Specify controller create action should set blog post variable
+Outer red: undefined method `title' for nil:NilClass
 
-Inner red: expected: #<InstanceDouble(BlogPost) (anonymous)>
-                got: nil
+<h1><%= @blog_post.title %></h1>
 
-expect(assigns[:blog_post]).to eq(blog_post)
+In other words, the @blog_post variable is not available in the view template because it was not assigned in the controller action.
 
-We reproduce the acceptance spec error in the controller spec, so that we can now implement it.
+
+### Specify controller create action should set blog post variable [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/75cfb6e014996c4871de8273128de15d454f58d1)
 
 #### spec/controllers/blog_posts_controller_spec.rb
 
@@ -393,34 +401,41 @@ We reproduce the acceptance spec error in the controller spec, so that we can no
  end
 ```
 
-### [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/d10ddecf215cdf3fac5751cb81895b36ce3c1d0f) Add blog post variable assignment to controller create method
+Inner red: expected: #<InstanceDouble(BlogPost) (anonymous)>
+                got: nil
 
-At this point, the controller spec passes, and the acceptance spec passes as well. We've successfully allowed the acceptance spec to drive us through implementing our feature, including any necessary lower-level specs.
+expect(assigns[:blog_post]).to eq(blog_post)
+
+We reproduce the acceptance spec error in the controller spec, so that we can now implement it.
+
+
+### Add blog post variable assignment to controller create method [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/d10ddecf215cdf3fac5751cb81895b36ce3c1d0f)
 
 #### app/controllers/blog_posts_controller.rb
 
 ```diff
 @@ -5,7 +5,7 @@ def new
    end
-
+ 
    def create
 -    BlogPost.create(blog_post_params)
 +    @blog_post = BlogPost.create(blog_post_params)
    end
-
+ 
    private
 ```
 
-### [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/b18d647a2900e0ae2a9aa40020ecb45d65c00f54) Extract duplicate post params to a variable
+At this point, the controller spec passes, and the acceptance spec passes as well. We've successfully allowed the acceptance spec to drive us through implementing our feature, including any necessary lower-level specs.
 
-We identify some duplication in our tests, so we refactor it to extract those duplicate parameters into a variable, to improve our tests' readability.
+
+### Extract duplicate post params to a variable [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/b18d647a2900e0ae2a9aa40020ecb45d65c00f54)
 
 #### spec/controllers/blog_posts_controller_spec.rb
 
 ```diff
 @@ -13,26 +13,25 @@
    end
-
+ 
    describe '#create' do
 -    it 'creates a blog post record' do
 -      expect(BlogPost).to receive(:create).with(title: 'My Title',
@@ -440,7 +455,7 @@ We identify some duplication in our tests, so we refactor it to extract those du
 +                                                body: 'My Body')
 +      post :create, post_params
      end
-
+ 
      it 'returns the new blog post to the view' do
        blog_post = instance_double(BlogPost)
        allow(BlogPost).to receive(:create).and_return(blog_post)
@@ -455,3 +470,6 @@ We identify some duplication in our tests, so we refactor it to extract those du
      end
    end
 ```
+
+We identify some duplication in our tests, so we refactor it to extract those duplicate parameters into a variable, to improve our tests' readability.
+
