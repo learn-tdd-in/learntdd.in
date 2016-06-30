@@ -3,7 +3,6 @@
 #### tests/acceptance/creating-a-blog-post-test.js
 
 ```diff
-@@ -0,0 +1,36 @@
 +/* jshint expr:true */
 +import {
 +  describe,
@@ -52,7 +51,6 @@ We set up the entire acceptance test at once. This test will guide us through th
 #### app/router.js
 
 ```diff
-@@ -6,6 +6,9 @@ const Router = Ember.Router.extend({
  });
  
  Router.map(function() {
@@ -68,7 +66,6 @@ We set up the entire acceptance test at once. This test will guide us through th
 #### app/routes/posts/new.js
 
 ```diff
-@@ -0,0 +1,4 @@
 +import Ember from 'ember';
 +
 +export default Ember.Route.extend({
@@ -79,7 +76,6 @@ We set up the entire acceptance test at once. This test will guide us through th
 #### app/templates/posts/new.hbs
 
 ```diff
-@@ -0,0 +1 @@
 +{{outlet}}
 ```
 
@@ -87,7 +83,6 @@ We set up the entire acceptance test at once. This test will guide us through th
 #### tests/unit/routes/posts/new-test.js
 
 ```diff
-@@ -0,0 +1,21 @@
 +/* jshint expr:true */
 +import { expect } from 'chai';
 +import {
@@ -123,7 +118,6 @@ The next error is simple: no `.post-title-input` field is found to fill text int
 #### app/components/post-form.js
 
 ```diff
-@@ -0,0 +1,4 @@
 +import Ember from 'ember';
 +
 +export default Ember.Component.extend({
@@ -134,7 +128,6 @@ The next error is simple: no `.post-title-input` field is found to fill text int
 #### app/templates/components/post-form.hbs
 
 ```diff
-@@ -0,0 +1 @@
 +{{yield}}
 ```
 
@@ -142,7 +135,6 @@ The next error is simple: no `.post-title-input` field is found to fill text int
 #### app/templates/posts/new.hbs
 
 ```diff
-@@ -1 +1,3 @@
 -{{outlet}}
 +<h1>New Post</h1>
 +
@@ -153,7 +145,6 @@ The next error is simple: no `.post-title-input` field is found to fill text int
 #### tests/integration/components/post-form-test.js
 
 ```diff
-@@ -0,0 +1,25 @@
 +/* jshint expr:true */
 +import { expect } from 'chai';
 +import {
@@ -193,7 +184,6 @@ We create the component, then create a unit tests for it that reproduce the acce
 #### app/templates/components/post-form.hbs
 
 ```diff
-@@ -1 +1,8 @@
 -{{yield}}
 +<form>
 +  <div>
@@ -215,7 +205,6 @@ Now that we're rendering markup for the component, its unit test is able to find
 #### tests/acceptance/creating-a-blog-post-test.js
 
 ```diff
-@@ -1,11 +1,11 @@
  /* jshint expr:true */
  import {
    describe,
@@ -266,7 +255,6 @@ Now that we're rendering markup for the component, its unit test is able to find
 #### tests/integration/components/post-form-test.js
 
 ```diff
-@@ -21,5 +21,19 @@ describeComponent(
               'Text input .post-title-input not found'
               ).to.equal(1);
      });
@@ -300,7 +288,6 @@ In order to get clear test output from the component test, we temporarily disabl
 #### app/components/post-form.js
 
 ```diff
-@@ -1,4 +1,9 @@
  import Ember from 'ember';
  
  export default Ember.Component.extend({
@@ -316,7 +303,6 @@ In order to get clear test output from the component test, we temporarily disabl
 #### app/templates/components/post-form.hbs
 
 ```diff
-@@ -4,5 +4,5 @@
      <input type="text" class="post-title-input" />
    </div>
  
@@ -329,7 +315,6 @@ In order to get clear test output from the component test, we temporarily disabl
 #### tests/acceptance/creating-a-blog-post-test.js
 
 ```diff
-@@ -1,11 +1,11 @@
  /* jshint expr:true */
  import {
    describe,
@@ -388,7 +373,6 @@ We also re-enable the acceptance test, and confirm that it's no longer hanging. 
 #### app/controllers/posts/new.js
 
 ```diff
-@@ -0,0 +1,9 @@
 +import Ember from 'ember';
 +
 +export default Ember.Controller.extend({
@@ -404,7 +388,6 @@ We also re-enable the acceptance test, and confirm that it's no longer hanging. 
 #### app/templates/posts/new.hbs
 
 ```diff
-@@ -1,3 +1,3 @@
  <h1>New Post</h1>
  
 -{{post-form}}
@@ -415,7 +398,6 @@ We also re-enable the acceptance test, and confirm that it's no longer hanging. 
 #### tests/unit/controllers/posts/new-test.js
 
 ```diff
-@@ -0,0 +1,22 @@
 +/* jshint expr:true */
 +import { expect } from 'chai';
 +import {
@@ -450,7 +432,6 @@ We implement a save handler by adding a new post controller to put it in, adding
 #### app/router.js
 
 ```diff
-@@ -8,6 +8,7 @@ const Router = Ember.Router.extend({
  Router.map(function() {
    this.route('posts', function() {
      this.route('new');
@@ -464,7 +445,6 @@ We implement a save handler by adding a new post controller to put it in, adding
 #### app/routes/posts/show.js
 
 ```diff
-@@ -0,0 +1,4 @@
 +import Ember from 'ember';
 +
 +export default Ember.Route.extend({
@@ -475,7 +455,6 @@ We implement a save handler by adding a new post controller to put it in, adding
 #### app/templates/posts/show.hbs
 
 ```diff
-@@ -0,0 +1 @@
 +{{outlet}}
 ```
 
@@ -483,7 +462,6 @@ We implement a save handler by adding a new post controller to put it in, adding
 #### tests/unit/routes/posts/show-test.js
 
 ```diff
-@@ -0,0 +1,21 @@
 +/* jshint expr:true */
 +import { expect } from 'chai';
 +import {
@@ -517,7 +495,6 @@ Now the acceptance test is able to display the `posts.show` route, but it can't 
 #### app/components/post-detail.js
 
 ```diff
-@@ -0,0 +1,4 @@
 +import Ember from 'ember';
 +
 +export default Ember.Component.extend({
@@ -528,7 +505,6 @@ Now the acceptance test is able to display the `posts.show` route, but it can't 
 #### app/templates/components/post-detail.hbs
 
 ```diff
-@@ -0,0 +1 @@
 +{{yield}}
 ```
 
@@ -536,7 +512,6 @@ Now the acceptance test is able to display the `posts.show` route, but it can't 
 #### app/templates/posts/show.hbs
 
 ```diff
-@@ -1 +1,3 @@
 -{{outlet}}
 +<h1>Post</h1>
 +
@@ -547,7 +522,6 @@ Now the acceptance test is able to display the `posts.show` route, but it can't 
 #### tests/integration/components/post-detail-test.js
 
 ```diff
-@@ -0,0 +1,23 @@
 +/* jshint expr:true */
 +import { expect } from 'chai';
 +import {
@@ -583,7 +557,6 @@ Again, instead of making the acceptance test pass as quickly as possible, we "wr
 #### app/templates/components/post-detail.hbs
 
 ```diff
-@@ -1 +1,3 @@
 -{{yield}}
 +<div>
 +  Title: <span class="post-title">{{post.title}}</span>
@@ -600,7 +573,6 @@ We make the component test pass by adding markup to display the post, but the ac
 #### app/controllers/posts/new.js
 
 ```diff
-@@ -2,8 +2,11 @@ import Ember from 'ember';
  
  export default Ember.Controller.extend({
    actions: {
@@ -620,7 +592,6 @@ We make the component test pass by adding markup to display the post, but the ac
 #### app/router.js
 
 ```diff
-@@ -8,7 +8,7 @@ const Router = Ember.Router.extend({
  Router.map(function() {
    this.route('posts', function() {
      this.route('new');
@@ -635,7 +606,6 @@ We make the component test pass by adding markup to display the post, but the ac
 #### app/routes/posts/show.js
 
 ```diff
-@@ -1,4 +1,7 @@
  import Ember from 'ember';
  
  export default Ember.Route.extend({
@@ -657,7 +627,6 @@ With this logic added, the acceptance test errors out quickly: there _is_ no `po
 #### app/models/post.js
 
 ```diff
-@@ -0,0 +1,7 @@
 +import Model from 'ember-data/model';
 +// import attr from 'ember-data/attr';
 +// import { belongsTo, hasMany } from 'ember-data/relationships';
@@ -671,7 +640,6 @@ With this logic added, the acceptance test errors out quickly: there _is_ no `po
 #### tests/unit/models/post-test.js
 
 ```diff
-@@ -0,0 +1,20 @@
 +/* jshint expr:true */
 +import { expect } from 'chai';
 +import { describeModel, it } from 'ember-mocha';
@@ -704,7 +672,6 @@ We add the Ember Data `post` model, and next we get an error from Mirage, our fa
 #### mirage/config.js
 
 ```diff
-@@ -1,26 +1,5 @@
  export default function() {
  
 -  // These comments are here to help you get started. Feel free to delete them.
@@ -744,7 +711,6 @@ Now that Mirage has an endpoint, it returns another error: a Mirage model for `p
 #### mirage/models/post.js
 
 ```diff
-@@ -0,0 +1,4 @@
 +import { Model } from 'ember-cli-mirage';
 +
 +export default Model.extend({
@@ -761,7 +727,6 @@ When we add the Mirage `post` model, the next error is pretty obscure. What's ha
 #### tests/integration/components/post-form-test.js
 
 ```diff
-@@ -22,10 +22,11 @@ describeComponent(
               ).to.equal(1);
      });
  
@@ -787,7 +752,6 @@ This is another case where we're reproducing the acceptance test situation, if n
 #### app/components/post-form.js
 
 ```diff
-@@ -2,8 +2,9 @@ import Ember from 'ember';
  
  export default Ember.Component.extend({
    actions: {
@@ -805,7 +769,6 @@ This is another case where we're reproducing the acceptance test situation, if n
 #### app/templates/components/post-form.hbs
 
 ```diff
-@@ -1,7 +1,7 @@
  <form>
    <div>
      <label for="post-title">Title</label>
@@ -828,7 +791,6 @@ Now the acceptance test still gives the same error, and in this case the tests a
 #### app/models/post.js
 
 ```diff
-@@ -1,7 +1,7 @@
  import Model from 'ember-data/model';
 -// import attr from 'ember-data/attr';
 +import attr from 'ember-data/attr';
@@ -850,7 +812,6 @@ We add the title field to the post model, so now it's saved by the new page. The
 #### mirage/config.js
 
 ```diff
-@@ -1,5 +1,6 @@
  export default function() {
  
 +  this.get('/posts/:id')

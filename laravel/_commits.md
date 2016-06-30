@@ -3,7 +3,6 @@
 #### tests/features/CreatingABlogPostTest.php
 
 ```diff
-@@ -0,0 +1,28 @@
 +<?php
 +
 +use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -46,7 +45,6 @@ The first error we get is that there is no `blog-posts/create` route.
 #### app/Http/routes.php
 
 ```diff
-@@ -14,3 +14,5 @@
  Route::get('/', function () {
      return view('welcome');
  });
@@ -64,7 +62,6 @@ We add the route, but we don't just write the simplest code possible to get the 
 #### app/Http/Controllers/BlogPostsController.php
 
 ```diff
-@@ -0,0 +1,7 @@
 +<?php
 +
 +namespace App\Http\Controllers;
@@ -86,7 +83,6 @@ The acceptance test can now find the controller, but not a create action on it.
 #### app/Http/Controllers/BlogPostsController.php
 
 ```diff
-@@ -3,5 +3,9 @@
  namespace App\Http\Controllers;
  
  class BlogPostsController extends Controller {
@@ -109,7 +105,6 @@ Laravel is now able to render the create page, but when the test looks for a "Ti
 #### app/Http/Controllers/BlogPostsController.php
 
 ```diff
-@@ -5,7 +5,7 @@
  class BlogPostsController extends Controller {
  
    function create() {
@@ -124,7 +119,6 @@ Laravel is now able to render the create page, but when the test looks for a "Ti
 #### composer.json
 
 ```diff
-@@ -6,7 +6,8 @@
      "type": "project",
      "require": {
          "php": ">=5.5.9",
@@ -140,7 +134,6 @@ Laravel is now able to render the create page, but when the test looks for a "Ti
 #### config/app.php
 
 ```diff
-@@ -156,6 +156,10 @@
          App\Providers\EventServiceProvider::class,
          App\Providers\RouteServiceProvider::class,
  
@@ -169,7 +162,6 @@ Laravel is now able to render the create page, but when the test looks for a "Ti
 #### resources/views/blog-posts/create.blade.php
 
 ```diff
-@@ -0,0 +1,11 @@
 +{!! Form::model($post, ['route' => 'blog-posts.store']) !!}
 +    <div>
 +      {!! Form::label('title') !!}
@@ -195,7 +187,6 @@ The next error we get is that the `$post` variable we attempt to pass into the f
 #### app/Http/Controllers/BlogPostsController.php
 
 ```diff
-@@ -1,11 +1,12 @@
  <?php
  
  namespace App\Http\Controllers;
@@ -221,7 +212,6 @@ We pass a `$post` variable into the view from the controller, sending it a `Blog
 #### app/BlogPost.php
 
 ```diff
-@@ -0,0 +1,10 @@
 +<?php
 +
 +namespace App;
@@ -244,7 +234,6 @@ Now that the BlogPost model exists, the controller is able to render the view, a
 #### app/Http/Controllers/BlogPostsController.php
 
 ```diff
-@@ -9,4 +9,8 @@ function create() {
      return view('blog-posts.create', ['post' => new BlogPost]);
    }
  
@@ -265,7 +254,6 @@ There is now a `store` action on the controller, but when the test attempts to l
 #### app/Http/Controllers/BlogPostsController.php
 
 ```diff
-@@ -10,7 +10,7 @@ function create() {
    }
  
    function store() {
@@ -280,7 +268,6 @@ There is now a `store` action on the controller, but when the test attempts to l
 #### resources/views/blog-posts/store.blade.php
 
 ```diff
-@@ -0,0 +1 @@
 +hi
 ```
 
@@ -296,7 +283,6 @@ Now that content is showing up, the test fails when it can't find the post title
 #### resources/views/blog-posts/store.blade.php
 
 ```diff
-@@ -1 +1,5 @@
 -hi
 +<h1>{{ $blogPost->title }}</h1>
 +
@@ -315,7 +301,6 @@ We add markup to output the blog post's title and body, but we get an error that
 #### app/Http/Controllers/BlogPostsController.php
 
 ```diff
-@@ -1,6 +1,7 @@
  <?php
  
  namespace App\Http\Controllers;
@@ -347,7 +332,6 @@ We create a BlogPost instance with the submitted form data and pass it to the vi
 #### tests/models/BlogPostTest.php
 
 ```diff
-@@ -0,0 +1,19 @@
 +<?php
 +
 +use App\BlogPost;
@@ -379,7 +363,6 @@ Since enabling fields for mass assignment is a logic change to the BlogPost clas
 #### app/BlogPost.php
 
 ```diff
-@@ -6,5 +6,5 @@
  
  class BlogPost extends Model
  {
@@ -392,7 +375,6 @@ Since enabling fields for mass assignment is a logic change to the BlogPost clas
 #### tests/models/BlogPostTest.php
 
 ```diff
-@@ -1,9 +1,11 @@
  <?php
  
 +use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -416,7 +398,6 @@ We add mass assignment support for the title and body fields, satisfying the uni
 #### database/migrations/2016_06_10_205256_create_blog_posts_table.php
 
 ```diff
-@@ -0,0 +1,34 @@
 +<?php
 +
 +use Illuminate\Database\Schema\Blueprint;
@@ -463,7 +444,6 @@ Now that the acceptance test is able to access a `blog_posts` table, it gives th
 #### app/Http/Controllers/BlogPostsController.php
 
 ```diff
-@@ -11,7 +11,7 @@ function create() {
    }
  
    function store(Request $request) {

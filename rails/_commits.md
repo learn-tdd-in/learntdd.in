@@ -3,7 +3,6 @@
 #### spec/features/creating_a_blog_post_spec.rb
 
 ```diff
-@@ -0,0 +1,22 @@
 +# spec/features/creating_a_blog_post_spec.rb
 +require 'rails_helper'
 +
@@ -38,7 +37,6 @@ We set up the entire acceptance test at once. This test will guide us through th
 #### config/routes.rb
 
 ```diff
-@@ -1,3 +1,4 @@
  # config/routes.rb
  Rails.application.routes.draw do
 +  resources :blog_posts
@@ -57,7 +55,6 @@ Rails allows you to "unit test" routes, but for trivial configuration like this,
 #### app/controllers/blog_posts_controller.rb
 
 ```diff
-@@ -0,0 +1,3 @@
 +# app/controllers/blog_posts_controller.rb
 +class BlogPostsController < ApplicationController
 +end
@@ -73,7 +70,6 @@ We didn't technically need to subclass ApplicationController to get the test to 
 #### app/controllers/blog_posts_controller.rb
 
 ```diff
-@@ -1,3 +1,5 @@
  # app/controllers/blog_posts_controller.rb
  class BlogPostsController < ApplicationController
 +  def new
@@ -93,7 +89,6 @@ Even though we didn't ask to render a template, Rails' default behavior for a co
 #### app/views/blog_posts/new.html.erb
 
 ```diff
-@@ -0,0 +1 @@
 +<%# app/views/blog_posts/new.html.erb %>
 ```
 
@@ -107,7 +102,6 @@ The acceptance test is finally able to successfully `visit '/blog_posts/new'` an
 #### app/views/blog_posts/new.html.erb
 
 ```diff
-@@ -1 +1,12 @@
  <%# app/views/blog_posts/new.html.erb %>
 +<%= form_for @blog_post do |f| %>
 +  <div>
@@ -136,7 +130,6 @@ This is another case where all we needed to add to get the test to pass was the 
 #### spec/controllers/blog_posts_controller_spec.rb
 
 ```diff
-@@ -0,0 +1,15 @@
 +# spec/controllers/blog_posts_controller_spec.rb
 +require 'rails_helper'
 +
@@ -164,7 +157,6 @@ We're mocking the `new` method on the actual BlogPost constant, so we need that 
 #### app/models/blog_post.rb
 
 ```diff
-@@ -0,0 +1,3 @@
 +# app/models/blog_post.rb
 +class BlogPost < ActiveRecord::Base
 +end
@@ -174,7 +166,6 @@ We're mocking the `new` method on the actual BlogPost constant, so we need that 
 #### db/migrate/20160223100510_create_blog_posts.rb
 
 ```diff
-@@ -0,0 +1,9 @@
 +# db/migrate/20160223100510_create_blog_posts.rb
 +class CreateBlogPosts < ActiveRecord::Migration
 +  def change
@@ -190,7 +181,6 @@ We're mocking the `new` method on the actual BlogPost constant, so we need that 
 #### db/schema.rb
 
 ```diff
-@@ -11,9 +11,14 @@
  #
  # It's strongly recommended that you check this file into your version control system.
  
@@ -223,7 +213,6 @@ The reason we don't create a model spec is because it's often not recommended to
 #### app/controllers/blog_posts_controller.rb
 
 ```diff
-@@ -1,5 +1,6 @@
  # app/controllers/blog_posts_controller.rb
  class BlogPostsController < ApplicationController
    def new
@@ -244,7 +233,6 @@ The acceptance spec now gets to the point of clicking on the 'Create Blog Post' 
 #### app/controllers/blog_posts_controller.rb
 
 ```diff
-@@ -3,4 +3,7 @@ class BlogPostsController < ApplicationController
    def new
      @blog_post = BlogPost.new
    end
@@ -262,7 +250,6 @@ Outer red: Missing template blog_posts/create
 #### app/views/blog_posts/create.html.erb
 
 ```diff
-@@ -0,0 +1 @@
 +<%# app/views/blog_posts/create.html.erb %>
 ```
 
@@ -280,7 +267,6 @@ Note that usually a create method would redirect to a show page, but for the sak
 #### spec/controllers/blog_posts_controller_spec.rb
 
 ```diff
-@@ -12,4 +12,16 @@
      end
    end
  
@@ -311,7 +297,6 @@ We specified the `create` method on the `BlogPost` that the controller nees to c
 #### app/controllers/blog_posts_controller.rb
 
 ```diff
-@@ -5,5 +5,6 @@ def new
    end
  
    def create
@@ -332,7 +317,6 @@ Because the controller spec passes a plain `Hash` in, it passes, but when the re
 #### app/controllers/blog_posts_controller.rb
 
 ```diff
-@@ -5,6 +5,12 @@ def new
    end
  
    def create
@@ -360,7 +344,6 @@ This adds strong params whitelisting to the title and body attributes, which all
 #### app/views/blog_posts/create.html.erb
 
 ```diff
-@@ -1 +1,6 @@
  <%# app/views/blog_posts/create.html.erb %>
 +<h1><%= @blog_post.title %></h1>
 +
@@ -381,7 +364,6 @@ In other words, the @blog_post variable is not available in the view template be
 #### spec/controllers/blog_posts_controller_spec.rb
 
 ```diff
-@@ -23,5 +23,17 @@
          }
        }
      end
@@ -414,7 +396,6 @@ We reproduce the acceptance spec error in the controller spec, so that we can no
 #### app/controllers/blog_posts_controller.rb
 
 ```diff
-@@ -5,7 +5,7 @@ def new
    end
  
    def create
@@ -433,7 +414,6 @@ At this point, the controller spec passes, and the acceptance spec passes as wel
 #### spec/controllers/blog_posts_controller_spec.rb
 
 ```diff
-@@ -13,26 +13,25 @@
    end
  
    describe '#create' do
