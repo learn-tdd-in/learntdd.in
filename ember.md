@@ -9,7 +9,7 @@ To see how TDD works in Ember, let's walk through a simple real-world example of
 
 The feature we'll build is the age-old tutorial feature: creating a blog post.
 
-### Specify the feature for creating a blog post
+### [(github)](https://github.com/learn-tdd-in/ember/9efbf887fcfc56c661a348c098c5f95bd98c9f31) Specify the feature for creating a blog post
 
 Red: The URL '/posts/new' did not match any routes in your application
 
@@ -57,7 +57,7 @@ We set up the entire acceptance test at once. This test will guide us through th
 +});
 ```
 
-### Add new blog post route
+### [(github)](https://github.com/learn-tdd-in/ember/765d0dc071e175a5e09fcc48b3b02b8851df7f8d) Add new blog post route
 
 Red: Element .post-title-input not found.
 
@@ -127,7 +127,7 @@ The next error is simple: no `.post-title-input` field is found to fill text int
 +);
 ```
 
-### Add form component and unit test
+### [(github)](https://github.com/learn-tdd-in/ember/8bd6f0a1134410958d040ad57a50973fe0b995f2) Add form component and unit test
 
 Inner red: expected 0 to equal 1
 
@@ -196,7 +196,7 @@ We create the component, then create a unit tests for it that reproduce the acce
 +);
 ```
 
-### Add form component markup
+### [(github)](https://github.com/learn-tdd-in/ember/421dbdf08088d8f69d359d617af04bf9d0fe3226) Add form component markup
 
 Inner green; outer test hangs after submitting form
 
@@ -217,7 +217,7 @@ Now that we're rendering markup for the component, its unit test is able to find
 +</form>
 ```
 
-### Specify the component should call the save action
+### [(github)](https://github.com/learn-tdd-in/ember/a901d04beb0436c9a5167f77cc047ab0ec44f552) Specify the component should call the save action
 
 Inner test hangs after submitting form
 
@@ -301,7 +301,7 @@ In order to get clear test output from the component test, we temporarily disabl
  );
 ```
 
-### Call save handler from post form
+### [(github)](https://github.com/learn-tdd-in/ember/592478f52cf6466339a4c0117c6aa239fbf6cd22) Call save handler from post form
 
 Outer red: undefined is not a constructor (evaluating 'this.get('save')()')
 
@@ -388,7 +388,7 @@ We also re-enable the acceptance test, and confirm that it's no longer hanging. 
  });
 ```
 
-### Add new post controller for save action
+### [(github)](https://github.com/learn-tdd-in/ember/97f774b0305a5b248fb80a64aef2959c20e46596) Add new post controller for save action
 
 Outer red: The route posts.show was not found
 
@@ -449,7 +449,7 @@ We implement a save handler by adding a new post controller to put it in, adding
 +);
 ```
 
-### Add posts.show route
+### [(github)](https://github.com/learn-tdd-in/ember/f8a1e4fb192f850c4b03bf79abc71912fdbb8a5d) Add posts.show route
 
 Outer red: expected '' to equal 'Test Post'
 
@@ -515,7 +515,7 @@ Now the acceptance test is able to display the `posts.show` route, but it can't 
 +);
 ```
 
-### Add detail component and unit test
+### [(github)](https://github.com/learn-tdd-in/ember/cbaf9c1174289df43b759161baa20600f1ce6936) Add detail component and unit test
 
 Inner red: expected '' to equal 'Test Title'
 
@@ -580,7 +580,7 @@ Again, instead of making the acceptance test pass as quickly as possible, we "wr
 +);
 ```
 
-### Add post detail display markup
+### [(github)](https://github.com/learn-tdd-in/ember/21b1867e2c92f24242770e6a0ada151c24136190) Add post detail display markup
 
 Inner green; outer red: expected '' to equal 'Test Post'
 
@@ -596,7 +596,7 @@ We make the component test pass by adding markup to display the post, but the ac
 +</div>
 ```
 
-### Hook routes into post model
+### [(github)](https://github.com/learn-tdd-in/ember/130b47d0a29073c7f838d4c758f8e76297efe097) Hook routes into post model
 
 Outer red: No model was found for 'post'
 
@@ -652,7 +652,7 @@ With this logic added, the acceptance test errors out quickly: there _is_ no `po
  });
 ```
 
-### Add post model
+### [(github)](https://github.com/learn-tdd-in/ember/1aba499b73ebacd0999f3532de793298106cfafe) Add post model
 
 Outer red: Your Ember app tried to POST '/posts', but there was no route defined to handle this request. Define a route that matches this path in your mirage/config.js file.
 
@@ -698,7 +698,7 @@ We add the Ember Data `post` model, and next we get an error from Mirage, our fa
 +);
 ```
 
-### Add mirage create post route
+### [(github)](https://github.com/learn-tdd-in/ember/2274dcce3db99d5c7e76ff7f9814f062a21307ca) Add mirage create post route
 
 Outer red: Pretender intercepted POST /posts but encountered an error: Mirage: The route handler for /posts is trying to access the post model, but that model doesn't exist. Create it using 'ember g mirage-model post'.
 
@@ -737,7 +737,7 @@ Now that Mirage has an endpoint, it returns another error: a Mirage model for `p
  }
 ```
 
-### Add mirage model
+### [(github)](https://github.com/learn-tdd-in/ember/ba5cc3a167a564b7efa2ce42cbac4a646a056a56) Add mirage model
 
 Outer red: Pretender intercepted POST /posts but encountered an error: Mirage: You're using a shorthand or #normalizedRequestAttrs, but your serializer's normalize function did not return a valid JSON:API document. http://www.ember-cli-mirage.com/docs/v0.2.0-beta.9/serializers/#normalizejson
 
@@ -753,7 +753,7 @@ When we add the Mirage `post` model, the next error is pretty obscure. What's ha
 +});
 ```
 
-### Specify the form data shound be sent to save action
+### [(github)](https://github.com/learn-tdd-in/ember/2d9c5d572a807d0ff979a35d3eeec99d5baa9baa) Specify the form data shound be sent to save action
 
 Inner red: undefined is not an object (evaluating 'post.title')
 
@@ -778,7 +778,7 @@ This is another case where we're reproducing the acceptance test situation, if n
        this.render(hbs`{{post-form save=(action verifySaveHandlerCalled)}}`);
 ```
 
-### Send post form data to save action
+### [(github)](https://github.com/learn-tdd-in/ember/dd9de29dd4afabb26104310202058b240846cf09) Send post form data to save action
 
 Inner green; outer red: Pretender intercepted POST /posts but encountered an error: Mirage: You're using a shorthand or #normalizedRequestAttrs, but your serializer's normalize function did not return a valid JSON:API document. http://www.ember-cli-mirage.com/docs/v0.2.0-beta.9/serializers/#normalizejson
 
@@ -818,7 +818,7 @@ Now the acceptance test still gives the same error, and in this case the tests a
    <button class="save-post" {{action 'save'}}>Save</button>
 ```
 
-### Add title field to post model
+### [(github)](https://github.com/learn-tdd-in/ember/00d21a62862309cb6d351a532324b3320644b582) Add title field to post model
 
 Outer red: Your Ember app tried to GET '/posts/1', but there was no route defined to handle this request. Define a route that matches this path in your mirage/config.js file.
 
@@ -839,7 +839,7 @@ We add the title field to the post model, so now it's saved by the new page. The
  });
 ```
 
-### Add mirage get post route
+### [(github)](https://github.com/learn-tdd-in/ember/3294a878f868824307820cb4e7ff8f92f389cae8) Add mirage get post route
 
 Outer green
 

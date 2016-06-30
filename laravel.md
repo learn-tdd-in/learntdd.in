@@ -9,7 +9,7 @@ To see how TDD works in Laravel, let's walk through a simple real-world example 
 
 The feature we'll build is the age-old tutorial feature: creating a blog post.
 
-### Specify the feature for creating a blog post
+### [(github)](https://github.com/learn-tdd-in/laravel/eb338bbad7e41cb0972acc2469a0eb189a658d2c) Specify the feature for creating a blog post
 
 Red: A request to [http://localhost/blog-posts/create] failed. Received status code [404].
 
@@ -86,7 +86,7 @@ The first error we get is that there is no `blog-posts/create` route.
 +}
 ```
 
-### Add blog posts resource route
+### [(github)](https://github.com/learn-tdd-in/laravel/8aeb8dd17e9112ca726a82b4208ffdbc34004b4b) Add blog posts resource route
 
 Red: Class App\Http\Controllers\BlogPostsController does not exist
 
@@ -103,7 +103,7 @@ We add the route, but we don't just write the simplest code possible to get the 
 +Route::resource('blog-posts', 'BlogPostsController');
 ```
 
-### Add empty blog posts controller
+### [(github)](https://github.com/learn-tdd-in/laravel/4f4d2579f54c6565a7c4930ee05c629db108798f) Add empty blog posts controller
 
 Red: Method App\Http\Controllers\BlogPostsController::create() does not exist
 
@@ -124,7 +124,7 @@ The acceptance test can now find the controller, but not a create action on it.
 +}
 ```
 
-### Add `create` action to blog posts controller
+### [(github)](https://github.com/learn-tdd-in/laravel/ea3991e6f9ee2f507b1df92df479e95b9a920500) Add `create` action to blog posts controller
 
 Red: Nothing matched the filter [Title] CSS query provided
 
@@ -146,7 +146,7 @@ Laravel is now able to render the create page, but when the test looks for a "Ti
  }
 ```
 
-### Add form template with fields and submit button
+### [(github)](https://github.com/learn-tdd-in/laravel/01554c412ad384d4044ce386dc55f21a46d64fe7) Add form template with fields and submit button
 
 Red: Undefined variable: post
 
@@ -309,7 +309,7 @@ The next error we get is that the `$post` variable we attempt to pass into the f
 +{!! Form::close() !!}
 ```
 
-### Add blog post variable assignment in controller
+### [(github)](https://github.com/learn-tdd-in/laravel/b0342f94cf6ec9207bbc747a4a12894113078340) Add blog post variable assignment in controller
 
 Red: Class 'App\BlogPost' not found
 
@@ -334,7 +334,7 @@ We pass a `$post` variable into the view from the controller, sending it a `Blog
  }
 ```
 
-### Add blog post model
+### [(github)](https://github.com/learn-tdd-in/laravel/985ddcb8e908c76ed6f71173d4f6114c2b253c40) Add blog post model
 
 Red: Method App\Http\Controllers\BlogPostsController::store() does not exist
 
@@ -356,7 +356,7 @@ Now that the BlogPost model exists, the controller is able to render the view, a
 +}
 ```
 
-### Add store method to blog posts controller
+### [(github)](https://github.com/learn-tdd-in/laravel/9d69e40315259ef9e554201a3d6460c5289f3a35) Add store method to blog posts controller
 
 Red: The current node list is empty.
 
@@ -376,7 +376,7 @@ There is now a `store` action on the controller, but when the test attempts to l
  }
 ```
 
-### Render store page
+### [(github)](https://github.com/learn-tdd-in/laravel/d925ed9f2ffd71790201bd2c41db4161b24a9c1f) Render store page
 
 Red: Failed asserting that the page contains the HTML [Hello, World!]
 
@@ -406,7 +406,7 @@ Now that content is showing up, the test fails when it can't find the post title
 +hi
 ```
 
-### Render blog post on store page
+### [(github)](https://github.com/learn-tdd-in/laravel/57437cfa62d2f5d7f6e8f1d1bd1b70fc0ea81efe) Render blog post on store page
 
 Red: Undefined variable: blogPost
 
@@ -424,7 +424,7 @@ We add markup to output the blog post's title and body, but we get an error that
 +</div>
 ```
 
-### Creates blog post for the view
+### [(github)](https://github.com/learn-tdd-in/laravel/b253d9bbe22a5112ff74ff6ec4b068637626b34c) Creates blog post for the view
 
 Red: Illuminate\Database\Eloquent\MassAssignmentException: title
 
@@ -455,7 +455,7 @@ We create a BlogPost instance with the submitted form data and pass it to the vi
  }
 ```
 
-### Specify the model should allow mass assignment
+### [(github)](https://github.com/learn-tdd-in/laravel/557d697bb6a0d6c209b98b1d521c46773edc979c) Specify the model should allow mass assignment
 
 Inner Red: Illuminate\Database\Eloquent\MassAssignmentException: title
 
@@ -486,7 +486,7 @@ Since enabling fields for mass assignment is a logic change to the BlogPost clas
 +}
 ```
 
-### Allow title and body to be mass-assigned
+### [(github)](https://github.com/learn-tdd-in/laravel/1ff43118e76fe33058c929959bc57f1f22181685) Allow title and body to be mass-assigned
 
 Inner green; outer red: PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'laravel-tdd-testing.blog_posts' doesn't exist
 
@@ -522,7 +522,7 @@ We add mass assignment support for the title and body fields, satisfying the uni
    public function itAllowsAssigningAllPublicFields()
 ```
 
-### Create blog posts table
+### [(github)](https://github.com/learn-tdd-in/laravel/979b7fe0de7b30a613d350d4a47ce3b6674b1b02) Create blog posts table
 
 Outer red: Trying to get property of non-object
 
@@ -568,7 +568,7 @@ Now that the acceptance test is able to access a `blog_posts` table, it gives th
 +}
 ```
 
-### Save blog post to database
+### [(github)](https://github.com/learn-tdd-in/laravel/6f79261d7624799a6f87297ff8f1cf926513fe74) Save blog post to database
 
 Outer green
 
