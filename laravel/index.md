@@ -13,4 +13,9 @@ The feature we'll build is the age-old tutorial feature: creating a blog post.
 
 ## More Resources
 
+To learn more about TDD, I recommend:
+
 * [Test-Driven Laravel From Scratch](http://adamwathan.me/2016/01/11/test-driven-laravel-from-scratch/) (video)
+{% include tutorial-goos.md %}
+
+{% include tutorial-contact.md %}
