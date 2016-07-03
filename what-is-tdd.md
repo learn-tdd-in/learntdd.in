@@ -1,5 +1,4 @@
 ---
-layout: page
 title: What is Test-Driven Development? | Learn TDD
 ---
 

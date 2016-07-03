@@ -1,5 +1,4 @@
 ---
-layout: page
 title: Contribute | Learn TDD
 ---
 

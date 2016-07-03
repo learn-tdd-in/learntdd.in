@@ -1,5 +1,4 @@
 ---
-layout: page
 title: About | Learn TDD
 permalink: /about/
 ---

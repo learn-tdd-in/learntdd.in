@@ -17,3 +17,11 @@ github_username:  learn-tdd-in
 
 # Build settings
 markdown: kramdown
+
+defaults:
+  -
+    scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "page"
