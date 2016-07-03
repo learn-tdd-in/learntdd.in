@@ -1,3 +1,11 @@
 .highlight {
   line-height: normal;
 }
+
+pre {
+  border-color: $grey-color-slightly-light;
+}
+
+.highlighter-rouge .highlight {
+  background-color: $background-color;
+}
