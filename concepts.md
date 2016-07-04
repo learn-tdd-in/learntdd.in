@@ -2,7 +2,9 @@
 title: Testing Concepts
 ---
 
-* <a name="acceptance-test"></a>**Acceptance Test**: a test that confirms that the system correctly implements a user-visible feature. Often accomplished with [end-to-end testing](#end-to-end-test).
+## Types of Test
+
+* **<a name="acceptance-test"></a>Acceptance Test**: a test that confirms that the system correctly implements a user-visible feature. Often accomplished with [end-to-end testing](#end-to-end-test).
 * **<a name="assertion"></a>Assertion**: a check within a test that ensures a given condition is true, and report an error message if not.
 * **<a name="behavior"></a>Behavior**: the messages sent by an object-oriented program. Behavior verification involves checking what messages were sent by a program, not the results of those messages in terms of data stored.
 * **<a name="bdd"></a>Behavior-Driven Development (BDD)**: an approach to software development that involves working with the user to specify the behavior of a system and build it in terms of those specifications. BDD is closely related to [Mockist TDD](#mockist-tdd), but whereas Mockist TDD usually begins with features already defined, BDD includes the process of coming up with the features list.
