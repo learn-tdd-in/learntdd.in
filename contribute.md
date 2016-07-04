@@ -1,5 +1,5 @@
 ---
-title: Contribute | Learn TDD
+title: Contribute
 ---
 
 You can contribute to Learn TDD by:

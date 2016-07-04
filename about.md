@@ -1,5 +1,5 @@
 ---
-title: About | Learn TDD
+title: About
 permalink: /about/
 ---
 
