@@ -1,5 +1,5 @@
 ---
-title: Glossary
+title: Testing Concepts
 ---
 
 * <a name="acceptance-test"></a>**Acceptance Test**: a test that confirms that the system correctly implements a user-visible feature. Often accomplished with [end-to-end testing](#end-to-end-test).
