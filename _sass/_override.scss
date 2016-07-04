@@ -6,6 +6,10 @@ pre {
   border-color: $grey-color-slightly-light;
 }
 
+code {
+  background-color: transparent;
+}
+
 .highlighter-rouge .highlight {
-  background-color: $background-color;
+  background-color: transparent;
 }
