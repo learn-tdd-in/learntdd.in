@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+echo "ember"
+bin/log2blog learn-tdd-in/ember e64efbc3eacca7ad333000a68d9a225b88cc9917 > ember/_commits.md
+
+echo "laravel"
+bin/log2blog learn-tdd-in/laravel 3589775872c38dba6c067ffaf3cec87ca9aad53e > laravel/_commits.md
+
+echo "rails"
+bin/log2blog learn-tdd-in/rails 5919833ab95bd189ea1a5feb15ba369e801d3b24 > rails/_commits.md
