@@ -10,4 +10,4 @@ puts "laravel"
 system("bin/log2blog generate learn-tdd-in/laravel 3589775872c38dba6c067ffaf3cec87ca9aad53e --token $GITHUB_OAUTH_TOKEN --skip composer.lock > laravel/_commits.md")
 
 puts "rails"
-system("bin/log2blog generate learn-tdd-in/rails 5919833ab95bd189ea1a5feb15ba369e801d3b24 --token $GITHUB_OAUTH_TOKEN --skip schema.rb > rails/_commits.md")
+system("bin/log2blog generate learn-tdd-in/rails 5919833ab95bd189ea1a5feb15ba369e801d3b24 --token $GITHUB_OAUTH_TOKEN --skip db/schema.rb > rails/_commits.md")

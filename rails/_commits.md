@@ -197,25 +197,6 @@ Inner red: PG::UndefinedTable: ERROR:  relation "blog_posts" does not exist
 +end
 ```
 
-
-#### db/schema.rb
-
-```diff
- #
- # It's strongly recommended that you check this file into your version control system.
- 
--ActiveRecord::Schema.define(version: 0) do
-+ActiveRecord::Schema.define(version: 20160614162712) do
- 
-   # These are extensions that must be enabled in order to support this database
-   enable_extension "plpgsql"
- 
-+  create_table "blog_posts", force: :cascade do |t|
-+  end
-+
- end
-```
-
 We fix the model test error by creating the `blog_posts` table.
 
 Inner green; outer red: undefined method `title' for #<BlogPost id: nil>
@@ -261,27 +242,6 @@ With this specification, we've reproduced the error from the acceptance test.
 +    add_column :blog_posts, :body, :text, null: false
 +  end
 +end
-```
-
-
-#### db/schema.rb
-
-```diff
- #
- # It's strongly recommended that you check this file into your version control system.
- 
--ActiveRecord::Schema.define(version: 20160614162712) do
-+ActiveRecord::Schema.define(version: 20160614163119) do
- 
-   # These are extensions that must be enabled in order to support this database
-   enable_extension "plpgsql"
- 
-   create_table "blog_posts", force: :cascade do |t|
-+    t.string "title", null: false
-+    t.text   "body",  null: false
-   end
- 
- end
 ```
 
 We create a new migration to add the title and body column to the blog posts table.
