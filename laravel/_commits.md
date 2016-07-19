@@ -3,7 +3,7 @@
 #### tests/features/CreatingABlogPostTest.php
 
 ```diff
-+<?php
+{% raw %}+<?php
 +
 +use Illuminate\Foundation\Testing\DatabaseMigrations;
 +use App\BlogPost;
@@ -30,7 +30,7 @@
 +    $this->assertEquals($post->title, 'Hello, World!');
 +    $this->assertEquals($post->body, 'Hello, I say!');
 +  }
-+}
++}{% endraw %}
 ```
 
 We start by writing out an acceptance test for the full feature we want to implement. In this case, we want to visit a blog post creation page, enter a title and body, save it, and then see on the results page that title and body, as well as confirming it's in the database.
@@ -45,11 +45,11 @@ The first error we get is that there is no `blog-posts/create` route.
 #### app/Http/routes.php
 
 ```diff
- Route::get('/', function () {
+{% raw %} Route::get('/', function () {
      return view('welcome');
  });
 +
-+Route::resource('blog-posts', 'BlogPostsController');
++Route::resource('blog-posts', 'BlogPostsController');{% endraw %}
 ```
 
 We add the route, but we don't just write the simplest code possible to get the test to pass; we "write the code we wish we had." In this case, we wish we had a blog posts controller, so we create a resource route and point to that controller by name.
@@ -64,13 +64,13 @@ The next error we get is that that controller doesn't exist.
 #### app/Http/Controllers/BlogPostsController.php
 
 ```diff
-+<?php
+{% raw %}+<?php
 +
 +namespace App\Http\Controllers;
 +
 +class BlogPostsController extends Controller {
 +  
-+}
++}{% endraw %}
 ```
 
 We add an empty controller that inherits from our app's base controller class. We could have gotten past this error message by creating a class that didn't inherit from anything, but in this case we're so sure we'll inherit from the base controller class that we can go ahead and do it.
@@ -85,7 +85,7 @@ The acceptance test can now find the controller, but not a create action on it.
 #### app/Http/Controllers/BlogPostsController.php
 
 ```diff
- namespace App\Http\Controllers;
+{% raw %} namespace App\Http\Controllers;
  
  class BlogPostsController extends Controller {
 -  
@@ -94,7 +94,7 @@ The acceptance test can now find the controller, but not a create action on it.
 +    
 +  }
 +
- }
+ }{% endraw %}
 ```
 
 Red: Nothing matched the filter [Title] CSS query provided
@@ -107,21 +107,21 @@ Laravel is now able to render the create page, but when the test looks for a "Ti
 #### app/Http/Controllers/BlogPostsController.php
 
 ```diff
- class BlogPostsController extends Controller {
+{% raw %} class BlogPostsController extends Controller {
  
    function create() {
 -    
 +    return view('blog-posts.create');
    }
  
- }
+ }{% endraw %}
 ```
 
 
 #### composer.json
 
 ```diff
-     "type": "project",
+{% raw %}     "type": "project",
      "require": {
          "php": ">=5.5.9",
 -        "laravel/framework": "5.2.*"
@@ -129,14 +129,14 @@ Laravel is now able to render the create page, but when the test looks for a "Ti
 +        "laravelcollective/html": "5.2.*"
      },
      "require-dev": {
-         "fzaninotto/faker": "~1.4",
+         "fzaninotto/faker": "~1.4",{% endraw %}
 ```
 
 
 #### config/app.php
 
 ```diff
-         App\Providers\EventServiceProvider::class,
+{% raw %}         App\Providers\EventServiceProvider::class,
          App\Providers\RouteServiceProvider::class,
  
 +       /*
@@ -146,7 +146,7 @@ Laravel is now able to render the create page, but when the test looks for a "Ti
      ],
  
      /*
-@@ -202,6 +206,11 @@
+...
          'Validator' => Illuminate\Support\Facades\Validator::class,
          'View' => Illuminate\Support\Facades\View::class,
  
@@ -157,14 +157,14 @@ Laravel is now able to render the create page, but when the test looks for a "Ti
 +        'Html' => Collective\Html\HtmlFacade::class,
      ],
  
- ];
+ ];{% endraw %}
 ```
 
 
 #### resources/views/blog-posts/create.blade.php
 
 ```diff
-+{!! Form::model($post, ['route' => 'blog-posts.store']) !!}
+{% raw %}+{!! Form::model($post, ['route' => 'blog-posts.store']) !!}
 +    <div>
 +      {!! Form::label('title') !!}
 +      {!! Form::text('title') !!}
@@ -174,7 +174,7 @@ Laravel is now able to render the create page, but when the test looks for a "Ti
 +      {!! Form::textarea('body') !!}
 +    </div>
 +    {!! Form::submit('Create Blog Post') !!}
-+{!! Form::close() !!}
++{!! Form::close() !!}{% endraw %}
 ```
 
 Instead of just adding the title field, we go ahead and add the entire form, including the body field and the submit button. This is more than is strictly necessary to get the current error to pass, but it seems reasonable. You'll never have acceptance tests drive out every detail of your template markup anyway. We also go ahead and use Laravel Collective's form helpers instead of creating the markup by hand.
@@ -189,7 +189,7 @@ The next error we get is that the `$post` variable we attempt to pass into the f
 #### app/Http/Controllers/BlogPostsController.php
 
 ```diff
- <?php
+{% raw %} <?php
  
  namespace App\Http\Controllers;
 +use App\BlogPost;
@@ -201,7 +201,7 @@ The next error we get is that the `$post` variable we attempt to pass into the f
 +    return view('blog-posts.create', ['post' => new BlogPost]);
    }
  
- }
+ }{% endraw %}
 ```
 
 We pass a `$post` variable into the view from the controller, sending it a `BlogPost` instance.
@@ -216,7 +216,7 @@ Next we get an error that the `BlogPost` class doesn't exist yet.
 #### app/BlogPost.php
 
 ```diff
-+<?php
+{% raw %}+<?php
 +
 +namespace App;
 +
@@ -225,7 +225,7 @@ Next we get an error that the `BlogPost` class doesn't exist yet.
 +class BlogPost extends Model
 +{
 +    //
-+}
++}{% endraw %}
 ```
 
 Now that the BlogPost model exists, the controller is able to render the view, and the test is able to submit the form to the `store` route.
@@ -240,14 +240,14 @@ The next error is that there is no `store` action configured on the controller.
 #### app/Http/Controllers/BlogPostsController.php
 
 ```diff
-     return view('blog-posts.create', ['post' => new BlogPost]);
+{% raw %}     return view('blog-posts.create', ['post' => new BlogPost]);
    }
  
 +  function store() {
 +    
 +  }
 +
- }
+ }{% endraw %}
 ```
 
 Red: The current node list is empty.
@@ -260,21 +260,21 @@ There is now a `store` action on the controller, but when the test attempts to l
 #### app/Http/Controllers/BlogPostsController.php
 
 ```diff
-   }
+{% raw %}   }
  
    function store() {
 -    
 +    return view('blog-posts.store');
    }
  
- }
+ }{% endraw %}
 ```
 
 
 #### resources/views/blog-posts/store.blade.php
 
 ```diff
-+hi
+{% raw %}+hi{% endraw %}
 ```
 
 We do just enough to get past the current error: we add a store view with some dummy content, and render it from the `store` action. Normally you would redirect from a `store` action to another route, but for the purposes of this test we'll just render content directly.
@@ -289,12 +289,12 @@ Now that content is showing up, the test fails when it can't find the post title
 #### resources/views/blog-posts/store.blade.php
 
 ```diff
--hi
+{% raw %}-hi
 +<h1>{{ $blogPost->title }}</h1>
 +
 +<div>
 +  {{ $blogPost->body }}
-+</div>
++</div>{% endraw %}
 ```
 
 We add markup to output the blog post's title and body.
@@ -309,14 +309,14 @@ Now we get an error that there is no `$blogPost` variable sent to the view templ
 #### app/Http/Controllers/BlogPostsController.php
 
 ```diff
- <?php
+{% raw %} <?php
  
  namespace App\Http\Controllers;
 +use Illuminate\Http\Request;
  use App\BlogPost;
  
  class BlogPostsController extends Controller {
-@@ -9,8 +10,9 @@ function create() {
+...
      return view('blog-posts.create', ['post' => new BlogPost]);
    }
  
@@ -327,7 +327,7 @@ Now we get an error that there is no `$blogPost` variable sent to the view templ
 +    return view('blog-posts.store', ['blogPost' => $blogPost]);
    }
  
- }
+ }{% endraw %}
 ```
 
 We create a BlogPost instance with the submitted form data and pass it to the view. We do mass assignment since that's the most convenient approach.
@@ -342,7 +342,7 @@ There's a problem with the mass assignment, though: the model throws an exceptio
 #### tests/models/BlogPostTest.php
 
 ```diff
-+<?php
+{% raw %}+<?php
 +
 +use App\BlogPost;
 +
@@ -360,7 +360,7 @@ There's a problem with the mass assignment, though: the model throws an exceptio
 +    $this->assertEquals('This is the body.', $post->body);
 +  }
 +
-+}
++}{% endraw %}
 ```
 
 Since enabling fields for mass assignment is a logic change to the BlogPost class, we create a unit test for it to specify this behavior. We reproduce the error happening at the acceptance level.
@@ -373,19 +373,19 @@ Inner Red: Illuminate\Database\Eloquent\MassAssignmentException: title
 #### app/BlogPost.php
 
 ```diff
- 
+{% raw %} 
  class BlogPost extends Model
  {
 -    //
 +    protected $fillable = ['title', 'body'];
- }
+ }{% endraw %}
 ```
 
 
 #### tests/models/BlogPostTest.php
 
 ```diff
- <?php
+{% raw %} <?php
  
 +use Illuminate\Foundation\Testing\DatabaseMigrations;
  use App\BlogPost;
@@ -395,7 +395,7 @@ Inner Red: Illuminate\Database\Eloquent\MassAssignmentException: title
 +  use DatabaseMigrations;
  
    /** @test */
-   public function itAllowsAssigningAllPublicFields()
+   public function itAllowsAssigningAllPublicFields(){% endraw %}
 ```
 
 We add mass assignment support for the title and body fields.
@@ -410,7 +410,7 @@ Now the unit test is satisfied, and the acceptance test throws an exception that
 #### database/migrations/2016_06_10_205256_create_blog_posts_table.php
 
 ```diff
-+<?php
+{% raw %}+<?php
 +
 +use Illuminate\Database\Schema\Blueprint;
 +use Illuminate\Database\Migrations\Migration;
@@ -443,7 +443,7 @@ Now the unit test is satisfied, and the acceptance test throws an exception that
 +    {
 +        Schema::drop('blog_posts');
 +    }
-+}
++}{% endraw %}
 ```
 
 Outer red: Trying to get property of non-object
@@ -456,14 +456,14 @@ Now that the acceptance test is able to access a `blog_posts` table, it gives th
 #### app/Http/Controllers/BlogPostsController.php
 
 ```diff
-   }
+{% raw %}   }
  
    function store(Request $request) {
 -    $blogPost = new BlogPost($request->only(['title', 'body']));
 +    $blogPost = BlogPost::create($request->only(['title', 'body']));
      return view('blog-posts.store', ['blogPost' => $blogPost]);
    }
- 
+ {% endraw %}
 ```
 
 We change the `store` action to not only instantiate a `BlogPost`, but also save it to the database.

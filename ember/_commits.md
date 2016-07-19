@@ -3,7 +3,7 @@
 #### tests/acceptance/creating-a-blog-post-test.js
 
 ```diff
-+/* jshint expr:true */
+{% raw %}+/* jshint expr:true */
 +import {
 +  describe,
 +  it,
@@ -39,7 +39,7 @@
 +      expect(find('.post-body').text()).to.include('This post is a test!');
 +    });
 +  });
-+});
++});{% endraw %}
 ```
 
 We set up the entire acceptance test at once. This test will guide us through the rest of the unit testing and implementation of the feature.
@@ -52,7 +52,7 @@ Red: The URL '/posts/new' did not match any routes in your application
 #### app/router.js
 
 ```diff
- });
+{% raw %} });
  
  Router.map(function() {
 +  this.route('posts', function() {
@@ -60,31 +60,31 @@ Red: The URL '/posts/new' did not match any routes in your application
 +  });
  });
  
- export default Router;
+ export default Router;{% endraw %}
 ```
 
 
 #### app/routes/posts/new.js
 
 ```diff
-+import Ember from 'ember';
+{% raw %}+import Ember from 'ember';
 +
 +export default Ember.Route.extend({
-+});
++});{% endraw %}
 ```
 
 
 #### app/templates/posts/new.hbs
 
 ```diff
-+{{outlet}}
+{% raw %}+{{outlet}}{% endraw %}
 ```
 
 
 #### tests/unit/routes/posts/new-test.js
 
 ```diff
-+/* jshint expr:true */
+{% raw %}+/* jshint expr:true */
 +import { expect } from 'chai';
 +import {
 +  describeModule,
@@ -104,7 +104,7 @@ Red: The URL '/posts/new' did not match any routes in your application
 +      expect(route).to.be.ok;
 +    });
 +  }
-+);
++);{% endraw %}
 ```
 
 We only change enough code to get to the next error message. Getting past the "no route" error only requires creating the route in the routes file.
@@ -119,34 +119,34 @@ The next error is simple: no `.post-title-input` field is found to fill text int
 #### app/components/post-form.js
 
 ```diff
-+import Ember from 'ember';
+{% raw %}+import Ember from 'ember';
 +
 +export default Ember.Component.extend({
-+});
++});{% endraw %}
 ```
 
 
 #### app/templates/components/post-form.hbs
 
 ```diff
-+{{yield}}
+{% raw %}+{{yield}}{% endraw %}
 ```
 
 
 #### app/templates/posts/new.hbs
 
 ```diff
--{{outlet}}
+{% raw %}-{{outlet}}
 +<h1>New Post</h1>
 +
-+{{post-form}}
++{{post-form}}{% endraw %}
 ```
 
 
 #### tests/integration/components/post-form-test.js
 
 ```diff
-+/* jshint expr:true */
+{% raw %}+/* jshint expr:true */
 +import { expect } from 'chai';
 +import {
 +  describeComponent,
@@ -175,7 +175,7 @@ The next error is simple: no `.post-title-input` field is found to fill text int
 +             ).to.equal(1);
 +    });
 +  }
-+);
++);{% endraw %}
 ```
 
 Rather than just getting the test to pass by putting a form input on the route's template, we "write the code we wish we had." In this case, we wish we had a `post-form` component to use that would provide the form inputs for us.
@@ -194,7 +194,7 @@ The default error message isn't the same because the Ember component tests use a
 #### app/templates/components/post-form.hbs
 
 ```diff
--{{yield}}
+{% raw %}-{{yield}}
 +<form>
 +  <div>
 +    <label for="post-title-input">Title</label>
@@ -206,7 +206,7 @@ The default error message isn't the same because the Ember component tests use a
 +  </div>
 +
 +  <button type="submit" class="save-post">Save</button>
-+</form>
++</form>{% endraw %}
 ```
 
 Inner green; outer test hangs after submitting form
@@ -219,7 +219,7 @@ Now that we're rendering markup for the component, its unit test is able to find
 #### tests/acceptance/creating-a-blog-post-test.js
 
 ```diff
- /* jshint expr:true */
+{% raw %} /* jshint expr:true */
  import {
    describe,
 -  it,
@@ -232,7 +232,7 @@ Now that we're rendering markup for the component, its unit test is able to find
  import startApp from '../helpers/start-app';
  import destroyApp from '../helpers/destroy-app';
  
-@@ -20,18 +20,18 @@ describe('Acceptance: CreatingABlogPost', function() {
+...
      destroyApp(application);
    });
  
@@ -264,14 +264,14 @@ Now that we're rendering markup for the component, its unit test is able to find
 +  //     expect(find('.post-body').text()).to.include('This post is a test!');
 +  //   });
 +  // });
- });
+ });{% endraw %}
 ```
 
 
 #### tests/integration/components/post-form-test.js
 
 ```diff
-              'Textarea .post-body-input not found'
+{% raw %}              'Textarea .post-body-input not found'
               ).to.equal(1);
      });
 +
@@ -290,7 +290,7 @@ Now that we're rendering markup for the component, its unit test is able to find
 +      expect(saveHandlerCalled).to.be.true;
 +    });
    }
- );
+ );{% endraw %}
 ```
 
 Inner test hangs after submitting form
@@ -305,7 +305,7 @@ In order to get clear test output from the component test, we temporarily disabl
 #### app/components/post-form.js
 
 ```diff
- import Ember from 'ember';
+{% raw %} import Ember from 'ember';
  
  export default Ember.Component.extend({
 +  actions: {
@@ -313,25 +313,25 @@ In order to get clear test output from the component test, we temporarily disabl
 +      this.get('save')();
 +    }
 +  }
- });
+ });{% endraw %}
 ```
 
 
 #### app/templates/components/post-form.hbs
 
 ```diff
--<form>
+{% raw %}-<form>
 +<form {{action 'save' on='submit'}}>
    <div>
      <label for="post-title-input">Title</label>
-     <input type="text" class="post-title-input" />
+     <input type="text" class="post-title-input" />{% endraw %}
 ```
 
 
 #### tests/acceptance/creating-a-blog-post-test.js
 
 ```diff
- /* jshint expr:true */
+{% raw %} /* jshint expr:true */
  import {
    describe,
 -  // it,
@@ -344,7 +344,7 @@ In order to get clear test output from the component test, we temporarily disabl
  import startApp from '../helpers/start-app';
  import destroyApp from '../helpers/destroy-app';
  
-@@ -20,18 +20,18 @@ describe('Acceptance: CreatingABlogPost', function() {
+...
      destroyApp(application);
    });
  
@@ -376,7 +376,7 @@ In order to get clear test output from the component test, we temporarily disabl
 +      expect(find('.post-body').text()).to.include('This post is a test!');
 +    });
 +  });
- });
+ });{% endraw %}
 ```
 
 We make the component test pass by setting the form to run the `save` action upon submit, and the `save` action of the component to run the passed-in `save` action closure.
@@ -393,7 +393,7 @@ Now it errors out because we aren't passing a save action closure into the compo
 #### app/controllers/posts/new.js
 
 ```diff
-+import Ember from 'ember';
+{% raw %}+import Ember from 'ember';
 +
 +export default Ember.Controller.extend({
 +  actions: {
@@ -401,24 +401,24 @@ Now it errors out because we aren't passing a save action closure into the compo
 +      this.transitionToRoute("posts.show");
 +    }
 +  }
-+});
++});{% endraw %}
 ```
 
 
 #### app/templates/posts/new.hbs
 
 ```diff
- <h1>New Post</h1>
+{% raw %} <h1>New Post</h1>
  
 -{{post-form}}
-+{{post-form save=(action "userSavedPost")}}
++{{post-form save=(action "userSavedPost")}}{% endraw %}
 ```
 
 
 #### tests/unit/controllers/posts/new-test.js
 
 ```diff
-+/* jshint expr:true */
+{% raw %}+/* jshint expr:true */
 +import { expect } from 'chai';
 +import {
 +  describeModule,
@@ -439,7 +439,7 @@ Now it errors out because we aren't passing a save action closure into the compo
 +      expect(controller).to.be.ok;
 +    });
 +  }
-+);
++);{% endraw %}
 ```
 
 We implement a save handler by adding a new post controller to put it in, adding the handler, then passing it into the form component.
@@ -454,37 +454,37 @@ Now the acceptance test successfully attempts to transition to the `posts.show` 
 #### app/router.js
 
 ```diff
- Router.map(function() {
+{% raw %} Router.map(function() {
    this.route('posts', function() {
      this.route('new');
 +    this.route('show');
    });
  });
- 
+ {% endraw %}
 ```
 
 
 #### app/routes/posts/show.js
 
 ```diff
-+import Ember from 'ember';
+{% raw %}+import Ember from 'ember';
 +
 +export default Ember.Route.extend({
-+});
++});{% endraw %}
 ```
 
 
 #### app/templates/posts/show.hbs
 
 ```diff
-+{{outlet}}
+{% raw %}+{{outlet}}{% endraw %}
 ```
 
 
 #### tests/unit/routes/posts/show-test.js
 
 ```diff
-+/* jshint expr:true */
+{% raw %}+/* jshint expr:true */
 +import { expect } from 'chai';
 +import {
 +  describeModule,
@@ -504,7 +504,7 @@ Now the acceptance test successfully attempts to transition to the `posts.show` 
 +      expect(route).to.be.ok;
 +    });
 +  }
-+);
++);{% endraw %}
 ```
 
 Outer red: expected '' to equal 'Test Post'
@@ -517,34 +517,34 @@ Now the acceptance test is able to display the `posts.show` route, but it can't 
 #### app/components/post-detail.js
 
 ```diff
-+import Ember from 'ember';
+{% raw %}+import Ember from 'ember';
 +
 +export default Ember.Component.extend({
-+});
++});{% endraw %}
 ```
 
 
 #### app/templates/components/post-detail.hbs
 
 ```diff
-+{{yield}}
+{% raw %}+{{yield}}{% endraw %}
 ```
 
 
 #### app/templates/posts/show.hbs
 
 ```diff
--{{outlet}}
+{% raw %}-{{outlet}}
 +<h1>Post</h1>
 +
-+{{post-detail post=model}}
++{{post-detail post=model}}{% endraw %}
 ```
 
 
 #### tests/integration/components/post-detail-test.js
 
 ```diff
-+/* jshint expr:true */
+{% raw %}+/* jshint expr:true */
 +import { expect } from 'chai';
 +import {
 +  describeComponent,
@@ -567,7 +567,7 @@ Now the acceptance test is able to display the `posts.show` route, but it can't 
 +      expect(this.$('.post-body').text()).to.include('This is a test post!');
 +    });
 +  }
-+);
++);{% endraw %}
 ```
 
 Again, instead of making the acceptance test pass as quickly as possible, we "write the code we wish we had": a post display component. We create it and add a component test that reproduces the acceptance test error; we specify that the component displays the post's title. And we go ahead and specify that it displays the body, too, because that seems safe in this case.
@@ -580,12 +580,12 @@ Inner red: expected '' to equal 'Test Title'
 #### app/templates/components/post-detail.hbs
 
 ```diff
--{{yield}}
+{% raw %}-{{yield}}
 +<h1 class="post-title">{{post.title}}</h1>
 +
 +<div class="post-body">
 +  {{post.body}}
-+</div>
++</div>{% endraw %}
 ```
 
 We make the component test pass by adding markup to display the post.
@@ -600,7 +600,7 @@ The acceptance test still has the same error, because we aren't passing the mode
 #### app/controllers/posts/new.js
 
 ```diff
- 
+{% raw %} 
  export default Ember.Controller.extend({
    actions: {
 -    userSavedPost() {
@@ -612,34 +612,34 @@ The acceptance test still has the same error, because we aren't passing the mode
 +      });
      }
    }
- });
+ });{% endraw %}
 ```
 
 
 #### app/router.js
 
 ```diff
- Router.map(function() {
+{% raw %} Router.map(function() {
    this.route('posts', function() {
      this.route('new');
 -    this.route('show');
 +    this.route('show', { path: ':postId' });
    });
  });
- 
+ {% endraw %}
 ```
 
 
 #### app/routes/posts/show.js
 
 ```diff
- import Ember from 'ember';
+{% raw %} import Ember from 'ember';
  
  export default Ember.Route.extend({
 +  model(params) {
 +    return this.store.findRecord('post', params.postId);
 +  }
- });
+ });{% endraw %}
 ```
 
 This acceptance test error drives a lot of logic: to display the post's title on the show page, we need to save the post on the new page, include the ID in the transition to the show route, then load the post on the show page's model hook.
@@ -654,20 +654,20 @@ With this logic added, the acceptance test errors out quickly: there _is_ no `po
 #### app/models/post.js
 
 ```diff
-+import Model from 'ember-data/model';
+{% raw %}+import Model from 'ember-data/model';
 +// import attr from 'ember-data/attr';
 +// import { belongsTo, hasMany } from 'ember-data/relationships';
 +
 +export default Model.extend({
 +
-+});
++});{% endraw %}
 ```
 
 
 #### tests/unit/models/post-test.js
 
 ```diff
-+/* jshint expr:true */
+{% raw %}+/* jshint expr:true */
 +import { expect } from 'chai';
 +import { describeModel, it } from 'ember-mocha';
 +
@@ -686,7 +686,7 @@ With this logic added, the acceptance test errors out quickly: there _is_ no `po
 +      expect(model).to.be.ok;
 +    });
 +  }
-+);
++);{% endraw %}
 ```
 
 Outer red: Your Ember app tried to POST '/posts', but there was no route defined to handle this request. Define a route that matches this path in your mirage/config.js file.
@@ -699,9 +699,9 @@ Next we get an error from Mirage, our fake server. It needs a corresponding post
 #### mirage/config.js
 
 ```diff
- export default function() {
+{% raw %} export default function() {
 +  this.post('/posts');
- }
+ }{% endraw %}
 ```
 
 Outer red: Pretender intercepted POST /posts but encountered an error: Mirage: The route handler for /posts is trying to access the post model, but that model doesn't exist. Create it using 'ember g mirage-model post'.
@@ -714,10 +714,10 @@ Now that Mirage has an endpoint, it returns another error: a Mirage model for `p
 #### mirage/models/post.js
 
 ```diff
-+import { Model } from 'ember-cli-mirage';
+{% raw %}+import { Model } from 'ember-cli-mirage';
 +
 +export default Model.extend({
-+});
++});{% endraw %}
 ```
 
 Outer red: Pretender intercepted POST /posts but encountered an error: Mirage: You're using a shorthand or #normalizedRequestAttrs, but your serializer's normalize function did not return a valid JSON:API document. http://www.ember-cli-mirage.com/docs/v0.2.0-beta.9/serializers/#normalizejson
@@ -730,7 +730,7 @@ The next error is pretty obscure. What's happening is that no attributes are bei
 #### tests/integration/components/post-form-test.js
 
 ```diff
-              ).to.equal(1);
+{% raw %}              ).to.equal(1);
      });
  
 -    it('calls the save action', function() {
@@ -743,7 +743,7 @@ The next error is pretty obscure. What's happening is that no attributes are bei
 +        expect(post.body).to.equal('New Body');
        });
  
-       this.render(hbs`{{post-form save=(action verifySaveHandlerCalled)}}`);
+       this.render(hbs`{{post-form save=(action verifySaveHandlerCalled)}}`);{% endraw %}
 ```
 
 This is another case where we're reproducing the acceptance test situation, if not the actual error message. We specify that the post form component should pass the data for the model to the save action closure.
@@ -758,7 +758,7 @@ We check that the title and body fields come back on that object, but since no v
 #### app/components/post-form.js
 
 ```diff
- 
+{% raw %} 
  export default Ember.Component.extend({
    actions: {
 -    save() {  
@@ -771,14 +771,14 @@ We check that the title and body fields come back on that object, but since no v
 +      this.get('save')(postData);
      }
    }
- });
+ });{% endraw %}
 ```
 
 
 #### app/templates/components/post-form.hbs
 
 ```diff
- <form {{action 'save' on='submit'}}>
+{% raw %} <form {{action 'save' on='submit'}}>
    <div>
      <label for="post-title-input">Title</label>
 -    <input type="text" class="post-title-input" />
@@ -790,7 +790,7 @@ We check that the title and body fields come back on that object, but since no v
 +    {{textarea class="post-body-input" value=body}}
    </div>
  
-   <button type="submit" class="save-post">Save</button>
+   <button type="submit" class="save-post">Save</button>{% endraw %}
 ```
 
 We get the component test to pass by making the input an Ember input helper, retrieving the saved value in it, and sending that in an object to the `save` action closure.
@@ -805,7 +805,7 @@ Now the acceptance test still gives the same error, and in this case the tests a
 #### app/models/post.js
 
 ```diff
- import Model from 'ember-data/model';
+{% raw %} import Model from 'ember-data/model';
 -// import attr from 'ember-data/attr';
 +import attr from 'ember-data/attr';
  // import { belongsTo, hasMany } from 'ember-data/relationships';
@@ -814,7 +814,7 @@ Now the acceptance test still gives the same error, and in this case the tests a
 -
 +  title: attr(),
 +  body: attr(),
- });
+ });{% endraw %}
 ```
 
 We add the title and body fields to the post model, so now it's saved by the new page.
@@ -829,10 +829,10 @@ The next error is in Mirage again: we now get to the post show page, but Mirage 
 #### mirage/config.js
 
 ```diff
- export default function() {
+{% raw %} export default function() {
 +  this.get('/posts/:id')
    this.post('/posts');
- }
+ }{% endraw %}
 ```
 
 Outer green

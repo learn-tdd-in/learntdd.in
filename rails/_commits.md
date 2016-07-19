@@ -3,7 +3,7 @@
 #### spec/features/creating_a_blog_post_spec.rb
 
 ```diff
-+require 'rails_helper'
+{% raw %}+require 'rails_helper'
 +
 +describe 'Creating a blog post' do
 +
@@ -23,7 +23,7 @@
 +    expect(blog_post.body).to eq('Hello, I say!')
 +  end
 +
-+end
++end{% endraw %}
 ```
 
 We set up the entire acceptance test at once. This test will guide us through the rest of the unit testing and implementation of the feature. When we run the test, the first error we get is:
@@ -36,9 +36,9 @@ Red: No route matches [GET] "/blog_posts/new"
 #### config/routes.rb
 
 ```diff
- Rails.application.routes.draw do
+{% raw %} Rails.application.routes.draw do
 +  resources :blog_posts
- end
+ end{% endraw %}
 ```
 
 We only change enough code to get to the next error message. Getting past the "no route" error only requires creating the route in the routes file.
@@ -53,8 +53,8 @@ Red: uninitialized constant BlogPostsController
 #### app/controllers/blog_posts_controller.rb
 
 ```diff
-+class BlogPostsController < ApplicationController
-+end
+{% raw %}+class BlogPostsController < ApplicationController
++end{% endraw %}
 ```
 
 We didn't technically need to subclass ApplicationController to get the test to pass; all we needed was a BlogPostsController class. But since we're sure that BlogPostsController will extend ApplicationController, we can safely go ahead and add that code as well.
@@ -67,10 +67,10 @@ Red: The action 'new' could not be found for BlogPostsController
 #### app/controllers/blog_posts_controller.rb
 
 ```diff
- class BlogPostsController < ApplicationController
+{% raw %} class BlogPostsController < ApplicationController
 +  def new
 +  end
- end
+ end{% endraw %}
 ```
 
 Again, we only add enough code to get the test to pass.
@@ -88,7 +88,7 @@ Even though we didn't ask to render a template, Rails' default behavior for a co
 #### app/views/blog_posts/new.html.erb
 
 ```diff
-+<%# empty view %>
+{% raw %}+<%# empty view %>{% endraw %}
 ```
 
 Red: Unable to find field "Title"
@@ -101,7 +101,7 @@ The acceptance test is finally able to successfully `visit '/blog_posts/new'` an
 #### app/views/blog_posts/new.html.erb
 
 ```diff
--<%# empty view %>
+{% raw %}-<%# empty view %>
 +<%= form_for @blog_post do |f| %>
 +  <div>
 +    <%= f.label :title %>
@@ -112,7 +112,7 @@ The acceptance test is finally able to successfully `visit '/blog_posts/new'` an
 +    <%= f.text_area :body %>
 +  </div>
 +  <%= f.submit 'Create Blog Post' %>
-+<% end %>
++<% end %>{% endraw %}
 ```
 
 This is another case where all we needed to add to get the test to pass was the title field. But this is a reasonable case where you know what the form will consist of, so you can go ahead and create it all. Plus, your tests will never drive out the full markup of your templates, so you'll need to do that by hand anyway.
@@ -129,11 +129,11 @@ In other words, @blog_post is nil but needs to be a model.
 #### app/controllers/blog_posts_controller.rb
 
 ```diff
- class BlogPostsController < ApplicationController
+{% raw %} class BlogPostsController < ApplicationController
    def new
 +    @blog_post = BlogPost.new
    end
- end
+ end{% endraw %}
 ```
 
 We attempt to make the acceptance test pass by assigning the @blog_post instance variable in the controller. Note that we don't create a unit test for the controller. Many developers discourage controller tests because controller behavior is so closely related to acceptance test cases. Also, Rails 5 removes some controller test features that result in limiting how effective they can be.
@@ -148,8 +148,8 @@ The line of code we added isn't actually able to succeed because there is no cla
 #### app/models/blog_post.rb
 
 ```diff
-+class BlogPost < ApplicationRecord
-+end
+{% raw %}+class BlogPost < ApplicationRecord
++end{% endraw %}
 ```
 
 We add the BlogPost model class. Although we don't strictly need to subclass `ApplicationRecord` to get the acceptance test error to pass, we're sure enough that this will be an Active Record model that it's safe for us to go ahead and subclass it.
@@ -166,7 +166,7 @@ Because we subclass `ApplicationRecord`, our call to `BlogPost.new` checks for t
 #### spec/models/blog_post_spec.rb
 
 ```diff
-+require 'rails_helper'
+{% raw %}+require 'rails_helper'
 +
 +describe BlogPost do
 +
@@ -174,7 +174,7 @@ Because we subclass `ApplicationRecord`, our call to `BlogPost.new` checks for t
 +    expect{ blog_post = BlogPost.new }.not_to raise_error
 +  end
 +
-+end
++end{% endraw %}
 ```
 
 The previous error wasn't enough for us to want to create a `BlogPost` model test, because it was just a structural error: there was no `BlogPost` class. But now we have an error that a `BlogPost` can't be instantiated, which is a logic error: and that means we should create a model test. It's not strictly a unit test because it's not isolated from the database, but it _is_ following the outside-in-testing principle of stepping down from the acceptance test to the test of an individual class.
@@ -189,12 +189,12 @@ Inner red: PG::UndefinedTable: ERROR:  relation "blog_posts" does not exist
 #### db/migrate/20160614162712_create_blog_posts.rb
 
 ```diff
-+class CreateBlogPosts < ActiveRecord::Migration
+{% raw %}+class CreateBlogPosts < ActiveRecord::Migration
 +  def change
 +    create_table :blog_posts do |t|
 +    end
 +  end
-+end
++end{% endraw %}
 ```
 
 We fix the model test error by creating the `blog_posts` table.
@@ -211,7 +211,7 @@ The next acceptance test error occurs when Rails attempts to render the form. Th
 #### spec/models/blog_post_spec.rb
 
 ```diff
-     expect{ blog_post = BlogPost.new }.not_to raise_error
+{% raw %}     expect{ blog_post = BlogPost.new }.not_to raise_error
    end
  
 +  it "defaults fields to nil" do
@@ -221,7 +221,7 @@ The next acceptance test error occurs when Rails attempts to render the form. Th
 +    expect(blog_post.body).to be_nil
 +  end
 +
- end
+ end{% endraw %}
 ```
 
 Once again, rather than fixing the acceptance error directly, we drop down to the model test level to reproduce the error. We specify that we want a `title` field--as well as a `body` field, since we know we'll need that and it feels safe to go ahead and add it. The behavior we want is that we want those fields to be `nil` for a new model instance.
@@ -236,12 +236,12 @@ With this specification, we've reproduced the error from the acceptance test.
 #### db/migrate/20160614163119_add_title_and_body_to_blog_posts.rb
 
 ```diff
-+class AddTitleAndBodyToBlogPosts < ActiveRecord::Migration
+{% raw %}+class AddTitleAndBodyToBlogPosts < ActiveRecord::Migration
 +  def change
 +    add_column :blog_posts, :title, :string, null: false
 +    add_column :blog_posts, :body, :text, null: false
 +  end
-+end
++end{% endraw %}
 ```
 
 We create a new migration to add the title and body column to the blog posts table.
@@ -256,13 +256,13 @@ With this, the model test passes, so we step back up to the acceptance test leve
 #### app/controllers/blog_posts_controller.rb
 
 ```diff
-   def new
+{% raw %}   def new
      @blog_post = BlogPost.new
    end
 +
 +  def create
 +  end
- end
+ end{% endraw %}
 ```
 
 We add the `create` method to the blog post controller directly, then rerun the acceptance test.
@@ -277,7 +277,7 @@ The error we get is a bit obscure, but effectively it means the acceptance test 
 #### app/views/blog_posts/create.html.erb
 
 ```diff
-+<%# empty view %>
+{% raw %}+<%# empty view %>{% endraw %}
 ```
 
 Usually a `create` action would redirect to another route instead of rendering a template directly. But for the sake of keeping this tutorial simple, we'll just go ahead and render it--so we add a `create` template file. We leave it empty since that's all we need to do to get past the current error.
@@ -292,24 +292,24 @@ The next error is that, after submitting the blog post, the acceptance test expe
 #### app/controllers/blog_posts_controller.rb
 
 ```diff
-   end
+{% raw %}   end
  
    def create
 +    @blog_post = BlogPost.new(params[:blog_post])
    end
- end
+ end{% endraw %}
 ```
 
 
 #### app/views/blog_posts/create.html.erb
 
 ```diff
--<%# empty view %>
+{% raw %}-<%# empty view %>
 +<h1><%= @blog_post.title %></h1>
 +
 +<div>
 +  <%= @blog_post.body %>
-+</div>
++</div>{% endraw %}
 ```
 
 To get the blog post content rendered in the view, we attempt to create a new BlogPost instance with the passed-in form params.
@@ -326,7 +326,7 @@ Attempting to instantiate a BlogPost leads to a new error: Rails' "strong parame
 #### app/controllers/blog_posts_controller.rb
 
 ```diff
-   end
+{% raw %}   end
  
    def create
 -    @blog_post = BlogPost.new(params[:blog_post])
@@ -338,7 +338,7 @@ Attempting to instantiate a BlogPost leads to a new error: Rails' "strong parame
 +  def blog_post_params
 +    params.require(:blog_post).permit(:title, :body)
    end
- end
+ end{% endraw %}
 ```
 
 We fix the error by using the conventional Rails strong parameters approach of creating a private controller method that specifies which parameters are permitted. Because this is conventionally done in the controller, we don't need to step down to any kind of unit test--letting the acceptance test drive this code is fine.
@@ -353,14 +353,14 @@ The next error isn't quite as readable as most we've gotten. What's going on is 
 #### app/controllers/blog_posts_controller.rb
 
 ```diff
-   end
+{% raw %}   end
  
    def create
 -    @blog_post = BlogPost.new(blog_post_params)
 +    @blog_post = BlogPost.create(blog_post_params)
    end
  
-   private
+   private{% endraw %}
 ```
 
 We fix this error by `create`ing a `BlogPost` in the database instead of just instantiating one in memory.
