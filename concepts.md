@@ -40,8 +40,9 @@ title: Testing Concepts
 ## <a name="types-of-test"></a>Types of Test
 
 * **<a name="acceptance-test"></a>Acceptance Test**: a test that confirms that the system correctly implements a user-visible feature. Often accomplished with [end-to-end testing](#end-to-end-test).
-* **<a name="characterization-test"></a>Characterization Test**: tests written against a pre-existing system to document its current behavior, bugs and all. Includes both first-party and third-party code.
+* **<a name="characterization-test"></a>Characterization Test**: tests written against a pre-existing system to document its current behavior, bugs and all. Includes both first-party and third-party code. Similar to [exploratory tests](#exploratory-test), but tends to be more comprehensive and permanent.
 * **<a name="end-to-end-test"></a>End-to-End Test**: a test that accesses the entire system from the outside, e.g. through the user interface or HTTP requests. Often used to accomplish [acceptance testing](#acceptance-test).
+* **<a name="exploratory-test"></a>Exploratory Test**: tests written against a pre-existing system to understand its current behavior. Includes both first-party and third-party code. Similar to [characterization tests](#characterization-test), but tends to be less comprehensive and more disposable.
 * **<a name="functional-test"></a>Functional Test**: a test of a controller in an MVC application.
 * **<a name="integration-test"></a>Integration Test**: multiple usages:
 	* Aby test that exercises more than one production class; the opposite of an [isolation test](#isolation-test).
