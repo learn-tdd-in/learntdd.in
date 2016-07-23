@@ -15,12 +15,12 @@ The order of steps is usually described is:
 Test-Driven Development has a number of benefits:
 
 - **Focus**: TDD helps you stick to working on a single user-visible feature at a time. This helps you deliver features more quickly to get feedback, in contrast to a waterfall approach of working on one layer at a time. It also helps prevent Big Design Up-Front and building features You Aren't Gonna Need.
-- **Design**: TDD helps guide you toward creating reusable components, because using them in a test *is* a form of reuse. Tests guide you to components with a clear propose (high cohesion) and well-defined dependencies (low coupling).
-- **Adaptability**: when you have a suite of tests creates via TDD, you can be confident you aren't breaking existing features as you add new ones. You're also free to refactor your code to account for changing needs, preventing your code from getting bogged down in history.
+- **Design**: TDD helps guide you toward creating reusable components, because using them in a test *is* a form of reuse. Tests guide you to components with a clear purpose (high cohesion) and well-defined dependencies (low coupling).
+- **Adaptability**: when you have a suite of tests created via TDD, you can be confident you aren't breaking existing features as you add new ones. You're also free to refactor your code to account for changing needs, preventing your code from getting bogged down in history.
 
 ## This Site's Approach
 
-There are a few different schools TDD, and this site follows the London school. There are a few closely-related terms.
+There are a few different schools of TDD, and this site follows the London school. There are a few terms closely related to the London school:
 
 - **Isolation Testing**: referring to the fact that it tests each class in complete isolation from your other classes.
 - **Mockist TDD**: referring to mocks, a type of test double used to isolate units.
