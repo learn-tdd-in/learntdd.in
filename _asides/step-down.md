@@ -1,0 +1,3 @@
+### When do I step down to a unit test?
+
+When you have a behavioral error rather than a structural error. When I say "behavioral" error, I mean an error with what the code should actually *do*. Up until now, all of the errors have been "structural" errors: missing routes, classes, and methods. Those things don't require design so they don't require a unit test, but when you get to how you want your code to behave, that's what you want to design, so you want a unit test.

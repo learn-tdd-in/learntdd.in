@@ -1,0 +1,3 @@
+### Why use test doubles in unit tests?
+
+Unlike in the acceptance test, we aren't calling real methods on production code. Instead, we use test doubles such as mocks and stubs. The reason is because we want these tests to specify only the behavior of the class under test. If they're dependent on other production classes, changes to those could cause these tests to fail. We want to specify the communication patterns, how this class talks to other classes.
