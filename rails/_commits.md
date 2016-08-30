@@ -1,4 +1,4 @@
-### Specify the feature for creating a blog post [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/5919833ab95bd189ea1a5feb15ba369e801d3b24)
+### Specify the feature for creating a blog post [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/576c89e3ed6ad2d45f2ca78797b42518c5231a4e)
 
 #### spec/features/creating_a_blog_post_spec.rb
 
@@ -26,12 +26,14 @@
 +end{% endraw %}
 ```
 
-We set up the entire acceptance test at once. This test will guide us through the rest of the unit testing and implementation of the feature. When we run the test, the first error we get is:
+We start by writing out an acceptance test for the full feature we want to implement. In this case, we want to visit a blog post creation page, enter a title and body, save it, and then see on the results page that title and body, as well as confirming it’s in the database.
 
 Red: No route matches [GET] "/blog_posts/new"
 
+The first error we get is that there is no blog-posts/new route.
 
-### Add blog posts resource route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/de189e4ba43882d2a82d2e6b02af4d9ece8a9a63)
+
+### Add blog posts resource route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/c1e5ccaad0ceb97ee01c9902f854e7e7d7f1dd6e)
 
 #### config/routes.rb
 
@@ -41,14 +43,16 @@ Red: No route matches [GET] "/blog_posts/new"
  end{% endraw %}
 ```
 
-We only change enough code to get to the next error message. Getting past the "no route" error only requires creating the route in the routes file.
+We add the route, but we don’t just write the simplest code possible to get the test to pass; we “write the code we wish we had.” In this case, we wish we had a resourceful blog posts controller, so we create a resource route, which corresponds to a resourceful controller of the same name..
 
 Rails allows you to "unit test" routes, but for trivial configuration like this, it's fine to let the acceptance test cover it without stepping down to the unit level.
 
 Red: uninitialized constant BlogPostsController
 
+The next error we get is that that controller doesn’t exist.
 
-### Add empty blog posts controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/e576218df41e7ec1e2f652c628517a96e91855ad)
+
+### Add empty blog posts controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/d6d87dc7a72495c975cd5fa7e225e181d93f2c78)
 
 #### app/controllers/blog_posts_controller.rb
 
@@ -57,12 +61,14 @@ Red: uninitialized constant BlogPostsController
 +end{% endraw %}
 ```
 
-We didn't technically need to subclass ApplicationController to get the test to pass; all we needed was a BlogPostsController class. But since we're sure that BlogPostsController will extend ApplicationController, we can safely go ahead and add that code as well.
+We add an empty controller that inherits from our app’s base controller class. We could have gotten past this error message by creating a class that didn’t inherit from anything, but in this case we’re so sure we’ll inherit from the base controller class that we can go ahead and do it.
 
 Red: The action 'new' could not be found for BlogPostsController
 
+The acceptance test can now find the controller, but not a "new" action on it.
 
-### Add `new` action to blog posts controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/7575d08265f91d0c7c78c887bed2016d286f0b03)
+
+### Add `new` action to blog posts controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/b75596026d5428b42449dcf14496a9c98dc2f67f)
 
 #### app/controllers/blog_posts_controller.rb
 
@@ -83,7 +89,7 @@ Red: BlogPostsController#new is missing a template for this request format and v
 Even though we didn't ask to render a template, Rails' default behavior for a controller action is to render a corresponding template, so that's the error it's running across next.
 
 
-### Add new blog post template [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/40f80815b860eb8dd425c55f075a676b453132fd)
+### Add new blog post template [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/5e25a7a4ac23aba095135e131d6dd689f203e562)
 
 #### app/views/blog_posts/new.html.erb
 
@@ -96,7 +102,7 @@ Red: Unable to find field "Title"
 The acceptance test is finally able to successfully `visit '/blog_posts/new'` and move on to attempt the next step, which is `fill_in 'Title', with: 'Hello, World!'`.
 
 
-### Add fields and submit button to form template [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/3d8de9eac9b11b48a4def42c9736b35839a8637b)
+### Add fields and submit button to form template [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/b0cd909133a46b0943a316256b8e263e042a431a)
 
 #### app/views/blog_posts/new.html.erb
 
@@ -124,7 +130,7 @@ Red: First argument in form cannot contain nil or be empty
 In other words, @blog_post is nil but needs to be a model.
 
 
-### Assign blog post in controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/e2b7e00998e50622e78cec098469abd4c1e15a63)
+### Assign blog post in controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/c835432f499421d3cb67a58adbbac7ca3839789b)
 
 #### app/controllers/blog_posts_controller.rb
 
@@ -143,7 +149,7 @@ Red: uninitialized constant BlogPostsController::BlogPost
 The line of code we added isn't actually able to succeed because there is no class named BlogPost defined yet.
 
 
-### Add blog post model [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/39a57cf5becc1f9d61846f986b3a357234161948)
+### Add blog post model [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/722db6c7d436b79158b4b2a3217d322e82474967)
 
 #### app/models/blog_post.rb
 
@@ -161,7 +167,7 @@ Red: PG::UndefinedTable: ERROR:  relation "blog_posts" does not exist
 Because we subclass `ApplicationRecord`, our call to `BlogPost.new` checks for the existence of a `blog_posts` table (a "relation"), and doesn't find one.
 
 
-### Specify model should be instantiable [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/aa13797755fb023577905a5dcdde4436b7a5779c)
+### Specify model should be instantiable [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/e4c4299fac4ee55e8346f6ea42dfd0b9de121a7d)
 
 #### spec/models/blog_post_spec.rb
 
@@ -184,7 +190,7 @@ We reproduce the error that occurred in the acceptance test in the model test: t
 Inner red: PG::UndefinedTable: ERROR:  relation "blog_posts" does not exist
 
 
-### Create blog posts table [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/e1a2cdf36c1f9da89771ba61cf9ed2c056266e01)
+### Create blog posts table [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/f8a8071136fca67af681e691d76c1b252bd89a9a)
 
 #### db/migrate/20160614162712_create_blog_posts.rb
 
@@ -206,7 +212,7 @@ Now the `BlogPost` can be instantiated, so the model test passes. We step back u
 The next acceptance test error occurs when Rails attempts to render the form. The form helper tries to get the current value of the `title` field on the model, but there is no `title` method to retrieve it. Since we want `title` to be a database-persisted field on our model, the problem is that there is no `title` column in our database table.
 
 
-### Specify blog post accessors [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/c1125e644306fcdb7ee27dec4f4ab05439fcb360)
+### Specify blog post accessors [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/2b9d59d639068f973e9b84bc41df8025e40f6aab)
 
 #### spec/models/blog_post_spec.rb
 
@@ -231,7 +237,7 @@ Inner red: undefined method `title' for #<BlogPost id: nil>
 With this specification, we've reproduced the error from the acceptance test.
 
 
-### Add columns to blog posts [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/9093ca6feca7f591a031f9989246fcb6b6c61659)
+### Add columns to blog posts [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/45bc97643fb879161c4c43bbe7e3d26905a4e51f)
 
 #### db/migrate/20160614163119_add_title_and_body_to_blog_posts.rb
 
@@ -251,7 +257,7 @@ Inner green; outer red: The action 'create' could not be found for BlogPostsCont
 With this, the model test passes, so we step back up to the acceptance test level and rerun it. The acceptance test moves on to the next error: the form is rendered, the fields are populated, it submits the form, but Rails doesn't find a `create` action on the controller to submit it to.
 
 
-### Add create method to blog post controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/333b30f6e174d0a7a999e61466859ecb4ed8356b)
+### Add create method to blog post controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/a540e7ad1b4068e5e39918ef914cc1eacc652a84)
 
 #### app/controllers/blog_posts_controller.rb
 
@@ -272,7 +278,7 @@ Outer red: Unable to find xpath "/html"
 The error we get is a bit obscure, but effectively it means the acceptance test can't even find an HTML document returned to search within. Unlike with the `new` action, with the `create` action, if no explicit render or redirect happens, Rails 5 does not return an error that a template is missing; it just returns empty content.
 
 
-### Add blog post create template [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/49c82e337d027d9aeacf6289fde2c1395af0d6d5)
+### Add blog post create template [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/17d38da84c53f18227cb07c8f54eac5454d71158)
 
 #### app/views/blog_posts/create.html.erb
 
@@ -287,7 +293,7 @@ Outer red: expected to find text "Hello, World!" in ""
 The next error is that, after submitting the blog post, the acceptance test expects to see the title of the post somewhere on the page, but it doesn't see it--because we haven't actually rendered any content at all.
 
 
-### Render blog post on create page [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/9eb7bea8d63469e498f71dfcff5a3a3e9cefccda)
+### Render blog post on create page [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/4371bf4cd41e1cbf8780932991ee0f12c549c311)
 
 #### app/controllers/blog_posts_controller.rb
 
@@ -321,7 +327,7 @@ Outer red: ActiveModel::ForbiddenAttributesError
 Attempting to instantiate a BlogPost leads to a new error: Rails' "strong parameters" security feature means that we can't just pass user-submitted params directly into a model; that could result in users hacking our system by setting fields they shouldn't be able to, like the user a post belongs to.
 
 
-### Switch to strong params for blog post creation [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/09ced75d0b3576dd52ecdb15af705a646de1d8ea)
+### Switch to strong params for blog post creation [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/262a8023a0db9629e7d98708b54d3c6a55f584ae)
 
 #### app/controllers/blog_posts_controller.rb
 
@@ -348,7 +354,7 @@ Outer red: undefined method `title' for nil:NilClass
 The next error isn't quite as readable as most we've gotten. What's going on is that the acceptance test attempts to load the last-saved `BlogPost` from the database, but none are saved, so we get `nil` back instead. When we try to check the `title` field, we get an error that there is no `title` method on `nil`. So the actual error is that no blog post is found in the database.
 
 
-### Save blog post to database [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/a4357cfd4aec2cbb93ea0f4c3fd7dadbc62fa9d7)
+### Save blog post to database [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/f68a15ace5b603027d897778f13a59b81e8c47f3)
 
 #### app/controllers/blog_posts_controller.rb
 
