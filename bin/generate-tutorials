@@ -7,7 +7,7 @@ puts "ember"
 system("bin/log2blog generate learn-tdd-in/ember c05369146b5ff3e2e696396f46a72562dc400a68 --token $GITHUB_OAUTH_TOKEN > ember/_commits.md")
 
 puts "laravel"
-system("bin/log2blog generate learn-tdd-in/laravel c03e62ca11d418eb18e4b0048d874df2f2419215 --token $GITHUB_OAUTH_TOKEN --skip composer.lock > laravel/_commits.md")
+system("bin/log2blog generate learn-tdd-in/laravel cc5f9f7b04ebd18d196e928905d58d0d8f381d07 --token $GITHUB_OAUTH_TOKEN --skip composer.lock > laravel/_commits.md")
 
 puts "rails"
 system("bin/log2blog generate learn-tdd-in/rails 576c89e3ed6ad2d45f2ca78797b42518c5231a4e --token $GITHUB_OAUTH_TOKEN --skip db/schema.rb > rails/_commits.md")
