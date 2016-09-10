@@ -14,7 +14,8 @@ The feature we'll build is the age-old tutorial feature: creating a blog post.
 
 To learn more about TDD, I recommend:
 
-* [Test-Driven Laravel From Scratch](http://adamwathan.me/2016/01/11/test-driven-laravel-from-scratch/) (video)
+* ["Test Driven Laravel" conference workshop](https://streamacon.com/video/laracon-us/adam-wathan-test-driven-laravel) (video)
+* [Test Driven Laravel screencast](https://adamwathan.me/test-driven-laravel/), an upcoming course. (video)
 {% include tutorial-goos.md %}
 
 {% include tutorial-contact.md %}
