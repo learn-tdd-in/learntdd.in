@@ -15,5 +15,6 @@ The feature we'll build is the age-old tutorial feature: creating a blog post.
 To learn more about TDD, I recommend:
 
 {% include tutorial-goos.md %}
+* [_Rails 4 Test Prescriptions_](https://pragprog.com/book/nrtest2/rails-4-test-prescriptions) by Noel Rappin
 
 {% include tutorial-contact.md %}
