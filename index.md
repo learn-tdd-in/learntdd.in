@@ -7,6 +7,6 @@ layout: page
 * [Rails](/rails)
 * [Ember](/ember)
 * [Laravel](/laravel)
-* [Cocoa Touch](/cocoa)
+* [Cocoa Touch](/cocoa-touch)
 
 Learn TDD is a resource for learning Test-Driven Development in the framework of your choice.
