@@ -4,7 +4,7 @@ require "dotenv"
 Dotenv.load
 
 puts "ember"
-system("bin/log2blog generate learn-tdd-in/ember c05369146b5ff3e2e696396f46a72562dc400a68 --token $GITHUB_OAUTH_TOKEN > ember/_commits.md")
+system("bin/log2blog generate learn-tdd-in/ember c05369146b5ff3e2e696396f46a72562dc400a68 --token $GITHUB_OAUTH_TOKEN --skip \"tests/unit\" > ember/_commits.md")
 
 puts "laravel"
 system("bin/log2blog generate learn-tdd-in/laravel cc5f9f7b04ebd18d196e928905d58d0d8f381d07 --token $GITHUB_OAUTH_TOKEN --skip composer.lock > laravel/_commits.md")

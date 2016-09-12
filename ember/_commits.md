@@ -104,33 +104,6 @@ Red: The URL '/posts/new' did not match any routes in your application
 {% raw %}+{{outlet}}{% endraw %}
 ```
 
-
-#### tests/unit/routes/posts/new-test.js
-
-```diff
-{% raw %}+/* jshint expr:true */
-+import { expect } from 'chai';
-+import {
-+  describeModule,
-+  it
-+} from 'ember-mocha';
-+
-+describeModule(
-+  'route:posts/new',
-+  'PostsNewRoute',
-+  {
-+    // Specify the other units that are required for this test.
-+    // needs: ['controller:foo']
-+  },
-+  function() {
-+    it('exists', function() {
-+      let route = this.subject();
-+      expect(route).to.be.ok;
-+    });
-+  }
-+);{% endraw %}
-```
-
 `ember g route posts/new`
 
 We only change enough code to get to the next error message. Getting past the "no route" error only requires creating the route in the routes file.
@@ -446,34 +419,6 @@ Now our component test is able to verify that the submit handler is called. We g
 +{{post-form submitHandler=(action "savePost")}}{% endraw %}
 ```
 
-
-#### tests/unit/controllers/posts/new-test.js
-
-```diff
-{% raw %}+/* jshint expr:true */
-+import { expect } from 'chai';
-+import {
-+  describeModule,
-+  it
-+} from 'ember-mocha';
-+
-+describeModule(
-+  'controller:posts/new',
-+  'PostsNewController',
-+  {
-+    // Specify the other units that are required for this test.
-+    // needs: ['controller:foo']
-+  },
-+  function() {
-+    // Replace this with your real tests.
-+    it('exists', function() {
-+      let controller = this.subject();
-+      expect(controller).to.be.ok;
-+    });
-+  }
-+);{% endraw %}
-```
-
 `ember g controller posts/new`
 
 We implement a save handler by adding a new post controller to put it in, adding the handler, then passing it into the form component.
@@ -512,33 +457,6 @@ Now the acceptance test successfully attempts to transition to the `posts.show` 
 
 ```diff
 {% raw %}+{{outlet}}{% endraw %}
-```
-
-
-#### tests/unit/routes/posts/show-test.js
-
-```diff
-{% raw %}+/* jshint expr:true */
-+import { expect } from 'chai';
-+import {
-+  describeModule,
-+  it
-+} from 'ember-mocha';
-+
-+describeModule(
-+  'route:posts/show',
-+  'PostsShowRoute',
-+  {
-+    // Specify the other units that are required for this test.
-+    // needs: ['controller:foo']
-+  },
-+  function() {
-+    it('exists', function() {
-+      let route = this.subject();
-+      expect(route).to.be.ok;
-+    });
-+  }
-+);{% endraw %}
 ```
 
 `ember g route posts/show`
@@ -736,32 +654,6 @@ With this logic added, the acceptance test errors out quickly: there _is_ no `po
 +export default DS.Model.extend({
 +
 +});{% endraw %}
-```
-
-
-#### tests/unit/models/post-test.js
-
-```diff
-{% raw %}+/* jshint expr:true */
-+import { expect } from 'chai';
-+import { describeModel, it } from 'ember-mocha';
-+
-+describeModel(
-+  'post',
-+  'Unit | Model | post',
-+  {
-+    // Specify the other units that are required for this test.
-+      needs: []
-+  },
-+  function() {
-+    // Replace this with your real tests.
-+    it('exists', function() {
-+      let model = this.subject();
-+      // var store = this.store();
-+      expect(model).to.be.ok;
-+    });
-+  }
-+);{% endraw %}
 ```
 
 `ember g model post`
