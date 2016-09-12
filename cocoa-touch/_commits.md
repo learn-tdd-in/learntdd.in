@@ -1,17 +1,9 @@
-### Specify adding a post [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/ec5268e540ba49202bbbbd4eccd4ff4d18941c70)
+### Specify adding a post [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/71b7fa4bfd998768c889877d9fb5b19b74dfbe1d)
 
 #### Acceptance Tests/CreatingAPostTest.m
 
 ```diff
-{% raw %}+//
-+//  CreatingAPostTest.m
-+//  Learn TDD in Cocoa Touch
-+//
-+//  Created by Josh Justice on 8/5/16.
-+//  Copyright © 2016 Learn TDD. All rights reserved.
-+//
-+
-+#import <KIF/KIF.h>
+{% raw %}+#import <KIF/KIF.h>
 +
 +@interface CreatingAPostTests : KIFTestCase
 +
@@ -43,7 +35,7 @@ The first error we get is that there is no message field:
 Red: Failed to find accessibility element with the label "New Message Field"
 
 
-### Add new message field [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/2afe1069eedec4855c15c223bb502625becb2bee)
+### Add new message field [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/45735bbb65669645d044fa682bfa9b61a0c9491b)
 
 
 As part of adding the message field, we go ahead and set up the table view controller we'll be using. We set the accessibility label on the field to "New Message Field" so the acceptance test can find it.
@@ -53,7 +45,7 @@ The next error we get is similar: now we can't find the Add Post button:
 Red: Failed to find accessibility element with the label "Add Post"
 
 
-### Add Add Post button [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/a24435c18d3003e2b32c3b0b17f06d932e0547ce)
+### Add Add Post button [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/f55b25b560658eb000351f9043b6772c73906e2f)
 
 
 We simply set the accessibility label on the button to "Add Post" so the test can find it.
@@ -63,20 +55,12 @@ Next, the test can't find the table to look in:
 Red: Could not find element with accessibilityIdentifier == "Posts Table"
 
 
-### Set table accessibility identifier [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/21ecb6ad58e0d0519d9b5aedb283cab8d3d61af4)
+### Set table accessibility identifier [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/dfab53da6ccf79c25e42eff13e6bd7b1d78aa612)
 
 #### Learn TDD in Cocoa Touch/PostsViewController.swift
 
 ```diff
-{% raw %}+//
-+//  PostsViewController.swift
-+//  Learn TDD in Cocoa Touch
-+//
-+//  Created by Josh Justice on 8/5/16.
-+//  Copyright © 2016 Learn TDD. All rights reserved.
-+//
-+
-+import UIKit
+{% raw %}+import UIKit
 +
 +class PostsViewController: UITableViewController {
 +    
@@ -87,45 +71,14 @@ Red: Could not find element with accessibilityIdentifier == "Posts Table"
 +}{% endraw %}
 ```
 
-
-#### Learn TDD in Cocoa Touch/ViewController.swift
-
-```diff
-{% raw %}-//
--//  ViewController.swift
--//  Learn TDD in Cocoa Touch
--//
--//  Created by Josh Justice on 8/5/16.
--//  Copyright © 2016 Learn TDD. All rights reserved.
--//
--
--import UIKit
--
--class ViewController: UIViewController {
--
--    override func viewDidLoad() {
--        super.viewDidLoad()
--        // Do any additional setup after loading the view, typically from a nib.
--    }
--
--    override func didReceiveMemoryWarning() {
--        super.didReceiveMemoryWarning()
--        // Dispose of any resources that can be recreated.
--    }
--
--
--}
--{% endraw %}
-```
-
-Interface Builder doesn't provide a way to set the accessibility identifier on the table, so we need to set it in our code instead. We go ahead and replace the default ViewController with our own PostsViewController class that subclasses UITableViewController, then we set the table's accessibility identifier in the `viewDidLoad` method.
+Interface Builder doesn't provide a way to set the accessibility identifier on the table, so we need to set it in our code instead. We create a PostsViewController class that subclasses UITableViewController, then we set the table's accessibility identifier in the `viewDidLoad` method.
 
 Next, the acceptance test can find the table, but it expects there to be a row added to the table, and there isn't one:
 
 Red: Row 0 is not found in section 0 of table view
 
 
-### Display contents of post store in table view [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/26e7106d5c90f0d5b1c6ec386a7d32c0531afb8a)
+### Display contents of post store in table view [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/90c838f4274eb9752ccc856f92e721e61cecff6a)
 
 #### Learn TDD in Cocoa Touch/PostsViewController.swift
 
@@ -160,21 +113,13 @@ Red: Use of undeclared identifier ‘PostStore’
 We get an error that the `PostStore` we've referred to doesn't exist.
 
 
-### Add post store class [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/f19afc0f9f60bccdf0c874bf805bd1d0b51c611f)
+### Add post store class [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/79268e688308a342c95ccda132c457a6ebaa7315)
 
 #### Learn TDD in Cocoa Touch/PostStore.swift
 
 ```diff
-{% raw %}+//
-+//  PostStore.swift
-+//  Learn TDD in Cocoa Touch
-+//
-+//  Created by Josh Justice on 8/29/16.
-+//  Copyright © 2016 Learn TDD. All rights reserved.
-+//
+{% raw %}+class PostStore {
 +
-+class PostStore {
-+    
 +}{% endraw %}
 ```
 
@@ -183,19 +128,19 @@ To make sure we don't implement more than the tests are driving us to, we do the
 First Red: Value of type ‘PostStore’ has no member ‘count’
 
 
-### Add count property [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/5960cac92ece09a2e05f191b76c079daea58aad3)
+### Add count property [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/e08392166c5b9e3cb18c48b3e109ad378292530a)
 
 #### Learn TDD in Cocoa Touch/PostStore.swift
 
 ```diff
-{% raw %} 
- class PostStore {
-     
+{% raw %} class PostStore {
+ 
 +    var count: Int {
 +        get {
 +            return 0
 +        }
 +    }
++
  }{% endraw %}
 ```
 
@@ -206,15 +151,14 @@ First Red: Value of type `PostStore` has no member `create`
 With that, the compiler is satisfied with our `count` property, and the next error is that `PostStore` also needs a `create()` method.
 
 
-### Add create function [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/495abb41caf2876cbaf5eb05ea204df5092eee15)
+### Add create function [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/e158feece53c5769a72f32d929981c39098a87b4)
 
 #### Learn TDD in Cocoa Touch/PostStore.swift
 
 ```diff
-{% raw %}             return 0
-         }
+{% raw %}         }
      }
-+    
+ 
 +    func create() {
 +        
 +    }
@@ -231,20 +175,12 @@ Red: Row 0 is not found in section 0 of table view
 This is the same failed assertion we saw before. We've made the number of rows in the table driven off of the `PostStore`, but because the `PostStore` always returns a count of 0, the row we need never appears. We need the `PostStore`'s `count` to return 1 after `create()` is called.
 
 
-### Specify count should be 1 after creating [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/ce26f41a39ab2612c3844d66342d1245cde3eac3)
+### Specify count should be 1 after creating [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/5ce4eb756d4232ec2eb8393d8f5a3bb9e98af0c0)
 
 #### Unit Tests/PostStoreTests.swift
 
 ```diff
-{% raw %}+//
-+//  PostStoreTests.swift
-+//  Learn TDD in Cocoa Touch
-+//
-+//  Created by Josh Justice on 8/29/16.
-+//  Copyright © 2016 Learn TDD. All rights reserved.
-+//
-+
-+import XCTest
+{% raw %}+import XCTest
 +@testable import Learn_TDD_in_Cocoa_Touch
 +
 +class PostStoreTests: XCTestCase {
@@ -277,20 +213,12 @@ Red: Expected store.count() to be 1 but was 0
 This failed assertion is exactly the same problem we see at the acceptance level, so now we're ready to implement this behavior.
 
 
-### Increase post count when `create()` is called [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/95c8a7366d9c0882be567c52309bba093b9d2a3b)
+### Increase post count when `create()` is called [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/aa20986d22ab48071a73113dad6df40f35ddcc49)
 
 #### Learn TDD in Cocoa Touch/Post.swift
 
 ```diff
-{% raw %}+//
-+//  Post.swift
-+//  Learn TDD in Cocoa Touch
-+//
-+//  Created by Josh Justice on 8/29/16.
-+//  Copyright © 2016 Learn TDD. All rights reserved.
-+//
-+
-+class Post {
+{% raw %}+class Post {
 +    
 +}{% endraw %}
 ```
@@ -299,11 +227,8 @@ This failed assertion is exactly the same problem we see at the acceptance level
 #### Learn TDD in Cocoa Touch/PostStore.swift
 
 ```diff
-{% raw %} //
+{% raw %} class PostStore {
  
- class PostStore {
--    
-+
 +    private var posts = [Post]()
 +
      var count: Int {
@@ -312,7 +237,7 @@ This failed assertion is exactly the same problem we see at the acceptance level
 +            return posts.count
          }
      }
-     
+ 
      func create() {
 -        
 +        let post = Post()
@@ -332,7 +257,7 @@ Outer red: UITableView…failed to obtain a cell from its dataSource
 The table view is trying to create a cell, which means we succeeded in increasing the row count when the user clicks "Add." But now the table view needs to know how to create a cell.
 
 
-### Set up cell for table view [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/96b13196306fdf1ac301fce774e9308fb353cde4)
+### Set up cell for table view [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/4ece792f0598a444ddb4d07c5699f4d5587617a7)
 
 #### Learn TDD in Cocoa Touch/PostsViewController.swift
 
@@ -356,7 +281,7 @@ Red: Expected cell label to be 'Hello, test!', was '(null)'
 Now the cell is retrieved, but our assertion about the content of the cell's label is failing. Because we didn't customize the cell at all, it doesn't have a label by default.
 
 
-### Pass message text along into post [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/e989bedb2b45f914a7a398de280b6b5b4ebf28d4)
+### Pass message text along into post [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/fd63a35db478c32dfb289f41b8021aa1937e3ccb)
 
 #### Learn TDD in Cocoa Touch/PostsViewController.swift
 
@@ -401,7 +326,7 @@ First Red: Value of type `PostStore` has no member `find`
 The first compilation error we get is that there is no `find()` method on `PostStore`.
 
 
-### Add find method [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/d7611529fabf496a5b5b4b3171878ee28ce5321b)
+### Add find method [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/bf1602226df9b739a28044c4a5e7f6238a605146)
 
 #### Learn TDD in Cocoa Touch/PostStore.swift
 
@@ -423,13 +348,12 @@ Red: Value of type `Post` has no member `message`
 Now our `Post` is being returned to the view controller, but when it tries to access the `message` property, there isn't one.
 
 
-### Add message field to post [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/c0f38441d1f52f37e2ea50ba2324b53e9d3848f5)
+### Add message field to post [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/e01b910f75e7599dd04daf5d323cf2f18e9ca9e1)
 
 #### Learn TDD in Cocoa Touch/Post.swift
 
 ```diff
-{% raw %} 
- class Post {
+{% raw %} class Post {
      
 +    var message: String?
 +    
@@ -443,14 +367,14 @@ Red: Argument passed to a call that takes no arguments
 Previously `create()` didn't have any arguments because all it needed to do was result in an incremented `count`. Now that our view controller is passing a dictionary into it with the message string, we need to update our other code to match.
 
 
-### Add post data param [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/3a8c89bc97ff5e04ef5113d23977f9cd64d5df4d)
+### Add post data param [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/930cc5d3e27615a99a515bbd22e33f8cdd0f0415)
 
 #### Learn TDD in Cocoa Touch/PostStore.swift
 
 ```diff
 {% raw %}         }
      }
-     
+ 
 -    func create() {
 +    func create(postData: [String:String]) {
          let post = Post()
@@ -479,7 +403,7 @@ Red: Expected cell label to be 'Hello, test!', was '(null)'
 Like last time, this is the same acceptance test failure we were getting previously. We've added the parameters and properties to pass the message along from the text field into the cell label, but we haven't actually persisted it: in our `find()` method, we just return an empty `Post`.
 
 
-### Add store unit test for find [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/da4975608d83562068403faecf0f675ce41e810e)
+### Add store unit test for find [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/905e71be2183f772b7fd664efc184498c702433b)
 
 #### Unit Tests/PostStoreTests.swift
 
@@ -505,12 +429,12 @@ Red: (“nil”) is not equal to (“Optional(“test message”)”)
 With this unit test failure, we've reproduced the problem we're seeing at the acceptance test level.
 
 
-### Save and retrieve post with data [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/90178c825ec7475151c755872dff5137121d8651)
+### Save and retrieve post with data [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/0427d1efa54f5211be06cdd3ec5b9c004e4dd233)
 
 #### Learn TDD in Cocoa Touch/PostStore.swift
 
 ```diff
-{% raw %}     
+{% raw %} 
      func create(postData: [String:String]) {
          let post = Post()
 +        post.message = postData["message"]
