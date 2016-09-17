@@ -13,4 +13,4 @@ puts 'rails'
 system('bin/log2blog generate learn-tdd-in/rails 576c89e3ed6ad2d45f2ca78797b42518c5231a4e --token $GITHUB_OAUTH_TOKEN --skip db/schema.rb > rails/_commits.md')
 
 puts 'cocoa-touch'
-system('bin/log2blog generate learn-tdd-in/cocoa-touch 71b7fa4bfd998768c889877d9fb5b19b74dfbe1d --token $GITHUB_OAUTH_TOKEN --skip "Main\.storyboard|project\.pbxproj" > cocoa-touch/_commits.md')
+system('bin/log2blog generate learn-tdd-in/cocoa-touch 15bcc4596c4ee2697b03d68de7d03716f767c234 --token $GITHUB_OAUTH_TOKEN --skip "Main\.storyboard|project\.pbxproj" > cocoa-touch/_commits.md')
