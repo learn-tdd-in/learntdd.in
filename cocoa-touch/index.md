@@ -14,6 +14,7 @@ The feature we'll build is a simple list of messages.
 
 To learn more about TDD, I recommend:
 
+* [iPhreaks podcast episode 95: TDD](https://devchat.tv/iphreaks/095-ips-tdd-test-driven-development)
 {% include tutorial-goos.md %}
 
 {% include tutorial-contact.md %}
