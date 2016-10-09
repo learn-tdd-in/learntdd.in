@@ -5,7 +5,7 @@ title: Learn TDD in Cocoa for iOS
 {% include tutorial-intro.md %}
 
 To see how TDD works in Cocoa Touch, let's walk through a simple real-world example of building a feature.
-We'll be using Xcode 7.3 and Cocoa Touch's built-in XCTest framework.
+We'll be using Xcode 8 and its built-in XCTest framework.
 Even though Cocoa Touch has UI testing built-in, I ran into some reliability issues with it,
 so instead we'll be using [the KIF framework](https://github.com/kif-framework/KIF/) for UI testing.
 Each section of the article is linked to a corresponding commit in the [Git repo](https://github.com/learn-tdd-in/cocoa-touch) that shows the process step-by-step.

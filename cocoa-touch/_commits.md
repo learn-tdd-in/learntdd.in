@@ -1,6 +1,6 @@
-### Specify adding a message [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/15bcc4596c4ee2697b03d68de7d03716f767c234)
+### Specify adding a message [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/7b9fbe96e6275495271cb3bfdd71728e18a2ad66)
 
-#### Acceptance Tests/CreatingAMessageTests.m
+#### Acceptance Tests/CreatingAMessageTest.m
 
 ```diff
 {% raw %}+#import <KIF/KIF.h>
@@ -11,23 +11,18 @@
 +
 +@implementation CreatingAMessageTests
 +
-+- (void)setUp
-+{
-+    [KIFUITestActor setDefaultTimeout:2.0];
-+}
-+
 +- (void)testItCanCreateAMessage
 +{
 +    NSString *testMessage = @"Hello, test!";
-+    
++
 +    [tester enterText:testMessage intoViewWithAccessibilityLabel:@"New Message Field"];
-+    [tester tapViewWithAccessibilityLabel:@"Add Message"];
-+    
-+    UITableViewCell *cell = [tester waitForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]
++    [tester tapViewWithAccessibilityLabel:@"Add"];
++
++    UITableViewCell *postCell = [tester waitForCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]
 +                        inTableViewWithAccessibilityIdentifier:@"Messages Table"];
-+    
-+    XCTAssertTrue([cell.textLabel.text isEqualToString:testMessage],
-+                  @"Expected cell label to be '%@', was '%@'", testMessage, cell.textLabel.text);
++
++    XCTAssertTrue([postCell.textLabel.text isEqualToString:testMessage],
++                  @"Expected cell label to be '%@', was '%@'", testMessage, postCell.textLabel.text);
 +}
 +
 +@end{% endraw %}
@@ -40,31 +35,31 @@ The first error we get is that there is no message field:
 Red: Failed to find accessibility element with the label "New Message Field"
 
 
-### Add new message field [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/c45418a881370b448814bbd73f0cd149d6914a63)
+### Add new message field [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/38aee4c205f969347a379556726f4fb593ff2e9e)
 
 
 ![Message Field](message-field.png)
 
 As part of adding the message field, we go ahead and set up the table view controller we'll be using. We set the accessibility label on the field to "New Message Field" so the acceptance test can find it.
 
-The next error we get is similar: now we can't find the Add Message button:
+The next error we get is similar: now we can't find the Add button:
 
-Red: Failed to find accessibility element with the label "Add Message"
+Red: Failed to find accessibility element with the label "Add"
 
 
-### Add Add Message button [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/207c49c7c333352a0bcea0137af80ce06021d0de)
+### Place Add button [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/247ebc40b475fe2d826a949d75bdbcafcd52592b)
 
 
 ![Add Button](add-button.png)
 
-We simply set the accessibility label on the button to "Add Message" so the test can find it.
+We put an Add button into the view so the test can find it.
 
 Next, the test can't find the table to look in:
 
 Red: Could not find element with accessibilityIdentifier == "Messages Table"
 
 
-### Set table accessibility identifier [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/037bc7792ab8b48f72270f670dd70d21c4086621)
+### Set table accessibility identifier [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/74c7b7ae9838685cd92bec5f8f6ee64e648d4e97)
 
 #### Learn TDD in Cocoa Touch/MessagesViewController.swift
 
@@ -87,7 +82,7 @@ Next, the acceptance test can find the table, but it expects there to be a row a
 Red: Row 0 is not found in section 0 of table view
 
 
-### Display contents of message store in table view [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/483db89e6aff11bff1285bfaa42aa0321591726c)
+### Display contents of message store in table view [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/87ca07f6126afa6fd6a9d5cdbdd6fd6463c2a1bc)
 
 #### Learn TDD in Cocoa Touch/MessagesViewController.swift
 
@@ -100,13 +95,12 @@ Red: Row 0 is not found in section 0 of table view
      override func viewDidLoad() {
          tableView.accessibilityIdentifier = "Messages Table"
 +        store = MessageStore()
-     }
- 
-+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-+        return store.count
 +    }
 +    
-+    
++    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
++        return store.count
+     }
+ 
 +    @IBAction func addMessage(sender: AnyObject) {
 +        store.create()
 +        tableView.reloadData()
@@ -122,7 +116,7 @@ Red: Use of undeclared identifier ‘MessageStore’
 We get an error that the `MessageStore` we've referred to doesn't exist.
 
 
-### Add message store class [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/d98093cbb7b0174daf6917522a66077c674dfd10)
+### Add message store class [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/9d825e04401ddc6becfa0f6567a5a40fae462523)
 
 #### Learn TDD in Cocoa Touch/MessageStore.swift
 
@@ -137,7 +131,7 @@ To make sure we don't implement more than the tests are driving us to, we do the
 First Red: Value of type ‘MessageStore’ has no member ‘count’
 
 
-### Add count property [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/e599028baae4c884fff23ac5e2e9157348c41a7f)
+### Add count property [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/95c6469eb7363741443c7c1c42f24f94cd0c09c0)
 
 #### Learn TDD in Cocoa Touch/MessageStore.swift
 
@@ -149,29 +143,30 @@ First Red: Value of type ‘MessageStore’ has no member ‘count’
 +            return 0
 +        }
 +    }
-+
++    
  }{% endraw %}
 ```
 
 We declare a `count` property to fix the error that one is missing. Because we know its value will ultimately be dynamically determined from the number of posts in the store, we make it a calculated property. But for now, we just return a hard-coded zero value to get the code to compile.
 
-First Red: Value of type `PostStore` has no member `create`
+First Red: Value of type `MessageStore` has no member `create`
 
-With that, the compiler is satisfied with our `count` property, and the next error is that `PostStore` also needs a `create()` method.
+With that, the compiler is satisfied with our `count` property, and the next error is that `MessageStore` also needs a `create()` method.
 
 
-### Add create function [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/cf0f496ca3d31e1be9de20577a9a60ff14400372)
+### Add create function [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/3d7bdafd787b564fe94e2e364d22077189e77297)
 
 #### Learn TDD in Cocoa Touch/MessageStore.swift
 
 ```diff
-{% raw %}         }
+{% raw %}             return 0
+         }
      }
- 
++
 +    func create() {
 +        
 +    }
-+    
+     
  }{% endraw %}
 ```
 
@@ -184,7 +179,7 @@ Red: Row 0 is not found in section 0 of table view
 This is the same failed assertion we saw before. We've made the number of rows in the table driven off of the `MessageStore`, but because the `MessageStore` always returns a count of 0, the row we need never appears. We need the `MessageStore`'s `count` to return 1 after `create()` is called.
 
 
-### Specify count should be 1 after creating [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/f0bae2fca39ec2ea82aecac490e4c67eeadc5e34)
+### Specify count should be 1 after creating [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/a1307eb02cfc4ae34496370a60f892efbf32f113)
 
 #### Unit Tests/MessageStoreTests.swift
 
@@ -215,14 +210,14 @@ This is the same failed assertion we saw before. We've made the number of rows i
 +}{% endraw %}
 ```
 
-This is a behavioral need, so instead of implementing the code to fix this directly, we step down from the acceptance test level and write a unit test for the `MessageStore`. Our goal is to reproduce the acceptance test failure at the unit level, so that we know exactly what this unit needs to do to accomplish our overall goal.
+This is a behavioral need, so instead of implementing the code to fix this directly, we step down from the acceptance test level and write a unit test for the `PostStore`. Our goal is to reproduce the acceptance test failure at the unit level, so that we know exactly what this unit needs to do to accomplish our overall goal.
 
 Red: Expected store.count() to be 1 but was 0
 
 This failed assertion is exactly the same problem we see at the acceptance level, so now we're ready to implement this behavior.
 
 
-### Increase message count when `create()` is called [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/2b344d0c4441892b6ede2e5c75e96027fff50538)
+### Increase message count when `create()` is called [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/4a129a8f4358a83e5b11c4f4a48bf04469049579)
 
 #### Learn TDD in Cocoa Touch/Message.swift
 
@@ -266,21 +261,41 @@ Outer red: UITableView…failed to obtain a cell from its dataSource
 The table view is trying to create a cell, which means we succeeded in increasing the row count when the user clicks "Add." But now the table view needs to know how to create a cell.
 
 
-### Set up cell for table view [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/fdc13c8b288d2b33ab54fad60cc171478edf1506)
+### Set up cell for table view [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/716ccffa0838b7d075e68f3a259f67e1613c3f8d)
 
 #### Learn TDD in Cocoa Touch/MessagesViewController.swift
 
 ```diff
-{% raw %}         return store.count
+{% raw %} import UIKit
+ 
+ class MessagesViewController: UITableViewController {
+-    
++
+     var store: MessageStore!
+-    
++
+     override func viewDidLoad() {
+         tableView.accessibilityIdentifier = "Messages Table"
+         store = MessageStore()
      }
-     
-+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
+-    
++
+     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+         return store.count
+     }
+ 
++    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
++        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
 +        return cell
 +    }
-     
++
      @IBAction func addMessage(sender: AnyObject) {
-         store.create(){% endraw %}
+         store.create()
+         tableView.reloadData()
+     }
+-    
++
+ }{% endraw %}
 ```
 
 We do the minimum necessary to get past the current acceptance test error: we implement `tableView(_:cellForRowAtIndexPath:)` to dequeue a cell with the identifier "Cell" (we only need one kind of cell), and we mark the prototype cell in our storyboard with that identifier.
@@ -290,39 +305,39 @@ Red: Expected cell label to be 'Hello, test!', was '(null)'
 Now the cell is retrieved, but our assertion about the content of the cell's label is failing. Because we didn't customize the cell at all, it doesn't have a label by default.
 
 
-### Pass text along into message [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/086f4b14464b33ba23fe3d6fad61a89a3c13d53e)
+### Pass message text along into post [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/9e3880c110eef43a76466e6ca4db07151ce8f3c9)
 
 #### Learn TDD in Cocoa Touch/MessagesViewController.swift
 
 ```diff
-{% raw %}     
+{% raw %} 
      var store: MessageStore!
-     
+ 
 +    @IBOutlet var messageField: UITextField!
-+    
++
      override func viewDidLoad() {
          tableView.accessibilityIdentifier = "Messages Table"
          store = MessageStore()
 ...
-     
-     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
+ 
+     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
 +        let message = store.find(indexPath.row)
-+        
++
 +        cell.textLabel?.text = message.text
-+        
++
          return cell
      }
-     
+ 
      @IBAction func addMessage(sender: AnyObject) {
 -        store.create()
 -        tableView.reloadData()
-+        if let text = messageField.text {
-+            store.create(["text": text])
++        if let message = messageField.text {
++            store.create(["text": message])
 +            tableView.reloadData()
 +        }
      }
-     
+ 
  }{% endraw %}
 ```
 
@@ -335,7 +350,7 @@ First Red: Value of type `MessageStore` has no member `find`
 The first compilation error we get is that there is no `find()` method on `MessageStore`.
 
 
-### Add find method [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/03a55b174150a503e752e47368d1197ceec18e38)
+### Add find method [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/3e8d85bc5b4cd80b690a5d5c4ac3cb0817f624c6)
 
 #### Learn TDD in Cocoa Touch/MessageStore.swift
 
@@ -343,7 +358,7 @@ The first compilation error we get is that there is no `find()` method on `Messa
 {% raw %}         messages.append(message)
      }
      
-+    func find(index: Int) -> Message {
++    func find(_ index: Int) -> Message {
 +        return Message()
 +    }
 +    
@@ -352,12 +367,12 @@ The first compilation error we get is that there is no `find()` method on `Messa
 
 Rather than dropping down to the unit level yet, we fix the compilation error right away, because until our code compiles we can't get any other feedback from tests. We simply add a `find()` method that takes an `Int` parameter and returns a `Message`. To do the minimum necessary to satisfy the compiler, we just instantiate and return a new empty `Message`.
 
-Red: Value of type `Message` has no member `text`
+Red: Value of type `Message` has no member `message`
 
-Now our `Message` is being returned to the view controller, but when it tries to access the `text` property, there isn't one.
+Now our `Message` is being returned to the view controller, but when it tries to access the `message` property, there isn't one.
 
 
-### Add text property to message [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/519378e22670895ea40cebe4cee807303b6be3b4)
+### Add text field to message [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/8d3835b1196c89de5a93cd9808b92a3d6c3aa920)
 
 #### Learn TDD in Cocoa Touch/Message.swift
 
@@ -376,7 +391,7 @@ Red: Argument passed to a call that takes no arguments
 Previously `create()` didn't have any arguments because all it needed to do was result in an incremented `count`. Now that our view controller is passing a dictionary into it with the message string, we need to update our other code to match.
 
 
-### Add message data param [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/f2b709355a81d873e2265e754ba46d31feff1b5e)
+### Add message data param [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/d06895bd47ed660a5453e2407b9ba845bbd2a199)
 
 #### Learn TDD in Cocoa Touch/MessageStore.swift
 
@@ -385,7 +400,7 @@ Previously `create()` didn't have any arguments because all it needed to do was 
      }
  
 -    func create() {
-+  func create(messageData: [String:String]) {
++    func create(_ messageData: [String:String]) {
          let message = Message()
          messages.append(message)
      }{% endraw %}
@@ -412,7 +427,7 @@ Red: Expected cell label to be 'Hello, test!', was '(null)'
 Like last time, this is the same acceptance test failure we were getting previously. We've added the parameters and properties to pass the message along from the text field into the cell label, but we haven't actually persisted it: in our `find()` method, we just return an empty `Message`.
 
 
-### Add store unit test for find [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/a7b1fe55edd6e0ecdb2ab0d706a6c7e55a1a5bda)
+### Specify store should retrieve posts [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/aa9f3474718fa509b82444ec03a2df3e760b9abe)
 
 #### Unit Tests/MessageStoreTests.swift
 
@@ -422,35 +437,35 @@ Like last time, this is the same acceptance test failure we were getting previou
      }
 +    
 +    func testItAllowsRetrievingAPostByRow() {
-+        let testMessage = "test message"
-+        store.create(["text": testMessage])
++        let testText = "test text"
++        store.create(["text": testText])
 +        
 +        let message = store.find(0)
-+        XCTAssertEqual(message.text, testMessage)
++        XCTAssertEqual(message.text, testText)
 +    }
  }{% endraw %}
 ```
 
-We add a `MessageStore` unit test showing the behavior we need: when `create()` is called with a certain text key, the message we later `find()` should have that same message.
+We add a `MessageStore` unit test showing the behavior we need: when `create()` is called with a certain message key, the post we later `find()` should have that same message.
 
 Red: (“nil”) is not equal to (“Optional(“test message”)”)
 
 With this unit test failure, we've reproduced the problem we're seeing at the acceptance test level.
 
 
-### Save and retrieve message with data [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/5447ebf4e0e31cdfe231f3d3eba4423d26fee3fe)
+### Save and retrieve message with data [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/a032c589e6f6e1dbeb3eee78b456639fe8d07a1c)
 
 #### Learn TDD in Cocoa Touch/MessageStore.swift
 
 ```diff
 {% raw %} 
-   func create(messageData: [String:String]) {
+     func create(_ messageData: [String:String]) {
          let message = Message()
 +        message.text = messageData["text"]
          messages.append(message)
      }
      
-     func find(index: Int) -> Message {
+     func find(_ index: Int) -> Message {
 -        return Message()
 +        return messages[index]
      }
