@@ -16,7 +16,7 @@ The feature we'll build is the age-old tutorial feature: creating a blog post.
 
 To learn more about TDD, I recommend:
 
-* [_The RSpec Book_](https://www.amazon.com/RSpec-Book-Behaviour-Development-Cucumber/dp/1934356379) - uses older versions of Rails and RSpec, but it's a great simple walkthrough of outside-in testing.
+* [_Effective Testing with RSpec 3_](https://pragprog.com/book/rspec3/effective-testing-with-rspec-3)
 {% include tutorial-goos.md %}
 * [_Rails 4 Test Prescriptions_](https://pragprog.com/book/nrtest2/rails-4-test-prescriptions) by Noel Rappin
 
