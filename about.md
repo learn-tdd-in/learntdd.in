@@ -23,7 +23,7 @@ You can contribute to Learn TDD by:
   - Correcting errors.
   - Improving practices to framework standards.
   - Updating to a newer version of the framework.
-- Creating a Learn TDD Git repo that walks through building a simple CRUD feature in a riven framework using TDD.
+- Creating a Learn TDD Git repo that walks through building a simple CRUD feature in a different framework using TDD.
 
 ## About Me
 
