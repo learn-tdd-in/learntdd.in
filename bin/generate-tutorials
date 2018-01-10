@@ -13,4 +13,4 @@ puts 'laravel'
 system('bin/log2blog generate learn-tdd-in/laravel e3049ae --token $GITHUB_OAUTH_TOKEN --skip composer.lock > laravel/_commits.md')
 
 puts 'rails'
-system('bin/log2blog generate learn-tdd-in/rails 9b20349 --token $GITHUB_OAUTH_TOKEN --skip db/schema.rb > rails/_commits.md')
+system('bin/log2blog generate learn-tdd-in/rails 6d0a570 --token $GITHUB_OAUTH_TOKEN --skip db/schema.rb > rails/_commits.md')
