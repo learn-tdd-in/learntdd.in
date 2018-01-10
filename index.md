@@ -1,5 +1,6 @@
 ---
-layout: page
+layout: home
+title: Learn TDD
 ---
 
 ## Learn Test-Driven Development in…
