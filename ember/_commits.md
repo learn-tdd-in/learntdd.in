@@ -1,44 +1,4 @@
-### Add acceptance test scaffold [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/c05369146b5ff3e2e696396f46a72562dc400a68)
-
-#### tests/acceptance/creating-a-blog-post-test.js
-
-```diff
-{% raw %}+/* jshint expr:true */
-+import {
-+  describe,
-+  it,
-+  beforeEach,
-+  afterEach
-+} from 'mocha';
-+import { expect } from 'chai';
-+import startApp from '../helpers/start-app';
-+import destroyApp from '../helpers/destroy-app';
-+
-+describe('Acceptance: CreatingABlogPost', function() {
-+  let application;
-+
-+  beforeEach(function() {
-+    application = startApp();
-+  });
-+
-+  afterEach(function() {
-+    destroyApp(application);
-+  });
-+
-+  it('can visit /creating-a-blog-post', function() {
-+    visit('/creating-a-blog-post');
-+
-+    andThen(function() {
-+      expect(currentPath()).to.equal('creating-a-blog-post');
-+    });
-+  });
-+});{% endraw %}
-```
-
-`ember g acceptance-test creating-a-blog-post`
-
-
-### Specify the feature for creating a blog post [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/3283febc02b3870e333bd17e3ca5860c02a8ebdf)
+### Specify the feature for creating a blog post [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/7a121b9fe3353feb28ccbc4b3160ed7793322c81)
 
 #### tests/acceptance/creating-a-blog-post-test.js
 
@@ -71,7 +31,7 @@ We set up the entire acceptance test at once. This test will guide us through th
 Red: The URL '/posts/new' did not match any routes in your application
 
 
-### Add new blog post route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/6121cf4ba91796e8509b09f698885eaa588bd1e4)
+### Add new blog post route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/174e844fcadc46ab588cb1b9e1c39e94741601ae)
 
 #### app/router.js
 
@@ -113,7 +73,7 @@ Red: Element .js-post-form-title not found.
 The next error is simple: no title form field is found to fill text into.
 
 
-### Add post-form component scaffold [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/684d9ac0f060718ec5e254916ddfadf437dc61fd)
+### Add post-form component scaffold [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/d35974f327248c0961ced0c5c58a3d86f89f1439)
 
 #### app/components/post-form.js
 
@@ -145,36 +105,30 @@ The next error is simple: no title form field is found to fill text into.
 #### tests/integration/components/post-form-test.js
 
 ```diff
-{% raw %}+/* jshint expr:true */
-+import { expect } from 'chai';
-+import {
-+  describeComponent,
-+  it
-+} from 'ember-mocha';
+{% raw %}+import { expect } from 'chai';
++import { it, describe } from 'mocha';
++import { setupComponentTest } from 'ember-mocha';
 +import hbs from 'htmlbars-inline-precompile';
 +
-+describeComponent(
-+  'post-form',
-+  'Integration: PostFormComponent',
-+  {
++describe('Integration: PostFormComponent', function() {
++  setupComponentTest('post-form', {
 +    integration: true
-+  },
-+  function() {
-+    it('renders', function() {
-+      // Set any properties with this.set('myProperty', 'value');
-+      // Handle any actions with this.on('myAction', function(val) { ... });
-+      // Template block usage:
-+      // this.render(hbs`
-+      //   {{#post-form}}
-+      //     template content
-+      //   {{/post-form}}
-+      // `);
++  });
 +
-+      this.render(hbs`{{post-form}}`);
-+      expect(this.$()).to.have.length(1);
-+    });
-+  }
-+);{% endraw %}
++  it('renders', function() {
++    // Set any properties with this.set('myProperty', 'value');
++    // Handle any actions with this.on('myAction', function(val) { ... });
++    // Template block usage:
++    // this.render(hbs`
++    //   {{#post-form}}
++    //     template content
++    //   {{/post-form}}
++    // `);
++
++    this.render(hbs`{{post-form}}`);
++    expect(this.$()).to.have.length(1);
++  });
++});{% endraw %}
 ```
 
 `ember g component post-form`
@@ -182,40 +136,39 @@ The next error is simple: no title form field is found to fill text into.
 Rather than just getting the test to pass by putting a form input on the route's template, we "write the code we wish we had." In this case, we wish we had a `post-form` component to use that would provide the form inputs for us. We generate it and go ahead and render it in our route template.
 
 
-### Specify form component should render the form [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/c47a8102f1dfd54639c707973579f62cb9562c46)
+### Specify form component should render the form [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/84a810acdef135c47e4ba0ff963ad37979955a11)
 
 #### tests/integration/components/post-form-test.js
 
 ```diff
 {% raw %}     integration: true
-   },
-   function() {
--    it('renders', function() {
--      // Set any properties with this.set('myProperty', 'value');
--      // Handle any actions with this.on('myAction', function(val) { ... });
--      // Template block usage:
--      // this.render(hbs`
--      //   {{#post-form}}
--      //     template content
--      //   {{/post-form}}
--      // `);
+   });
+ 
+-  it('renders', function() {
+-    // Set any properties with this.set('myProperty', 'value');
+-    // Handle any actions with this.on('myAction', function(val) { ... });
+-    // Template block usage:
+-    // this.render(hbs`
+-    //   {{#post-form}}
+-    //     template content
+-    //   {{/post-form}}
+-    // `);
 -
-+    it('renders the form', function() {
-       this.render(hbs`{{post-form}}`);
--      expect(this.$()).to.have.length(1);
++  it('renders the form', function() {
+     this.render(hbs`{{post-form}}`);
+-    expect(this.$()).to.have.length(1);
 +
-+      var title = this.$('.js-post-form-title');
-+      expect(title.length,
-+             'Element .js-post-form-title not found'
-+             ).to.equal(1);
++    var title = this.$('.js-post-form-title');
++    expect(title.length,
++           'Element .js-post-form-title not found'
++           ).to.equal(1);
 +
-+      var body = this.$('.js-post-form-body');
-+      expect(body.length,
-+             'Element .js-post-form-body not found'
-+             ).to.equal(1);
-     });
-   }
- );{% endraw %}
++    var body = this.$('.js-post-form-body');
++    expect(body.length,
++           'Element .js-post-form-body not found'
++           ).to.equal(1);
+   });
+ });{% endraw %}
 ```
 
 We create a unit test for the component that reproduces the acceptance test error.
@@ -227,7 +180,7 @@ Inner red: Element .js-post-form-title not found: expected 0 to equal 1
 The default error message isn't the same because the Ember component tests use a different framework than acceptance tests, so we write a custom error message to match more closely.
 
 
-### Add form component markup [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/a6eb4d90edf67a723622e9e7c2d46022ccb75ce6)
+### Add form component markup [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/b71001cf42bfe94b587aa1e00ec26a84ed3d40e9)
 
 #### app/templates/components/post-form.hbs
 
@@ -252,23 +205,17 @@ Inner green; outer test hangs after submitting form
 Now that we're rendering markup for the component, its unit test is able to find the title field and fill it in. The acceptance test also gets past the point of filling in the title, and now it hangs after clicking the save button. I'm not sure why, but I think it has to do with the fact that, since that form isn't wired up to any Ember behavior, the form is actually submitted in the browser, which closes down the Ember app. In any case, we need to get Ember handling the form submission.
 
 
-### Specify the component should call the save action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/a25459d29fb64677d6b61a3a6fed1e8801134ca8)
+### Specify the component should call the save action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/14e7c07302737c94788d51e873df3b150f3fc62b)
 
 #### tests/acceptance/creating-a-blog-post-test.js
 
 ```diff
-{% raw %} /* jshint expr:true */
- import {
-   describe,
--  it,
-+  // it,
-   beforeEach,
-   afterEach
- } from 'mocha';
+{% raw %}-import { describe, it, beforeEach, afterEach } from 'mocha';
 -import { expect } from 'chai';
++import { describe, /*it,*/ beforeEach, afterEach } from 'mocha';
 +// import { expect } from 'chai';
- import startApp from '../helpers/start-app';
- import destroyApp from '../helpers/destroy-app';
+ import startApp from 'learn-tdd-in-ember/tests/helpers/start-app';
+ import destroyApp from 'learn-tdd-in-ember/tests/helpers/destroy-app';
  
 ...
      destroyApp(application);
@@ -290,25 +237,24 @@ Now that we're rendering markup for the component, its unit test is able to find
 #### tests/integration/components/post-form-test.js
 
 ```diff
-{% raw %}              'Element .js-post-form-body not found'
-              ).to.equal(1);
-     });
+{% raw %}            'Element .js-post-form-body not found'
+            ).to.equal(1);
+   });
 +
-+    it('calls the submit handler', function() {
-+      let submitHandlerCalled = false;
-+      this.set('testSubmitHandler', () => {
-+        submitHandlerCalled = true;
-+      });
-+
-+      this.render(hbs`{{post-form submitHandler=(action testSubmitHandler)}}`);
-+
-+      this.$('.js-post-form-save').click();
-+
-+      expect(submitHandlerCalled,
-+             "Expected submit handler to be called").to.be.true;
++  it('calls the submit handler', function() {
++    let submitHandlerCalled = false;
++    this.set('testSubmitHandler', () => {
++      submitHandlerCalled = true;
 +    });
-   }
- );{% endraw %}
++
++    this.render(hbs`{{post-form submitHandler=(action testSubmitHandler)}}`);
++
++    this.$('.js-post-form-save').click();
++
++    expect(submitHandlerCalled,
++           "Expected submit handler to be called").to.be.true;
++  });
+ });{% endraw %}
 ```
 
 Inner test hangs after submitting form
@@ -318,7 +264,7 @@ We reproduce the acceptance test error at the component level, which is unfortun
 In order to get clear test output from the component test, we temporarily disable the acceptance test so it's only the component test causing the suite to hang.
 
 
-### Add form submit action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/714b3ede96e6018ffcd1842c4a0a30dbd3fe57ee)
+### Add form submit action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/b319404b0716a31820118503481b62078c1d776f)
 
 #### app/templates/components/post-form.hbs
 
@@ -337,7 +283,7 @@ Inner red: Expected submit handler to be called: expected false to be true
 Ember doesn't complain about the fact that we don't actually have a "submitForm" action on the component; it just proceeds on its way. So our test's submit handler is never called.
 
 
-### Add submitForm action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/7e495c0f92f29680cacff3c6cda75d723358d254)
+### Add submitForm action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/6359fb9864abc8e7ca38a48202905130f403dc22)
 
 #### app/components/post-form.js
 
@@ -357,18 +303,12 @@ Ember doesn't complain about the fact that we don't actually have a "submitForm"
 #### tests/acceptance/creating-a-blog-post-test.js
 
 ```diff
-{% raw %} /* jshint expr:true */
- import {
-   describe,
--  // it,
-+  it,
-   beforeEach,
-   afterEach
- } from 'mocha';
+{% raw %}-import { describe, /*it,*/ beforeEach, afterEach } from 'mocha';
 -// import { expect } from 'chai';
++import { describe, it, beforeEach, afterEach } from 'mocha';
 +import { expect } from 'chai';
- import startApp from '../helpers/start-app';
- import destroyApp from '../helpers/destroy-app';
+ import startApp from 'learn-tdd-in-ember/tests/helpers/start-app';
+ import destroyApp from 'learn-tdd-in-ember/tests/helpers/destroy-app';
  
 ...
      destroyApp(application);
@@ -393,7 +333,7 @@ Inner green; outer red: TypeError: undefined is not a constructor (evaluating 't
 Now our component test is able to verify that the submit handler is called. We go ahead and re-enable our acceptance test, and now it's no longer hanging either--but it errors out because submitting the form expects a submitHandler to be passed in, and there isn't one.
 
 
-### Add new post controller for save action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/ced8133d448412dfabeef63cf943acee03af5b26)
+### Add new post controller for save action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/c821933c95c6d49e518b64a4c4c1bf86b37fb2a3)
 
 #### app/controllers/posts/new.js
 
@@ -428,7 +368,7 @@ Outer red: The route posts.show was not found
 Now the acceptance test successfully attempts to transition to the `posts.show` route, but it doesn't yet exist.
 
 
-### Add posts.show route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/5e3bfd172a38ad2cd5d995bde81edf6eb05dd64c)
+### Add posts.show route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/c6c646bb233219f26a80101a0601aa408ef73418)
 
 #### app/router.js
 
@@ -466,7 +406,7 @@ Outer red: expected '' to equal 'Test Post'
 Now the acceptance test is able to display the `posts.show` route, but it can't find the post's title on the page, because we aren't rendering anything to the screen yet.
 
 
-### Add detail component scaffold [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/54bab2bfa450c6f0d8dd23e922129a4a2b495794)
+### Add detail component scaffold [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/e68a6fe099b5fd2e084c94fb59ad6b2a14f6792f)
 
 #### app/components/post-detail.js
 
@@ -498,36 +438,30 @@ Now the acceptance test is able to display the `posts.show` route, but it can't 
 #### tests/integration/components/post-detail-test.js
 
 ```diff
-{% raw %}+/* jshint expr:true */
-+import { expect } from 'chai';
-+import {
-+  describeComponent,
-+  it
-+} from 'ember-mocha';
+{% raw %}+import { expect } from 'chai';
++import { it, describe } from 'mocha';
++import { setupComponentTest } from 'ember-mocha';
 +import hbs from 'htmlbars-inline-precompile';
 +
-+describeComponent(
-+  'post-detail',
-+  'Integration: PostDetailComponent',
-+  {
++describe('Integration: PostDetailComponent', function() {
++  setupComponentTest('post-detail', {
 +    integration: true
-+  },
-+  function() {
-+    it('renders', function() {
-+      // Set any properties with this.set('myProperty', 'value');
-+      // Handle any actions with this.on('myAction', function(val) { ... });
-+      // Template block usage:
-+      // this.render(hbs`
-+      //   {{#post-detail}}
-+      //     template content
-+      //   {{/post-detail}}
-+      // `);
++  });
 +
-+      this.render(hbs`{{post-detail}}`);
-+      expect(this.$()).to.have.length(1);
-+    });
-+  }
-+);{% endraw %}
++  it('renders', function() {
++    // Set any properties with this.set('myProperty', 'value');
++    // Handle any actions with this.on('myAction', function(val) { ... });
++    // Template block usage:
++    // this.render(hbs`
++    //   {{#post-detail}}
++    //     template content
++    //   {{/post-detail}}
++    // `);
++
++    this.render(hbs`{{post-detail}}`);
++    expect(this.$()).to.have.length(1);
++  });
++});{% endraw %}
 ```
 
 `ember g component post-detail`
@@ -535,34 +469,33 @@ Now the acceptance test is able to display the `posts.show` route, but it can't 
 Again, instead of making the acceptance test pass as quickly as possible, we "write the code we wish we had": a post display component.
 
 
-### Specify detail component should display model fields [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/2a08f9e70704af1cdd53b700751d7663a528aeb4)
+### Specify detail component should display model fields [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/b3b4d6c2b14e76c30f11c122181c8888b65f22f9)
 
 #### tests/integration/components/post-detail-test.js
 
 ```diff
 {% raw %}     integration: true
-   },
-   function() {
--    it('renders', function() {
--      // Set any properties with this.set('myProperty', 'value');
--      // Handle any actions with this.on('myAction', function(val) { ... });
--      // Template block usage:
--      // this.render(hbs`
--      //   {{#post-detail}}
--      //     template content
--      //   {{/post-detail}}
--      // `);
-+    it('displays details for the passed-in post', function() {
-+      this.set('testModel', {title: 'Test Title', body: 'This is a test post!'});
+   });
  
--      this.render(hbs`{{post-detail}}`);
--      expect(this.$()).to.have.length(1);
-+      this.render(hbs`{{post-detail post=testModel}}`);
-+      expect(this.$('.js-post-detail-title').text()).to.include('Test Title');
-+      expect(this.$('.js-post-detail-body').text()).to.include('This is a test post!');
-     });
-   }
- );{% endraw %}
+-  it('renders', function() {
+-    // Set any properties with this.set('myProperty', 'value');
+-    // Handle any actions with this.on('myAction', function(val) { ... });
+-    // Template block usage:
+-    // this.render(hbs`
+-    //   {{#post-detail}}
+-    //     template content
+-    //   {{/post-detail}}
+-    // `);
++  it('displays details for the passed-in post', function() {
++    this.set('testModel', {title: 'Test Title', body: 'This is a test post!'});
+ 
+-    this.render(hbs`{{post-detail}}`);
+-    expect(this.$()).to.have.length(1);
++    this.render(hbs`{{post-detail post=testModel}}`);
++    expect(this.$('.js-post-detail-title').text()).to.include('Test Title');
++    expect(this.$('.js-post-detail-body').text()).to.include('This is a test post!');
+   });
+ });{% endraw %}
 ```
 
 We add a component test that reproduces the acceptance test error: we specify that the component displays the post's title. And we go ahead and specify that it displays the body, too, because that seems safe in this case.
@@ -570,7 +503,7 @@ We add a component test that reproduces the acceptance test error: we specify th
 Inner red: expected '' to equal 'Test Title'
 
 
-### Add post detail display markup [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/7f036fd2218001bbf1347a71023dbffc22b55e7c)
+### Add post detail display markup [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/47813e701a5f5888d0b5a2430e1d5d4589dfe2e3)
 
 #### app/templates/components/post-detail.hbs
 
@@ -590,7 +523,7 @@ Inner green; outer red: expected '' to equal 'Test Post'
 The acceptance test still has the same error, because we aren't passing the model into the component.
 
 
-### Hook routes into post model [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/30dc61f27995c04bc5585b279a121459d78a9e6f)
+### Hook routes into post model [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/887d5901b94e7a54196b88ba70dad60e9175245e)
 
 #### app/controllers/posts/new.js
 
@@ -644,7 +577,7 @@ Outer red: No model was found for 'post'
 With this logic added, the acceptance test errors out quickly: there _is_ no `post` model.
 
 
-### Add post model [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/c72828ff16ef5c913d28c763ff08ecc5fc8819be)
+### Add post model [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/c5d126601eeb8b49c7b3d69b8d8ec296918d3d5b)
 
 #### app/models/post.js
 
@@ -663,7 +596,7 @@ Outer red: Your Ember app tried to POST '/posts', but there was no route defined
 Next we get an error from Mirage, our fake server. It needs a corresponding post creation endpoint created.
 
 
-### Add mirage create post route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/e2bb7e4ea133bed54a9e930ffce125d2202b597d)
+### Add mirage create post route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/42fd81ba8925cbd269ebbed42baf807994a5fa6a)
 
 #### mirage/config.js
 
@@ -678,7 +611,7 @@ Outer red: Pretender intercepted POST /posts but encountered an error: Mirage: T
 Now that Mirage has an endpoint, it returns another error: a Mirage model for `post` needs to be added too.
 
 
-### Add mirage model [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/a8775df1abf8f6070a618ae45fb4edda6c1c3d5f)
+### Add mirage model [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/6dc9632db8a91b1d0fdac89dd054b9d37aafba34)
 
 #### mirage/models/post.js
 
@@ -691,36 +624,52 @@ Now that Mirage has an endpoint, it returns another error: a Mirage model for `p
 
 `ember g mirage-model post`
 
-Outer red: Pretender intercepted POST /posts but encountered an error: Mirage: You're using a shorthand or #normalizedRequestAttrs, but your serializer's normalize function did not return a valid JSON:API document. http://www.ember-cli-mirage.com/docs/v0.2.x/serializers/#normalizejson
+Outer red: Your Ember app tried to GET '/posts/1', but there was no route defined to handle this request. Define a route that matches this path in your mirage/config.js file. Did you forget to add your namespace?
 
-The next error is pretty obscure. What's happening is that no attributes are being sent in the create request, and Mirage is erroring out right away. We do want the `title` attribute to be sent, so this is a valid error situation.
+The next error is in Mirage again: we now get to the post show page, but Mirage isn't configured to retrieve a post by ID.
 
 
-### Specify form should send the form data [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/a5e305f4fe1268bde0fd59344e3eef91c1967fe8)
+### Add mirage get post route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/ac51d834657c984f5b89ef2258bc7ead8b91dd90)
+
+#### mirage/config.js
+
+```diff
+{% raw %} export default function() {
++  this.get('/posts/:id');
+   this.post('/posts');
+ }{% endraw %}
+```
+
+Outer red: expected '' to include 'Test Post'
+
+We configure Mirage to return a post retrieved by ID. This allows the post detail screen to be displayed, but no title is shown. This is because the data from our create post form isn't actually submitted.
+
+
+### Specify form should send the form data [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/a7ed24721bc28d01092f0560320960bfd3761e28)
 
 #### tests/integration/components/post-form-test.js
 
 ```diff
-{% raw %}              ).to.equal(1);
+{% raw %}            ).to.equal(1);
+   });
+ 
+-  it('calls the submit handler', function() {
++  it('calls the submit handler with the form data', function() {
+     let submitHandlerCalled = false;
+-    this.set('testSubmitHandler', () => {
++    this.set('testSubmitHandler', (postData) => {
+       submitHandlerCalled = true;
++      expect(postData.title).to.equal('New Title');
++      expect(postData.body).to.equal('New Body');
      });
  
--    it('calls the submit handler', function() {
-+    it('calls the submit handler with the form data', function() {
-       let submitHandlerCalled = false;
--      this.set('testSubmitHandler', () => {
-+      this.set('testSubmitHandler', (postData) => {
-         submitHandlerCalled = true;
-+        expect(postData.title).to.equal('New Title');
-+        expect(postData.body).to.equal('New Body');
-       });
+     this.render(hbs`{{post-form submitHandler=(action testSubmitHandler)}}`);
  
-       this.render(hbs`{{post-form submitHandler=(action testSubmitHandler)}}`);
++    this.$('.js-post-form-title').val('New Title').blur();
++    this.$('.js-post-form-body').val('New Body').blur();
+     this.$('.js-post-form-save').click();
  
-+      this.$('.js-post-form-title').val('New Title').blur();
-+      this.$('.js-post-form-body').val('New Body').blur();
-       this.$('.js-post-form-save').click();
- 
-       expect(submitHandlerCalled,{% endraw %}
+     expect(submitHandlerCalled,{% endraw %}
 ```
 
 We add a component test case specifying that the post form should send the data from the form fields into the submit handler.
@@ -730,7 +679,7 @@ Inner red: undefined is not an object (evaluating 'postData.title')
 This means that no postData object is being sent into the submit handler at all.
 
 
-### Send post form data to save action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/cba7cec04bda940b27c914856d8677bfbb204b25)
+### Send post form data to save action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/2bd43c8eb86b26b1981c70dde79540a5a8e2751e)
 
 #### app/components/post-form.js
 
@@ -772,12 +721,59 @@ This means that no postData object is being sent into the submit handler at all.
 
 We get the component test to pass by making the input an Ember input helper, retrieving the saved value in it, and sending that in an object to the `save` action closure.
 
-Inner green; outer red: Pretender intercepted POST /posts but encountered an error: Mirage: You're using a shorthand or #normalizedRequestAttrs, but your serializer's normalize function did not return a valid JSON:API document. http://www.ember-cli-mirage.com/docs/v0.2.0-beta.9/serializers/#normalizejson
+Inner green; outer green
 
-Now the acceptance test still gives the same error, and in this case the tests aren't that helpful to guide us to why. What's going on is that the Ember Data `post` model doesn't have any fields defined on it, so it isn't saved and retrieved by the show page.
+The unit and acceptance test both pass. We've successfully let our acceptance test drive out the behavior of this feature!
+
+Interestingly, note that the tests didn't drive us to actually add attributes to our Post model. Apparently Ember 2.13 will allow assigning arbitrary attributes to a model in-memory and will preserve them. But we know we need those attributes to be defined.
+
+The TDD way to approach this problem is to find the test that will demonstrate the problem with the attributes not being defined. In this case, a test of the post retrieval page pulling up a post from the backend will show the problem.o
 
 
-### Add fields to post model [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/c5564deb41fe3e3cf1b675de5542085b61e6bf95)
+### Specify show page should display model from the database [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/91abaee781690763061b459d72dd2fec1e7dfe47)
+
+#### tests/acceptance/viewing-a-blog-post-test.js
+
+```diff
+{% raw %}+import { describe, it, beforeEach, afterEach } from 'mocha';
++import { expect } from 'chai';
++import startApp from 'learn-tdd-in-ember/tests/helpers/start-app';
++import destroyApp from 'learn-tdd-in-ember/tests/helpers/destroy-app';
++
++describe('Acceptance | viewing a blog post', function() {
++  let application;
++
++  beforeEach(function() {
++    application = startApp();
++  });
++
++  afterEach(function() {
++    destroyApp(application);
++  });
++
++  it('can display blog posts', function() {
++    let post = window.server.create('post', {
++      title: 'Test Post',
++      body: 'This post is a test!'
++    });
++    visit(`/posts/${post.id}`);
++
++    return andThen(() => {
++      expect(find('.js-post-detail-title').text()).to.include('Test Post');
++      expect(find('.js-post-detail-body').text()).to.include('This post is a test!');
++    });
++  });
++});{% endraw %}
+```
+
+Outer red: expected '' to include 'Test Post'
+
+We create a new acceptance test for viewing a page. We use Mirage's `server.create()` method to create a test post directly in our fake backend. We specify that, when the post view page is shown, the post's title and body are visible.
+
+The test fails because no title is being outputted on the page. This is the problem that happens when we don't define attributes on our model.
+
+
+### Add attributes to model [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/f21a2d72ebfb7a4c85fed13171f5153bd5c15e3b)
 
 #### app/models/post.js
 
@@ -791,25 +787,7 @@ Now the acceptance test still gives the same error, and in this case the tests a
  });{% endraw %}
 ```
 
-We add the title and body fields to the post model, so now it's saved by the new page.
-
-Outer red: Your Ember app tried to GET '/posts/1', but there was no route defined to handle this request. Define a route that matches this path in your mirage/config.js file.
-
-The next error is in Mirage again: we now get to the post show page, but Mirage isn't configured to retrieve a post by ID.
-
-
-### Add mirage get post route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/68e8d05be5186696c6a83c0d9e1e31d9ae5bea0d)
-
-#### mirage/config.js
-
-```diff
-{% raw %} export default function() {
-+  this.get('/posts/:id');
-   this.post('/posts');
- }{% endraw %}
-```
-
 Outer green
 
-We configure Mirage to return a post retrieved by ID, and the acceptance test passes. We've successfully let our acceptance test drive out the behavior of this feature!
+We add title and body attributes to our model, and now both the title and body are shown on the get page. Our last bug is squashed!
 

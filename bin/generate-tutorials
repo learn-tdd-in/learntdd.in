@@ -4,13 +4,13 @@ require 'dotenv'
 Dotenv.load
 
 puts 'cocoa-touch'
-system('bin/log2blog generate learn-tdd-in/cocoa-touch 1da6b2f --token $GITHUB_OAUTH_TOKEN --skip "Main\.storyboard|project\.pbxproj" > learn-tdd/cocoa-touch/_commits.md')
+system('bin/log2blog generate learn-tdd-in/cocoa-touch 162ba03 --token $GITHUB_OAUTH_TOKEN --skip "Main\.storyboard|project\.pbxproj" > cocoa-touch/_commits.md')
 
 puts 'ember'
-system('bin/log2blog generate learn-tdd-in/ember 7a121b9fe3353feb28ccbc4b3160ed7793322c81 --token $GITHUB_OAUTH_TOKEN --skip "tests/unit" > learn-tdd/ember/_commits.md')
+system('bin/log2blog generate learn-tdd-in/ember 7a121b9 --token $GITHUB_OAUTH_TOKEN --skip "tests/unit" > ember/_commits.md')
 
 puts 'laravel'
-system('bin/log2blog generate learn-tdd-in/laravel e3049aee40d7533c8ee29e1c37838273dc3892cc --token $GITHUB_OAUTH_TOKEN --skip composer.lock > learn-tdd/laravel/_commits.md')
+system('bin/log2blog generate learn-tdd-in/laravel e3049ae --token $GITHUB_OAUTH_TOKEN --skip composer.lock > laravel/_commits.md')
 
 puts 'rails'
-system('bin/log2blog generate learn-tdd-in/rails 9b20349cd6c2f380cfbf9bcea100c6e85612a138 --token $GITHUB_OAUTH_TOKEN --skip db/schema.rb > learn-tdd/rails/_commits.md')
+system('bin/log2blog generate learn-tdd-in/rails 9b20349 --token $GITHUB_OAUTH_TOKEN --skip db/schema.rb > rails/_commits.md')
