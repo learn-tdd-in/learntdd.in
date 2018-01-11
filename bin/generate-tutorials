@@ -3,11 +3,11 @@
 require 'dotenv'
 Dotenv.load
 
+puts 'ember'
+system('bin/log2blog generate learn-tdd-in/ember cddb0e8 --token $GITHUB_OAUTH_TOKEN --skip "tests/unit" > ember/_commits.md')
+
 puts 'cocoa-touch'
 system('bin/log2blog generate learn-tdd-in/cocoa-touch 162ba03 --token $GITHUB_OAUTH_TOKEN --skip "Main\.storyboard|project\.pbxproj" > cocoa-touch/_commits.md')
-
-puts 'ember'
-system('bin/log2blog generate learn-tdd-in/ember 7a121b9 --token $GITHUB_OAUTH_TOKEN --skip "tests/unit" > ember/_commits.md')
 
 puts 'laravel'
 system('bin/log2blog generate learn-tdd-in/laravel e3049ae --token $GITHUB_OAUTH_TOKEN --skip composer.lock > laravel/_commits.md')
