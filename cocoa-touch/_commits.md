@@ -1,4 +1,4 @@
-### Specify adding a message [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/162ba03c0aa13b543e8c3a46a08a8d7062ab9c85)
+### Specify adding a message [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/2e43dd97dd12fd132a45a572538822cace543282)
 
 #### LearnTDDInCocoaTouchTests/E2E/CreatingAMessageTest.swift
 
@@ -30,41 +30,7 @@ The first error we get is that there is no message field:
 Red: NoMatchingElementException. ...accessibilityID('messageTextField')
 
 
-### Remove default view controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/a790831d24827bdc6139826efb6b86c88e7bd658)
-
-#### LearnTDDInCocoaTouch/ViewController.swift
-
-```diff
-{% raw %}-//
--//  ViewController.swift
--//  LearnTDDInCocoaTouch
--//
--//  Created by Josh Justice on 1/1/18.
--//  Copyright © 2018 Learn TDD. All rights reserved.
--//
--
--import UIKit
--
--class ViewController: UIViewController {
--
--    override func viewDidLoad() {
--        super.viewDidLoad()
--        // Do any additional setup after loading the view, typically from a nib.
--    }
--
--    override func didReceiveMemoryWarning() {
--        super.didReceiveMemoryWarning()
--        // Dispose of any resources that can be recreated.
--    }
--
--
--}
--{% endraw %}
-```
-
-
-
-### Add table view controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/7edd84929fa47bbba59e8b63226604c2408caa60)
+### Add new message field [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/318ffc31eeaa8530efef746fdac806dcc8d23a42)
 
 #### LearnTDDInCocoaTouch/MessagesViewController.swift
 
@@ -76,29 +42,28 @@ Red: NoMatchingElementException. ...accessibilityID('messageTextField')
 +}{% endraw %}
 ```
 
+As part of adding the message field, we go ahead and set up the table view controller we’ll be using. We set the accessibility identifier on the field to "messageTextField" so the acceptance test can find it.
 
-
-### Add new message field [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/958dc1810bc37afd1e708bcdbb73c7b9bbcec7e8)
-
-
-As part of adding the message field, we go ahead and set up the table view controller we’ll be using. We set the accessibility label on the field to “New Message Field” so the acceptance test can find it.
+![message text field](messageTextField.png)
 
 The next error we get is similar: now we can’t find the Save button:
 
 Red: NoMatchingElementException. accessibilityID('saveButton')
 
 
-### Place Save button [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/c7e96ff1034ef1ca545d6214c4a216a3b5415193)
+### Add save button [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/3414a1146d39570b00a26a8f73e9feca09012280)
 
 
-We put a Save button into the view so the test can find it.
+We put a Save button into the view and give it an accessibility identifier of "saveButton" so the test can find it.
+
+![save button](saveButton.png)
 
 Next, the test sees that the new message field isn't correctly cleared out when the Save button is tapped:
 
 Red: AssertionFailedException. Element Matcher: accessibilityID('messageTextField'), Assertion Criteria: hasText('')
 
 
-### Clear text field upon save [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/b17820f30c4e4f48698f74a62a919f2c41382f20)
+### Clear text field upon save [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/9365e8cfd0e3f516288820a6bfda172f8dc2cf0d)
 
 #### LearnTDDInCocoaTouch/MessagesViewController.swift
 
@@ -122,7 +87,7 @@ Now our feature test makes it all the way to the final assertion. The test is lo
 Red: NoMatchingElementException. accessibilityLabel('New message')
 
 
-### Drive table view out of messages store [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/3d5ba6e57f509d36d6731b9186802fb97b7f6d62)
+### Drive table view out of messages store [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/95a37d884e6d7f700445f546c93aa2a390e37d15)
 
 #### LearnTDDInCocoaTouch/MessagesViewController.swift
 
@@ -173,7 +138,7 @@ Because we haven't implemented this MessageStore, we get compiler errors. Let's 
 Red: Use of undeclared type 'MessageStore'
 
 
-### Add message store [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/03f7990bed1afed9c5f7d9836c38f405b3508a0b)
+### Add message store [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/2428a8189fd7548c2edac396f49854e8ce2f4d08)
 
 #### LearnTDDInCocoaTouch/MessageStore.swift
 
@@ -187,10 +152,10 @@ Red: Use of undeclared type 'MessageStore'
 
 Let's only write enough code to fix that compiler error. First, we create a MessageStore type.
 
-Red: Value of type 'MessageStore' has no member 'create'
+Red: Value of type 'MessageStore' has no member 'count'
 
 
-### Add count property [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/488726ac9322b2db148c94a7d62e81b50e6dba83)
+### Add count property [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/60c7935d231aac333ecca6f728e9997dc75bcda8)
 
 #### LearnTDDInCocoaTouch/MessageStore.swift
 
@@ -205,10 +170,10 @@ Red: Value of type 'MessageStore' has no member 'create'
 
 Right now we just want to add the minimal code to get the app to compile. We don't want to add any behavior to the class yet; we'll wait until we have a unit test for it to do that. The simplest way to get a count property to compile is to just add a simple stored property. An initial value of zero seems reasonable.
 
-Red: Value of type 'MessageStore' has no member 'get'
+Red: Value of type 'MessageStore' has no member 'create'
 
 
-### Add create method [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/b3002bfb6e27899c02bc23bb02580dc48adbd28f)
+### Add create method [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/c0607d8e846d8cb5d306dbd58bf3a32692d9e819)
 
 #### LearnTDDInCocoaTouch/MessageStore.swift
 
@@ -228,7 +193,7 @@ The create method has no return value, so it's easy to get it to compile: we jus
 Red: Value of type 'MessageStore' has no member 'get'
 
 
-### Add get method to store [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/fb0dc996e3d77cdf31da9c2e9b2c05aaf57e85ca)
+### Add get method to store [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/37717c174c4c6826a30887a9e3202e41f65129e6)
 
 #### LearnTDDInCocoaTouch/MessageStore.swift
 
@@ -250,7 +215,7 @@ Now the MessageStore compiles, but our feature test is still failing with the sa
 Red: NoMatchingElementException. accessibilityLabel('New message')
 
 
-### Specify count should increase [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/2fc45af945fe6c0f002e6959bc40a584571bffc8)
+### Specify count should increase [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/b8fd525a574c0d4b90bf562811ce37e5b7287835)
 
 #### LearnTDDInCocoaTouchTests/Unit/MessageStoreTests.swift
 
@@ -283,7 +248,7 @@ The first problem we have is that the table view is never showing any rows. To g
 Inner Red: Expected store.count to be 1 but was 0
 
 
-### Increase count upon create [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/252dc712641d497c27b95e746c5d0230e9c7a032)
+### Increase count upon create [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/4b71c8e91315d14b04f255aeb04696540bffb677)
 
 #### LearnTDDInCocoaTouch/MessageStore.swift
 
@@ -303,7 +268,7 @@ The unit test passes; the count is increased. We rerun our feature test and conf
 Outer Red:
 
 
-### specify returning the same message [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/3aed0b6b3ba74bfa88d7b95e06f3e67bf550f0c2)
+### Specify returning the same message added [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/c491dee4cf8ddb5f8a18b773183a6facfef460d7)
 
 #### LearnTDDInCocoaTouchTests/Unit/MessageStoreTests.swift
 
@@ -327,8 +292,10 @@ We add another unit test to confirm that the get() method returns the same messa
 
 Inner Red: ("fake message") is not equal to ("test message text")
 
+Our unit test error confirms that we're currently returning a hard-coded message.
 
-### Retrieve same message added [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/bf041ea1b0a746c79f3b2022b9994c709e32a1e0)
+
+### Return the same message added [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/cocoa-touch/commit/2186d5c05f394b79161a49e44981de6af66b1d3b)
 
 #### LearnTDDInCocoaTouch/MessageStore.swift
 
@@ -359,7 +326,8 @@ Inner Red: ("fake message") is not equal to ("test message text")
 We implement the behavior the unit test specifies: when create() is called we store the message in an array, and when get() is called we return the message at the appropriate index.
 
 Inner Green
+
 Outer Green
 
-With that, both our unit test and feature test are passing. We've finished test-driving our feature!
+With that, both our unit test and feature test are passing. We've finished test-driving our feature! To make sure it works, run your app and see.
 
