@@ -254,7 +254,7 @@ describe('ButtonCounter', () => {
 });
 ```
 
-A lot of the test seems the same: we still enter a new message and click the save button. But this is testing something very different. Instead of testing the whole app running together, we're testing just the NewMessageForm by itself.
+A lot of the test seems the same as the end-to-end test: we still enter a new message and click the save button. But this is testing something very different. Instead of testing the whole app running together, we're testing just the NewMessageForm by itself.
 
 Run `NewMessageForm.spec.js` with Cypress. We get the same error as we did with the end-to-end test:
 
