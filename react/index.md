@@ -277,7 +277,7 @@ The NewMessageForm won't be responsible for displaying this message, though: we'
 
 Getting the component to take in an event handler and call it is a great use of Enzyme-based component testing. We can now **step down from the "outside" level of end-to-end tests to an "inside" component test.** This allows us to more precisely specify the behavior of each piece. Also, since end-to-end tests are slow, component tests prevent us from having to write an end-to-end test for every rare edge case.
 
-Let's write an Enzyme component test specifying that clicking the Save button should . Create the file `src/__tests__/NewMessageForm.test.js` and enter the following contents:
+Let's write an Enzyme component test specifying that clicking the Save button should call the passed-in event handler. Create the file `src/__tests__/NewMessageForm.test.js` and enter the following contents:
 
 ```jsx
 import React from 'react';
