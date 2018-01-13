@@ -280,7 +280,7 @@ Now, we can add the behavior to the component to get this test to pass. To accom
  export default class NewMessageForm extends Component {
 +  state = { inputText: '' }
 + 
-+  handleTextChange = (event) => {
++  handleTextChange(event) {
 +    this.setState({ inputText: event.target.value });
 +  }
 + 
@@ -292,7 +292,7 @@ Now, we can add the behavior to the component to get this test to pass. To accom
            type="text"
            data-test="messageText"
 +          value={inputText}
-+          onChange={this.handleTextChange}
++          onChange={(e) => this.handleTextChange(e)}
          />
          <button
            data-test="saveButton"
@@ -306,7 +306,7 @@ Next, we want to clear out `inputText` when the Save button is clicked:
      this.setState({ inputText: event.target.value });
    }
  
-+  handleSave = () => {
++  handleSave() {
 +    this.setState({ inputText: '' });
 +  }
 + 
@@ -314,7 +314,7 @@ Next, we want to clear out `inputText` when the Save button is clicked:
 ...
          <button
            data-test="saveButton"
-+          onClick={this.handleSave}
++          onClick={() => this.handleSave()}
          >
            Save
          </button>
@@ -376,7 +376,7 @@ Expected spy to have been called with arguments "New message", but it was never 
 So the `saveCallback` isn't being called. Let's fix that:
 
 ```diff
-   handleSave = () => {
+   handleSave() {
 +    const { inputText } = this.state;
 +    const { onSave } = this.props;
 + 
@@ -396,14 +396,14 @@ We changed NewMessageForm to use an onSave event handler, but we haven't passed 
 
 ```diff
  class App extends Component {
-+  handleSave = (newMessage) => {
++  handleSave(newMessage) {
 +  }
 + 
    render() {
      return (
        <div>
 -        <NewMessageForm />
-+        <NewMessageForm onSave={this.handleSave} />
++        <NewMessageForm onSave={(newMessage) => this.handleSave(newMessage)} />
        </div>
      );
    }
@@ -427,7 +427,7 @@ Next, we need to save the message in state in the App component. Let's add it to
  class App extends Component {
 +  state = { messages: [] };
 + 
-   handleSave = (newMessage) => {
+   handleSave(newMessage) {
 +    const { messages } = this.state;
 +    this.setState({ messages: [newMessage, ...messages] });
    }

@@ -273,7 +273,7 @@ As before, we might run into the temptation to implement all the functionality o
  export default class NewMessageForm extends Component {
 +  state = { inputText: '' }
 +
-+  handleChangeText = (text) => {
++  handleChangeText(text) {
 +    this.setState({ inputText: text });
 +  }
 +
@@ -284,7 +284,7 @@ As before, we might run into the temptation to implement all the functionality o
          <TextInput
 +          value={inputText}
            testID="messageText"
-+          onChangeText={this.handleChangeText}
++          onChangeText={(text) => this.handleChangeText(text)}
          />
 ```
 
@@ -298,7 +298,7 @@ Next, we want to clear out `inputText` when the Save button is tapped:
      this.setState({ inputText: text });
    }
 
-+  handleSave = () => {
++  handleSave() {
 +    this.setState({ inputText: '' });
 +  }
 +
@@ -307,7 +307,7 @@ Next, we want to clear out `inputText` when the Save button is tapped:
          <Button
            title="Save"
            testID="saveButton"
-+          onPress={this.handleSave}
++          onPress={() => this.handleSave()}
          />
 ```
 
@@ -322,7 +322,7 @@ The NewMessageForm won't be responsible for displaying this message, though: we'
 The way we can send data to the parent component is by taking in an event handler and calling it. Add the following to `NewMessageForm.js`:
 
 ```diff
-   handleSave = () => {
+   handleSave() {
 +    const { inputText } = this.state;
 +    const { onSave } = this.props;
 +
@@ -344,14 +344,14 @@ Our NewMessageForm is calling `onSave`, but we haven't yet passed a valid functi
 
 ```diff
  export default class App extends Component {
-+  handleSave = (newMessage) => {
++  handleSave(newMessage) {
 +  }
 +
    render() {
      return (
        <View>
 -        <NewMessageForm />
-+        <NewMessageForm onSave={this.handleSave} />
++        <NewMessageForm onSave={(newMessage) => this.handleSave(newMessage)} />
        </View>
      );
    }
@@ -365,7 +365,7 @@ Next, we need to save the message in state in the App component. Let's add it to
  export default class App extends Component {
 +  state = { messages: [] };
 +
-   handleSave = (newMessage) => {
+   handleSave(newMessage) {
 +    const { messages } = this.state;
 +    this.setState({ messages: [newMessage, ...messages] });
    }
