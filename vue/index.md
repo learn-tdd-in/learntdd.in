@@ -81,6 +81,7 @@ As our last setup step, let's clear out some of the default code to get a clean 
 
 - `cypress/integration/example_spec.js`
 - `src/components/HelloWorld.vue`
+- `test/unit/specs/HelloWorld.spec.js`
 
 Replace the contents of `src/App.vue` with the following:
 
@@ -111,13 +112,13 @@ describe('Creating a message', () => {
   it('Displays the message in the list', () => {
     cy.visit('http://localhost:8080');
 
-    cy.get("[data-test='messageText']")
+    cy.get("[data-test='newMessage']")
       .type('New message');
 
     cy.get("[data-test='saveButton']")
       .click();
 
-    cy.get("[data-test='messageText']")
+    cy.get("[data-test='newMessage']")
       .should('have.value', '');
 
     cy.contains('New message');
@@ -231,8 +232,8 @@ Instead of adding the behavior directly, let's **step down from the "outside" le
 Create a new file `cypress/integration/NewMessageForm.spec.js` and add the following:
 
 ```javascript
+import mountVue from 'cypress-vue-unit-test';
 import NewMessageForm from '../../src/components/NewMessageForm.vue';
-const mountVue = require('cypress-vue-unit-test');
 
 describe('ButtonCounter', () => {
   beforeEach(mountVue(NewMessageForm));
