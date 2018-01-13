@@ -112,13 +112,13 @@ describe('Creating a message', () => {
   it('Displays the message in the list', () => {
     cy.visit('http://localhost:8080');
 
-    cy.get("[data-test='newMessage']")
+    cy.get("[data-test='messageText']")
       .type('New message');
 
     cy.get("[data-test='saveButton']")
       .click();
 
-    cy.get("[data-test='newMessage']")
+    cy.get("[data-test='messageText']")
       .should('have.value', '');
 
     cy.contains('New message');
@@ -193,7 +193,7 @@ Now rerun the tests in Cypress. We're still getting the same error, because we h
 ```diff
  <template>
    <div>
-+    <input type="text" data-test="newMessage" />
++    <input type="text" data-test="messageText" />
    </div>
  </template>
 ```
@@ -211,7 +211,7 @@ We want the save button to be part of our `NewMessageForm`, so fixing this error
 ```diff
  <template>
    <div>
-     <input type="text" data-test="newMessage" />
+     <input type="text" data-test="messageText" />
 +    <button data-test="saveButton">Save</button>
    </div>
  </template>
@@ -240,7 +240,7 @@ describe('ButtonCounter', () => {
 
   describe('clicking the save button', () => {
     beforeEach(() => {
-      cy.get("[data-test='newMessage']")
+      cy.get("[data-test='messageText']")
         .type('New message');
 
       cy.get("[data-test='saveButton']")
@@ -248,7 +248,7 @@ describe('ButtonCounter', () => {
     });
 
     it('clears the text field', () => {
-      cy.get("[data-test='newMessage']")
+      cy.get("[data-test='messageText']")
         .should('have.value', '');
     });
   });
@@ -270,7 +270,7 @@ Now, we can add the behavior to the component to get this test to pass. First, w
    <div>
      <input
        type="text"
-       data-test="newMessage"
+       data-test="messageText"
 +      v-model="inputText"
      />
      <button data-test="saveButton">Save</button>
@@ -296,7 +296,7 @@ Next, we add a `save()` method that sets the `inputText` data property to the em
    <div>
      <input
        type="text"
-       data-test="newMessage"
+       data-test="messageText"
        v-model="inputText"
      />
      <button
@@ -349,7 +349,7 @@ Add another test case to `NewMessageForm.spec.js`:
 +      spy = cy.spy();
 +      Cypress.vue.$on('save', spy);
 + 
-       cy.get("[data-test='newMessage']")
+       cy.get("[data-test='messageText']")
          .type('New message');
 
        cy.get("[data-test='saveButton']")
@@ -357,7 +357,7 @@ Add another test case to `NewMessageForm.spec.js`:
      });
 
      it('clears the text field', () => {
-       cy.get("[data-test='newMessage']")
+       cy.get("[data-test='messageText']")
          .should('have.value', '');
      });
 + 
