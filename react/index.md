@@ -4,7 +4,7 @@ title: Learn TDD in React
 
 {% include tutorial-intro.md %}
 
-To see how TDD works in React, let's walk through a simple real-world example of building a feature. We'll be using React 16.2.0 and a few different testing tools: [Cypress][cypress] for end-to-end tests and [Enzyme][enzyme] for component tests. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react) that shows the process step-by-step. This tutorial assumes you have some [familiarity with React][react] and with [automated testing concepts](/learn-tdd/concepts).
+To see how TDD works in React, let's walk through a simple real-world example of building a feature. We'll be using React 16.2 and [Cypress][cypress] for end-to-end and component tests. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react) that shows the process step-by-step. This tutorial assumes you have some [familiarity with React][react] and with [automated testing concepts](/learn-tdd/concepts).
 
 The feature we'll build is a simple list of messages.
 
@@ -23,10 +23,10 @@ Now, run your app and leave it open for the duration of the process:
 # npm start
 ```
 
-Next, we need to add Cypress and Enzyme as dependencies of our project:
+Next, we need to add Cypress and some React-specific packages as dependencies of our project:
 
 ```
-# npm install --save-dev cypress enzyme enzyme-adapter-react-16
+# npm install --save-dev cypress cypress-react-unit-test @cypress/webpack-preprocessor
 ```
 
 Add an NPM script for opening Cypress into your `package.json`:
@@ -48,13 +48,35 @@ Now open Cypress and it will initialize your app:
 # npm run cypress:open
 ```
 
-Now, to set up Enzyme to work within `create-react-app`, create a `src/setupTests.js` file and add the following:
+Next, set up Cypress to be able to handle the latest ECMAScript features by replacing the contents of `cypress/plugins/index.js` with the following:
 
 ```javascript
-import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+const webpack = require('@cypress/webpack-preprocessor')
+const webpackOptions = {
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx|mjs)$/,
+        loader: 'babel-loader',
+        options: {
+          presets: ['env', 'react'],
+          plugins: ['transform-class-properties'],
+        },
+      }
+    ]
+  }
+}
 
-Enzyme.configure({ adapter: new Adapter() });
+const options = {
+  // send in the options from your webpack.config.js, so it works the same
+  // as your app's code
+  webpackOptions,
+  watchOptions: {}
+}
+
+module.exports = on => {
+  on('file:preprocessor', webpack(options))
+}
 ```
 
 As our last setup step, let's clear out some of the default code to get a clean starting point. Delete all the following files:
@@ -215,9 +237,44 @@ expected '<input />' to have value '', but the value was 'New message'
 
 We've made it to our first assertion, which is that the message text box should be empty -- but it isn't. We haven't yet added the behavior to our app to clear out the message text box.
 
-Typically we’d create a component test for NewMessageForm to specify the behavior that the text input should be cleared out upon clicking Save. However, asserting against HTML properties isn’t typical in Enzyme.
+Instead of adding the behavior directly, let's **step down from the "outside" level of end-to-end tests to an "inside" component test.** This allows us to more precisely specify the behavior of each piece. Also, since end-to-end tests are slow, component tests prevent us from having to write an end-to-end test for every rare edge case.
 
-Instead, let's add the behavior directly. To accomplish this, we'll need to make the input a [controlled component][controlled-component], so its text is available in the parent component's state:
+Create a new file `cypress/integration/NewMessageForm.spec.js` and add the following:
+
+```javascript
+import NewMessageForm from '../../src/NewMessageForm';
+import React from 'react';
+import { mount } from 'cypress-react-unit-test';
+
+describe('<NewMessageForm />', () => {
+  describe('clicking the save button', () => {
+    beforeEach(() => {
+      mount(<NewMessageForm />);
+
+      cy.get("[data-test='messageText']")
+        .type('New message');
+
+      cy.get("[data-test='saveButton']")
+        .click();
+    });
+
+    it('clears the text field', () => {
+      cy.get("[data-test='messageText']")
+        .should('have.value', '');
+    });
+  });
+});
+```
+
+A lot of the test seems the same as the end-to-end test: we still enter a new message and click the save button. But this is testing something very different. Instead of testing the whole app running together, we're testing just the NewMessageForm by itself.
+
+Run `NewMessageForm.spec.js` with Cypress. We get the same error as we did with the end-to-end test:
+
+```
+expected '<input />' to have value '', but the value was 'New message'
+```
+
+Now, we can add the behavior to the component to get this test to pass. To accomplish this, we'll need to make the input a [controlled component][controlled-component], so its text is available in the parent component's state:
 
 ```diff
  export default class NewMessageForm extends Component {
@@ -263,9 +320,7 @@ Next, we want to clear out `inputText` when the Save button is clicked:
          </button>
 ```
 
-Rerun the test. This gets us past the assertion failure.
-
-Now our final assertion fails:
+Rerun the component test and it passes. **Once a component test passes, step back up to the outer end-to-end test to see what the next error is.** Rerun `creating_a_message.spec.js`. Now our final assertion fails:
 
 ```
 Expected to find content: 'New message' but never did.
@@ -275,75 +330,63 @@ Now, finally, the test will drive us to implement the real meat of our feature: 
 
 The NewMessageForm won't be responsible for displaying this message, though: we'll create a separate MessageList component that also exists in the parent App component. The way we can send data to the parent component is by taking in an event handler and calling it.
 
-Getting the component to take in an event handler and call it is a great use of Enzyme-based component testing. We can now **step down from the "outside" level of end-to-end tests to an "inside" component test.** This allows us to more precisely specify the behavior of each piece. Also, since end-to-end tests are slow, component tests prevent us from having to write an end-to-end test for every rare edge case.
+To add this event handler behavior to NewMessageForm, we want to step back down to the component test. In this case, the component test won't be asserting exactly the same thing as the end-to-end test. The end-to-end test is looking for the 'New message' content on the screen, but the component test will only be asserting the behavior that the NewMessageForm component is responsible for: that it calls the event handler.
 
-Let's write an Enzyme component test specifying that clicking the Save button should call the passed-in event handler. Create the file `src/__tests__/NewMessageForm.test.js` and enter the following contents:
+Add another test case to `NewMessageForm.spec.js`:
 
-```jsx
-import React from 'react';
-import { mount } from 'enzyme';
-import NewMessageForm from '../NewMessageForm';
+```diff
+ describe('<NewMessageForm />', () => {
+   describe('clicking the save button', () => {
++    let spy;
++ 
+     beforeEach(() => {
++      spy = cy.spy();
+-      mount(<NewMessageForm />);
++      mount(<NewMessageForm onSave={spy} />);
 
-describe('<NewMessageForm />', () => {
-  it('calls onSave with the entered message', () => {
-    const saveCallback = jest.fn();
-    const wrapper = mount(<NewMessageForm onSave={saveCallback} />);
+       cy.get("[data-test='messageText']")
+         .type('New message');
 
-    wrapper
-      .find("[data-test='messageText']")
-      .simulate('change', { target: { value: 'New message' } });
-    wrapper
-      .find("[data-test='saveButton']")
-      .simulate('click');
+       cy.get("[data-test='saveButton']")
+         .click();
+     });
 
-    expect(saveCallback).toHaveBeenCalledTimes(1);
-    expect(saveCallback).toHaveBeenCalledWith('New message');
-  });
-});
+     it('clears the text field', () => {
+       cy.get("[data-test='messageText']")
+         .should('have.value', '');
+     });
++ 
++    it('emits the "save" event', () => {
++      expect(spy).to.have.been.calledWith('New message');
++    });
+   });
+ });
 ```
 
-Enzyme isn't a test runner; it's used within the context of other tests. Here we've written a test with Jest, the default test runner in `create-react-app`. You can run the test with `npm test`. You should see this result:
+Notice that we **make one assertion per test in component tests.** Having separate test cases for each behavior of the component makes it easy to understand what it does, and easy to see what went wrong if one of the assertions fails. The `beforeEach` block will run through the same steps for each of the two test cases below.
+
+You may recall that this isn't what we did in the end-to-end test, though. Generally you **make *multiple* assertions per test in end-to-end tests.** Why? End-to-end tests are slower, so the overhead of the repeating the steps would significantly slow down our suite as it grows. In fact, larger end-to-end tests tend to turn into "feature tours:" you perform some actions, do some assertions, perform some more actions, do more assertions, etc.
+
+Run the component test again. You'll see the "clears the text field" test pass, and the new 'emits the "save" event' test fail with the error:
 
 ```
-Expected mock function to have been called one time, but it was called zero times.
+Expected spy to have been called with arguments "New message", but it was never called.
 ```
 
 So the `saveCallback` isn't being called. Let's fix that:
 
 ```diff
    handleSave = () => {
++    const { inputText } = this.state;
 +    const { onSave } = this.props;
 + 
-+    onSave();
++    onSave(inputText);
 + 
      this.setState({ inputText: '' });
    }
 ```
 
-Rerun and now the error is:
-
-```
-Expected mock function to have been called with:
-      ["New message"]
-    But it was called with:
-      Array []
-```
-
-So we aren't yet passing the message text to the `saveCallback`. That's also an easy fix:
-
-```diff
-   handleSave = () => {
-+    const { inputText } = this.state;
-     const { onSave } = this.props;
- 
--    onSave();
-+    onSave(inputText);
-
-     this.setState({ inputText: '' });
-   }
-```
-
-Now the component test passes. That's great! **When an inner test passes, step back up to the outer test to see what error you need to fix next.**
+Now the component test passes. That's great! Now we step back up again to run our feature test and we get:
 
 ```
 Uncaught TypeError: onSave is not a function
@@ -469,5 +512,4 @@ To learn more about TDD, I recommend:
 [controlled-component]: https://reactjs.org/docs/forms.html#controlled-components
 [create-react-app]: https://github.com/facebookincubator/create-react-app#create-react-app-
 [cypress]: https://www.cypress.io/
-[enzyme]: http://airbnb.io/enzyme/
 [react]: https://reactjs.org/docs/hello-world.html
