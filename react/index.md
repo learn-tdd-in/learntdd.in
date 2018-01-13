@@ -1,5 +1,8 @@
 ---
+layout: tutorial
 title: Learn TDD in React
+logo: /images/react.svg
+logo_alt: React logo
 ---
 
 {% include tutorial-intro.md %}

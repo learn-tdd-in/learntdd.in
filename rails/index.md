@@ -1,5 +1,8 @@
 ---
+layout: tutorial
 title: Learn TDD in Rails
+logo: /images/rails.svg
+logo_alt: Rails logo
 ---
 
 {% include tutorial-intro.md %}

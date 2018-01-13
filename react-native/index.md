@@ -1,5 +1,8 @@
 ---
+layout: tutorial
 title: Learn TDD in React Native
+logo: /images/react.svg
+logo_alt: React Native logo
 ---
 
 {% include tutorial-intro.md %}

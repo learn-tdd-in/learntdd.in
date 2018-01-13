@@ -1,5 +1,8 @@
 ---
+layout: tutorial
 title: Learn TDD in Ember
+logo: /images/ember.svg
+logo_alt: Ember logo
 ---
 
 {% include tutorial-intro.md %}

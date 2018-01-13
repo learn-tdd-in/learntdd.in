@@ -1,5 +1,8 @@
 ---
+layout: tutorial
 title: Learn TDD in Cocoa Touch
+logo: /images/apple.svg
+logo_alt: Apple logo
 ---
 
 {% include tutorial-intro.md %}

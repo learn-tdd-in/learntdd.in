@@ -1,5 +1,8 @@
 ---
+layout: tutorial
 title: Learn TDD in Vue
+logo: /images/vue.svg
+logo_alt: Vue logo
 ---
 
 {% include tutorial-intro.md %}
