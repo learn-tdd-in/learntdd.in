@@ -287,7 +287,7 @@ As before, we might run into the temptation to implement all the functionality o
          <TextInput
 +          value={inputText}
            testID="messageText"
-+          onChangeText={(text) => this.handleChangeText(text)}
++          onChangeText={text => this.handleChangeText(text)}
          />
 ```
 
@@ -354,7 +354,7 @@ Our NewMessageForm is calling `onSave`, but we haven't yet passed a valid functi
      return (
        <View>
 -        <NewMessageForm />
-+        <NewMessageForm onSave={(newMessage) => this.handleSave(newMessage)} />
++        <NewMessageForm onSave={newMessage => this.handleSave(newMessage)} />
        </View>
      );
    }
