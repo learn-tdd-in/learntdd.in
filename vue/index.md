@@ -238,7 +238,7 @@ Create a new file `cypress/integration/NewMessageForm.spec.js` and add the follo
 import mountVue from 'cypress-vue-unit-test';
 import NewMessageForm from '../../src/components/NewMessageForm.vue';
 
-describe('ButtonCounter', () => {
+describe('NewMessageForm', () => {
   beforeEach(mountVue(NewMessageForm));
 
   describe('clicking the save button', () => {
