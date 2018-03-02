@@ -507,6 +507,7 @@ End-to-end testing has had major payoffs for server-rendered apps, and with Cypr
 
 To learn more about TDD, I recommend:
 
+* [Testing React with Enzyme and Jest](https://javascriptplayground.com/testing-react-enzyme-jest/) - a great tutorial on component-level TDD using a different testing tool, Enzyme
 {% include tutorial-goos.md %}
 * ["JavaScript Jabber 224: Cypress.js"](https://devchat.tv/js-jabber/224-jsj-cypress-js-with-brian-mann) podcast episode
 
