@@ -25,6 +25,7 @@ To begin, create a new iOS app in Xcode, then [install EarlGrey][earl-grey-insta
 To learn more about TDD, I recommend:
 
 * [iPhreaks podcast episode 95: TDD](https://devchat.tv/iphreaks/095-ips-tdd-test-driven-development)
+* [Quality Coding](https://qualitycoding.org/) - unit testing resources from Jon Reid, a major iOS TDD advocate
 * [_Test-Driven iOS Development_](http://www.informit.com/store/test-driven-ios-development-9780321774187) - it's a bit dated: it's in Objective-C and precedes XCTest, but the principles of how to break up an iOS app for testing are still very useful.
 {% include tutorial-goos.md %}
 
