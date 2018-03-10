@@ -1,29 +1,35 @@
-### Specify the feature for creating a blog post [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/cddb0e8dbe7c6afa776c40cb539500e924f12aae)
+### Specify the feature for creating a blog post [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/b761d00dda0aef2b561bf08f2a570d7428369722)
 
 #### tests/acceptance/creating-a-blog-post-test.js
 
 ```diff
-{% raw %} 
- moduleForAcceptance('Acceptance | creating a blog post');
+{% raw %} import { module, test } from 'qunit';
+-import { visit, currentURL } from '@ember/test-helpers';
++import { visit, fillIn, click, currentRouteName } from '@ember/test-helpers';
+ import { setupApplicationTest } from 'ember-qunit';
++import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
  
--test('visiting /creating-a-blog-post', function(assert) {
--  visit('/creating-a-blog-post');
-+test('creating a blog post', function(assert) {
-+  visit('/posts/new');
-+
-+  fillIn('.js-post-form-title', 'Test Post');
-+  fillIn('.js-post-form-body', 'This post is a test!');
-+  click('.js-post-form-save');
+ module('Acceptance | creating a blog post', function(hooks) {
+   setupApplicationTest(hooks);
++  setupMirage(hooks);
  
-   andThen(function() {
+-  test('visiting /creating-a-blog-post', async function(assert) {
+-    await visit('/creating-a-blog-post');
++  test('creating a blog post', async function(assert) {
++    await visit('/posts/new');
+ 
 -    assert.equal(currentURL(), '/creating-a-blog-post');
-+    assert.equal(currentPath(), 'posts.show');
++    await fillIn('.js-post-form-title', 'Test Post');
++    await fillIn('.js-post-form-body', 'This post is a test!');
++    await click('.js-post-form-save');
++
++    assert.equal(currentRouteName(), 'posts.show');
 +    assert.ok(
-+      find('.js-post-detail-title').text().includes('Test Post'),
++      this.element.querySelector('.js-post-detail-title').textContent.includes('Test Post'),
 +      'Title not found'
 +    );
 +    assert.ok(
-+      find('.js-post-detail-body').text().includes('This post is a test!'),
++      this.element.querySelector('.js-post-detail-body').textContent.includes('This post is a test!'),
 +      'Body not found'
 +    );
    });
@@ -32,10 +38,10 @@
 
 We set up the entire acceptance test at once. This test will guide us through the rest of the unit testing and implementation of the feature.
 
-Red: The URL '/posts/new' did not match any routes in your application
+Red: UnrecognizedURLError: /posts/new
 
 
-### Add new blog post route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/457ec9966de5ccd25e9c5a60632bff33da020a05)
+### Add new blog post route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/732f9d0d51e0ea9b42755b4129dded13849f0d43)
 
 #### app/router.js
 
@@ -72,12 +78,12 @@ Red: The URL '/posts/new' did not match any routes in your application
 
 We only change enough code to get to the next error message. Getting past the "no route" error only requires creating the route in the routes file.
 
-Red: Element .js-post-form-title not found.
+Red: Element not found when calling `fillIn('.js-post-form-title')`
 
 The next error is simple: no title form field is found to fill text into.
 
 
-### Add post-form component scaffold [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/0ef9bad2a721a723743f9675c201350f234eb7e3)
+### Add post-form component scaffold [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/7670d9f18ff48d869b0f990e9f7b15c9003ba128)
 
 #### app/components/post-form.js
 
@@ -109,29 +115,31 @@ The next error is simple: no title form field is found to fill text into.
 #### tests/integration/components/post-form-test.js
 
 ```diff
-{% raw %}+import { moduleForComponent, test } from 'ember-qunit';
+{% raw %}+import { module, test } from 'qunit';
++import { setupRenderingTest } from 'ember-qunit';
++import { render } from '@ember/test-helpers';
 +import hbs from 'htmlbars-inline-precompile';
 +
-+moduleForComponent('post-form', 'Integration | Component | post form', {
-+  integration: true
-+});
++module('Integration | Component | post-form', function(hooks) {
++  setupRenderingTest(hooks);
 +
-+test('it renders', function(assert) {
-+  // Set any properties with this.set('myProperty', 'value');
-+  // Handle any actions with this.on('myAction', function(val) { ... });
++  test('it renders', async function(assert) {
++    // Set any properties with this.set('myProperty', 'value');
++    // Handle any actions with this.set('myAction', function(val) { ... });
 +
-+  this.render(hbs`{{post-form}}`);
++    await render(hbs`{{post-form}}`);
 +
-+  assert.equal(this.$().text().trim(), '');
++    assert.equal(this.element.textContent.trim(), '');
 +
-+  // Template block usage:
-+  this.render(hbs`
-+    {{#post-form}}
-+      template block text
-+    {{/post-form}}
-+  `);
++    // Template block usage:
++    await render(hbs`
++      {{#post-form}}
++        template block text
++      {{/post-form}}
++    `);
 +
-+  assert.equal(this.$().text().trim(), 'template block text');
++    assert.equal(this.element.textContent.trim(), 'template block text');
++  });
 +});{% endraw %}
 ```
 
@@ -140,39 +148,40 @@ The next error is simple: no title form field is found to fill text into.
 Rather than just getting the test to pass by putting a form input on the route's template, we "write the code we wish we had." In this case, we wish we had a `post-form` component to use that would provide the form inputs for us. We generate it and go ahead and render it in our route template.
 
 
-### Specify form component should render the form [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/55038ce5575e472b2b7a79a8edec7d8d79dbe0ec)
+### Specify form component should render the form [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/61fa018cd74944bc26ebacf8ead8266a17057780)
 
 #### tests/integration/components/post-form-test.js
 
 ```diff
-{% raw %}   integration: true
- });
+{% raw %} module('Integration | Component | post-form', function(hooks) {
+   setupRenderingTest(hooks);
  
--test('it renders', function(assert) {
--  // Set any properties with this.set('myProperty', 'value');
--  // Handle any actions with this.on('myAction', function(val) { ... });
+-  test('it renders', async function(assert) {
+-    // Set any properties with this.set('myProperty', 'value');
+-    // Handle any actions with this.set('myAction', function(val) { ... });
 -
-+test('renders the form', function(assert) {
-   this.render(hbs`{{post-form}}`);
++  test('it renders the form', async function(assert) {
+     await render(hbs`{{post-form}}`);
  
--  assert.equal(this.$().text().trim(), '');
+-    assert.equal(this.element.textContent.trim(), '');
 -
--  // Template block usage:
--  this.render(hbs`
--    {{#post-form}}
--      template block text
--    {{/post-form}}
--  `);
-+  const title = this.$('.js-post-form-title');
-+  assert.equal(title.length, 1, 'Element .js-post-form-title not found');
+-    // Template block usage:
+-    await render(hbs`
+-      {{#post-form}}
+-        template block text
+-      {{/post-form}}
+-    `);
++    const title = this.element.querySelectorAll('.js-post-form-title');
++    assert.equal(title.length, 1, 'Element .js-post-form-title not found');
  
--  assert.equal(this.$().text().trim(), 'template block text');
-+  const body = this.$('.js-post-form-body');
-+  assert.equal(body.length, 1, 'Element .js-post-form-body not found');
+-    assert.equal(this.element.textContent.trim(), 'template block text');
++    const body = this.element.querySelectorAll('.js-post-form-body');
++    assert.equal(body.length, 1, 'Element .js-post-form-body not found');
+   });
  });{% endraw %}
 ```
 
-We create a unit test for the component that reproduces the acceptance test error.
+We create a component test that reproduces the acceptance test error.
 
 We also go ahead and specify the body field as well, even though that's not strictly necessary to reproduce the current acceptance error. We're pretty sure it'll error out on that field missing too, so this is a case where it's safe to go ahead and specify it at the unit level.
 
@@ -181,7 +190,7 @@ Element .js-post-form-title not found
 Element .js-post-form-body not found
 
 
-### Add form component markup [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/0b89ea9a17b8e8ae0517731a2de999097ec2952d)
+### Add form component markup [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/a541ba07f5903d4c27a7f3dfbba0aeadf535c907)
 
 #### app/templates/components/post-form.hbs
 
@@ -201,33 +210,47 @@ Element .js-post-form-body not found
 +</form>{% endraw %}
 ```
 
-Inner green; outer test hangs after submitting form
+Inner green
+Outer red:
+        actual: >
+            posts.new
+        expected: >
+            posts.show
 
-Now that we're rendering markup for the component, its unit test is able to find the title field and fill it in. The acceptance test also gets past the point of filling in the title, and now it hangs after clicking the save button. I'm not sure why, but I think it has to do with the fact that, since that form isn't wired up to any Ember behavior, the form is actually submitted in the browser, which closes down the Ember app. In any case, we need to get Ember handling the form submission.
+Now that we're rendering markup for the component, its unit test is able to find the title field and fill it in. The acceptance test also gets past the point of filling in the title, and now it reports that it expected to end up at the posts.show route, but it was still on the posts.new route. This is because we haven't told the component to do anything when the save button is clicked. We need to get Ember handling the form submission.
 
 
-### Specify the component should call the save action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/290fc140accaa4948a87e7e2b96ba6b6b00a72b6)
+### Specify the component should call the save action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/5a1e72740c76a852876e6fe1057220beb0ebfd41)
 
 #### tests/integration/components/post-form-test.js
 
 ```diff
-{% raw %}   const body = this.$('.js-post-form-body');
-   assert.equal(body.length, 1, 'Element .js-post-form-body not found');
- });
+{% raw %} import { module, test } from 'qunit';
+ import { setupRenderingTest } from 'ember-qunit';
+-import { render } from '@ember/test-helpers';
++import { render, click } from '@ember/test-helpers';
+ import hbs from 'htmlbars-inline-precompile';
+ 
+ module('Integration | Component | post-form', function(hooks) {
+...
+     const body = this.element.querySelectorAll('.js-post-form-body');
+     assert.equal(body.length, 1, 'Element .js-post-form-body not found');
+   });
 +
-+test('calls the submit handler', function(assert) {
-+  let submitHandlerCalled = false;
-+  this.set('testSubmitHandler', () => {
-+    submitHandlerCalled = true;
++  test('it calls the submit handler', async function(assert) {
++    let submitHandlerCalled = false;
++    this.set('testSubmitHandler', () => {
++      submitHandlerCalled = true;
++    });
++
++    await render(hbs`{{post-form submitHandler=(action testSubmitHandler)}}`);
++
++    await click('.js-post-form-save');
++
++    assert.ok(submitHandlerCalled,
++          "Expected submit handler to be called");
 +  });
-+
-+  this.render(hbs`{{post-form submitHandler=(action testSubmitHandler)}}`);
-+
-+  this.$('.js-post-form-save').click();
-+
-+  assert.ok(submitHandlerCalled,
-+         "Expected submit handler to be called");
-+});{% endraw %}
+ });{% endraw %}
 ```
 
 We reproduce the acceptance test error at the component level:
@@ -237,7 +260,7 @@ Inner Red: Expected submit handler to be called
 Ember doesn't complain about the fact that we don't actually have a "submitForm" action on the component; it just proceeds on its way. So our test's submit handler is never called.
 
 
-### Add submitForm action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/11a3ba5a3e69b86c9f293b711d5e7430f40d50b5)
+### Add submitForm action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/55f8e4007a91d68eab3f6989bad9d3a83d2aa96a)
 
 #### app/components/post-form.js
 
@@ -272,7 +295,7 @@ Inner green; outer red: TypeError: this.get(...) is not a function
 Now our component test is able to verify that the submit handler is called. Now the acceptance test errors out because submitting the form expects a submitHandler to be passed in, and there isn't one.
 
 
-### Add new post controller for save action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/8c898f0d6ab4a08d732a5a6028b69cc8f14137fd)
+### Add new post controller for save action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/cb64c7c71658a54265d3a09a01196e8ba44edca5)
 
 #### app/controllers/posts/new.js
 
@@ -306,7 +329,7 @@ Outer red: expected posts.show, actual posts.new
 Now the acceptance tests reports that the user isn't being transitioned to the posts.show route
 
 
-### Transition to show route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/c047db742e2cf4c4462415c212c7ea488af30e92)
+### Transition to show route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/33ff3fec46d64a47c8bc2445037316890195bf90)
 
 #### app/controllers/posts/new.js
 
@@ -325,7 +348,7 @@ Outer red: The route posts.show was not found
 Now the acceptance test successfully attempts to transition to the `posts.show` route, but it doesn't yet exist.
 
 
-### Add posts.show route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/49bfc972dcf33da2ade003dc2576c5fd347d9d3f)
+### Add posts.show route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/a9ea00956acd45363b49dd68a6e2d09bc4aea0fd)
 
 #### app/router.js
 
@@ -363,7 +386,7 @@ Outer red: Title not found
 Now the acceptance test is able to display the `posts.show` route, but it can't find the post's title on the page, because we aren't rendering anything to the screen yet.
 
 
-### Add detail component scaffold [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/4bbcb91e84fecbe883ba4133eb108360744d7a63)
+### Add detail component scaffold [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/2e488c6a228ec2cb3d96b031e44e39e77d5d4719)
 
 #### app/components/post-detail.js
 
@@ -395,29 +418,31 @@ Now the acceptance test is able to display the `posts.show` route, but it can't 
 #### tests/integration/components/post-detail-test.js
 
 ```diff
-{% raw %}+import { moduleForComponent, test } from 'ember-qunit';
+{% raw %}+import { module, test } from 'qunit';
++import { setupRenderingTest } from 'ember-qunit';
++import { render } from '@ember/test-helpers';
 +import hbs from 'htmlbars-inline-precompile';
 +
-+moduleForComponent('post-detail', 'Integration | Component | post detail', {
-+  integration: true
-+});
++module('Integration | Component | post-detail', function(hooks) {
++  setupRenderingTest(hooks);
 +
-+test('it renders', function(assert) {
-+  // Set any properties with this.set('myProperty', 'value');
-+  // Handle any actions with this.on('myAction', function(val) { ... });
++  test('it renders', async function(assert) {
++    // Set any properties with this.set('myProperty', 'value');
++    // Handle any actions with this.set('myAction', function(val) { ... });
 +
-+  this.render(hbs`{{post-detail}}`);
++    await render(hbs`{{post-detail}}`);
 +
-+  assert.equal(this.$().text().trim(), '');
++    assert.equal(this.element.textContent.trim(), '');
 +
-+  // Template block usage:
-+  this.render(hbs`
-+    {{#post-detail}}
-+      template block text
-+    {{/post-detail}}
-+  `);
++    // Template block usage:
++    await render(hbs`
++      {{#post-detail}}
++        template block text
++      {{/post-detail}}
++    `);
 +
-+  assert.equal(this.$().text().trim(), 'template block text');
++    assert.equal(this.element.textContent.trim(), 'template block text');
++  });
 +});{% endraw %}
 ```
 
@@ -427,50 +452,56 @@ Again, instead of making the acceptance test pass as quickly as possible, we
  "write the code we wish we had": a post display component.
 
 
-### Specify detail component should display model fields [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/49e4a914c757fe3554e62f92bdc444b2a7f470b2)
+### Specify detail component should display model fields [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/4afb82be3153badee7ed282901ecc57ce7ddf614)
 
 #### tests/integration/components/post-detail-test.js
 
 ```diff
-{% raw %}   integration: true
- });
+{% raw %} module('Integration | Component | post-detail', function(hooks) {
+   setupRenderingTest(hooks);
  
--test('it renders', function(assert) {
--  // Set any properties with this.set('myProperty', 'value');
--  // Handle any actions with this.on('myAction', function(val) { ... });
-+test('displays details for the passed-in post', function(assert) {
-+  this.set('testModel', {title: 'Test Title', body: 'This is a test post!'});
+-  test('it renders', async function(assert) {
+-    // Set any properties with this.set('myProperty', 'value');
+-    // Handle any actions with this.set('myAction', function(val) { ... });
++  test('it displays details for the passed-in post', async function(assert) {
++    this.set('testModel', {
++      title: 'Test Title',
++      body: 'This is a test post!',
++    });
  
--  this.render(hbs`{{post-detail}}`);
-+  this.render(hbs`{{post-detail post=testModel}}`);
+-    await render(hbs`{{post-detail}}`);
++    await render(hbs`{{post-detail post=testModel}}`);
  
--  assert.equal(this.$().text().trim(), '');
+-    assert.equal(this.element.textContent.trim(), '');
 -
--  // Template block usage:
--  this.render(hbs`
--    {{#post-detail}}
--      template block text
--    {{/post-detail}}
--  `);
+-    // Template block usage:
+-    await render(hbs`
+-      {{#post-detail}}
+-        template block text
+-      {{/post-detail}}
+-    `);
 -
--  assert.equal(this.$().text().trim(), 'template block text');
-+  assert.ok(
-+    this.$('.js-post-detail-title').text().includes('Test Title'),
-+    'Title not found'
-+  );
-+  assert.ok(
-+    this.$('.js-post-detail-body').text().includes('This is a test post!'),
-+    'Body not found'
-+  );
+-    assert.equal(this.element.textContent.trim(), 'template block text');
++    assert.ok(
++      this.element.querySelector('.js-post-detail-title').textContent.includes('Test Title'),
++      'Title not found'
++    );
++    assert.ok(
++      this.element.querySelector('.js-post-detail-body').textContent.includes('This is a test post!'),
++      'Body not found'
++    );
+   });
  });{% endraw %}
 ```
 
 We add a component test that reproduces the acceptance test error: we specify that the component displays the post's title. And we go ahead and specify that it displays the body, too, because that seems safe in this case.
 
-Inner red: Title not found
+Inner red: Cannot read property 'textContent' of null
+
+This means that the title field was not found, to be able to retrieve the textContent from it.
 
 
-### Add post detail display markup [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/cdfc232dd2fe529a3922ba233c246a4fa7cdf594)
+### Add post detail display markup [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/e950c041b92891b14c0a3b76a811453fc58ebc1d)
 
 #### app/templates/components/post-detail.hbs
 
@@ -490,7 +521,7 @@ Inner green; outer red: Title not found
 The acceptance test still has the same error! Why's that? Well, we're not actually saving the post when we click save, and we aren't loading the post on the show page.
 
 
-### Hook routes into post model [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/306ca7e2741fefc3f9837ef773e549b39e46dbb5)
+### Hook routes into post model [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/eedc1f172297edebfa004913ed7e4adb1ae3baf8)
 
 #### app/controllers/posts/new.js
 
@@ -500,11 +531,10 @@ The acceptance test still has the same error! Why's that? Well, we're not actual
    actions: {
 -    savePost() {
 -      this.transitionToRoute('posts.show');
-+    savePost(postData) {
++    async savePost(postData) {
 +      let post = this.store.createRecord('post', postData);
-+      post.save().then((post) => {
-+        this.transitionToRoute('posts.show', post.id);
-+      });
++      await post.save();
++      this.transitionToRoute('posts.show', post.id);
      }
    }
  });{% endraw %}
@@ -531,24 +561,20 @@ The acceptance test still has the same error! Why's that? Well, we're not actual
 {% raw %} import Route from '@ember/routing/route';
  
  export default Route.extend({
-+  model(params) {
-+    return this.store.findRecord('post', params.id);
++  model({ id }) {
++    return this.store.findRecord('post', id);
 +  }
  });{% endraw %}
 ```
 
-This acceptance test error drives a lot of logic: to display the post's titl
-e on the show page, we need to save the post on the new page, include the ID in
-the transition to the show route, then load the post on the show page's model ho
-ok.
+This acceptance test error drives a lot of logic: to display the post's title on the show page, we need to save the post on the new page, include the ID in the transition to the show route, then load the post on the show page's model hook.
 
-Outer red: No model was found for 'post'
+Outer red: Uncaught TypeError: Cannot read property 'create' of undefined
 
-With this logic added, the acceptance test errors out quickly: there _is_ no
- `post` model.
+This isn't a very descriptive error, but it seems to be related to the fact that there _is_ no `post` model.
 
 
-### Add post model [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/e41c4c01a521e3b5aee1099da9dbd2467cf46451)
+### Add post model [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/9670210c6766108dd10c13ec56aaae47e165e245)
 
 #### app/models/post.js
 
@@ -567,7 +593,7 @@ Outer red: Your Ember app tried to POST '/posts', but there was no route defined
 Next we get an error from Mirage, our fake server. It needs a corresponding post creation endpoint created.
 
 
-### Add post route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/7726fc79205f158b64fc75380e72f262788f44f7)
+### Add post route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/ab55e3ca7c53e2cba68d8902a7c17a37fb07e819)
 
 #### mirage/config.js
 
@@ -582,7 +608,7 @@ Outer red: Your Ember app tried to GET '/posts/1', but there was no route define
 The next error is in Mirage again: we now get to the post show page, but Mirage isn't configured to retrieve a post by ID.
 
 
-### Add mirage get post route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/6afb0f5e1efbc34a82f763d2a7d8fa85dc5d515b)
+### Add mirage get post route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/365bf075aacf62c0e2501b83d58337fcd27dcaf2)
 
 #### mirage/config.js
 
@@ -596,31 +622,39 @@ The next error is in Mirage again: we now get to the post show page, but Mirage 
 We configure Mirage to return a post retrieved by ID. This allows the post detail screen to be displayed, but no title is shown. This is because the data from our create post form isn't actually submitted.
 
 
-### Specify form should send the form data [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/ef71fa1a2007e6d66bce9993cf6064e8fc4139a4)
+### Specify form should send the form data [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/4b7e82c29e8c6ed2f599c381c33c38cce8052d69)
 
 #### tests/integration/components/post-form-test.js
 
 ```diff
-{% raw %}   assert.equal(body.length, 1, 'Element .js-post-form-body not found');
- });
+{% raw %} import { module, test } from 'qunit';
+ import { setupRenderingTest } from 'ember-qunit';
+-import { render, click } from '@ember/test-helpers';
++import { render, fillIn, click } from '@ember/test-helpers';
+ import hbs from 'htmlbars-inline-precompile';
  
--test('calls the submit handler', function(assert) {
-+test('calls the submit handler with the form data', function(assert) {
-   let submitHandlerCalled = false;
--  this.set('testSubmitHandler', () => {
-+  this.set('testSubmitHandler', (postData) => {
-     submitHandlerCalled = true;
-+    assert.equal(postData.title, 'New Title');
-+    assert.equal(postData.body, 'New Body');
+ module('Integration | Component | post-form', function(hooks) {
+...
+     assert.equal(body.length, 1, 'Element .js-post-form-body not found');
    });
  
-   this.render(hbs`{{post-form submitHandler=(action testSubmitHandler)}}`);
+-  test('it calls the submit handler', async function(assert) {
++  test('it calls the submit handler with the form data', async function(assert) {
+     let submitHandlerCalled = false;
+-    this.set('testSubmitHandler', () => {
++    this.set('testSubmitHandler', postData => {
+       submitHandlerCalled = true;
++      assert.equal(postData.title, 'New Title');
++      assert.equal(postData.body, 'New Body');
+     });
  
-+  this.$('.js-post-form-title').val('New Title').blur();
-+  this.$('.js-post-form-body').val('New Body').blur();
-   this.$('.js-post-form-save').click();
+     await render(hbs`{{post-form submitHandler=(action testSubmitHandler)}}`);
  
-   assert.ok(submitHandlerCalled,{% endraw %}
++    await fillIn('.js-post-form-title', 'New Title');
++    await fillIn('.js-post-form-body', 'New Body');
+     await click('.js-post-form-save');
+ 
+     assert.ok(submitHandlerCalled,{% endraw %}
 ```
 
 We add a component test case specifying that the post form should send the data from the form fields into the submit handler.
@@ -630,7 +664,7 @@ Inner red: Cannot read property 'title' of undefined
 This means that no postData object is being sent into the submit handler at all.
 
 
-### Send post form data to save action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/20d880054a0fc5849b6bcec5a33857df18ef4a0a)
+### Send post form data to save action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/77d7a49ba079742d1f1f1c28e226f88149d0ad3b)
 
 #### app/components/post-form.js
 
@@ -679,37 +713,40 @@ Interestingly, note that the tests didn't drive us to actually add attributes to
 The TDD way to approach this problem is to find the test that will demonstrate the problem with the attributes not being defined. In this case, a test of the post retrieval page pulling up a post from the backend will show the problem.
 
 
-### Specify show page should display model from the database [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/b246cf06f9faa60a129e985fb8be21590db3b65a)
+### Specify show page should display model from the database [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/33594c5085bbee967e1299b1347500894fd6fb33)
 
 #### tests/acceptance/viewing-a-blog-post-test.js
 
 ```diff
-{% raw %}+import { test } from 'qunit';
-+import moduleForAcceptance from 'ember-tdd/tests/helpers/module-for-acceptance';
+{% raw %}+import { module, test } from 'qunit';
++import { visit } from '@ember/test-helpers';
++import { setupApplicationTest } from 'ember-qunit';
++import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 +
-+moduleForAcceptance('Acceptance | viewing a blog post');
++module('Acceptance | viewing a blog post', function(hooks) {
++  setupApplicationTest(hooks);
++  setupMirage(hooks);
 +
-+test('viewing a blog post', function(assert) {
-+  let post = window.server.create('post', {
-+    title: 'Test Post',
-+    body: 'This post is a test!'
-+  });
-+  visit(`/posts/${post.id}`);
++  test('viewing a blog post', async function(assert) {
++    let post = server.create('post', {
++      title: 'Test Post',
++      body: 'This post is a test!'
++    });
++    await visit(`/posts/${post.id}`);
 +
-+  return andThen(() => {
 +    assert.ok(
-+      find('.js-post-detail-title').text().includes('Test Post'),
++      this.element.querySelector('.js-post-detail-title').textContent.includes('Test Post'),
 +      'Title not found'
 +    );
 +    assert.ok(
-+      find('.js-post-detail-body').text().includes('This post is a test!'),
++      this.element.querySelector('.js-post-detail-body').textContent.includes('This post is a test!'),
 +      'Body not found'
 +    );
 +  });
 +});{% endraw %}
 ```
 
-Outer red: expected '' to include 'Test Post'
+Outer red: Title not found
 
 We create a new acceptance test for viewing a page. We use Mirage's `server.create()` method to create a test post directly in our fake backend. We specify
 that, when the post view page is shown, the post's title and body are visible.
@@ -717,7 +754,7 @@ that, when the post view page is shown, the post's title and body are visible.
 The test fails because no title is being outputted on the page. This is the problem that happens when we don't define attributes on our model.
 
 
-### Add attributes to model [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/f5e207338f3e4860495e1a310b87f35799c7ed97)
+### Add attributes to model [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/dc5854074f6806f2b40617ce247249e552974ae1)
 
 #### app/models/post.js
 
