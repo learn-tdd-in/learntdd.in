@@ -4,10 +4,10 @@ require 'dotenv'
 Dotenv.load
 
 puts 'cocoa-touch'
-system('bin/log2blog generate learn-tdd-in/cocoa-touch 2e43dd9 --token $GITHUB_OAUTH_TOKEN --skip "Main\.storyboard|project\.pbxproj" > cocoa-touch/_commits.md')
+system("bin/log2blog generate learn-tdd-in/cocoa-touch 2e43dd9 --token #{ENV['GITHUB_OAUTH_TOKEN']} --skip \"Main\.storyboard|project\.pbxproj\" > cocoa-touch/_commits.md")
 
 puts 'ember'
 system("bin/log2blog generate learn-tdd-in/ember b761d00 --token #{ENV['GITHUB_OAUTH_TOKEN']} --skip \"tests/unit\" > ember/_commits.md")
 
 puts 'rails'
-system('bin/log2blog generate learn-tdd-in/rails 6d0a570 --token $GITHUB_OAUTH_TOKEN --skip db/schema.rb > rails/_commits.md')
+system("bin/log2blog generate learn-tdd-in/rails 6d0a570 --token #{ENV['GITHUB_OAUTH_TOKEN']} --skip db/schema.rb > rails/_commits.md")
