@@ -505,6 +505,7 @@ To learn more about TDD, I recommend:
 
 {% include tutorial-goos.md %}
 * ["JavaScript Jabber 224: Cypress.js"](https://devchat.tv/js-jabber/224-jsj-cypress-js-with-brian-mann) podcast episode
+* [_Testing Vue.js Applications_](https://www.manning.com/books/testing-vuejs-applications) - an early-access book that provides a detailed perspective on writing valuable Vue tests
 
 {% include tutorial-contact.md %}
 
