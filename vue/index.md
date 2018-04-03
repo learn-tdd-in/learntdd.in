@@ -351,7 +351,7 @@ Add another test case to `NewMessageForm.spec.js`:
      beforeEach(() => {
 +      spy = cy.spy();
 +      Cypress.vue.$on('save', spy);
-+ 
++
        cy.get("[data-test='messageText']")
          .type('New message');
 
@@ -363,7 +363,7 @@ Add another test case to `NewMessageForm.spec.js`:
        cy.get("[data-test='messageText']")
          .should('have.value', '');
      });
-+ 
++
 +    it('emits the "save" event', () => {
 +      expect(spy).to.have.been.calledWith('New message');
 +    });
@@ -413,9 +413,9 @@ Next, we need to save the message as a data property in the App component. First
    </div>
  </template>
 ```
- 
+
 Next, we add the messages data property, and add the message to it when `addMessage()` is called:
- 
+
 ```diff
    components: {
      NewMessageForm,
