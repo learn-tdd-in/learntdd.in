@@ -7,7 +7,7 @@ logo_alt: React logo
 
 {% include tutorial-intro.md %}
 
-To see how TDD works in React, let's walk through a simple real-world example of building a feature. We'll be using React 16.2 and [Cypress][cypress] for end-to-end and component tests. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react) that shows the process step-by-step. This tutorial assumes you have some [familiarity with React][react] and with [automated testing concepts](/learn-tdd/concepts).
+To see how TDD works in React, let's walk through a simple real-world example of building a feature. We'll be using React 16.3 and [Cypress][cypress] for end-to-end and component tests. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react) that shows the process step-by-step. This tutorial assumes you have some [familiarity with React][react] and with [automated testing concepts](/learn-tdd/concepts).
 
 The feature we'll build is a simple list of messages.
 
@@ -282,11 +282,11 @@ Now, we can add the behavior to the component to get this test to pass. To accom
 ```diff
  export default class NewMessageForm extends Component {
 +  state = { inputText: '' }
-+ 
++
 +  handleTextChange(event) {
 +    this.setState({ inputText: event.target.value });
 +  }
-+ 
++
    render() {
 +    const { inputText } = this.state;
      return (
@@ -308,11 +308,11 @@ Next, we want to clear out `inputText` when the Save button is clicked:
    handleTextChange = (event) => {
      this.setState({ inputText: event.target.value });
    }
- 
+
 +  handleSave() {
 +    this.setState({ inputText: '' });
 +  }
-+ 
++
    render() {
 ...
          <button
@@ -341,7 +341,7 @@ Add another test case to `NewMessageForm.spec.js`:
  describe('<NewMessageForm />', () => {
    describe('clicking the save button', () => {
 +    let spy;
-+ 
++
      beforeEach(() => {
 +      spy = cy.spy();
 -      mount(<NewMessageForm />);
@@ -358,7 +358,7 @@ Add another test case to `NewMessageForm.spec.js`:
        cy.get("[data-test='messageText']")
          .should('have.value', '');
      });
-+ 
++
 +    it('emits the "save" event', () => {
 +      expect(spy).to.have.been.calledWith('New message');
 +    });
@@ -382,9 +382,9 @@ So the `saveCallback` isn't being called. Let's fix that:
    handleSave() {
 +    const { inputText } = this.state;
 +    const { onSave } = this.props;
-+ 
++
 +    onSave(inputText);
-+ 
++
      this.setState({ inputText: '' });
    }
 ```
@@ -401,7 +401,7 @@ We changed NewMessageForm to use an onSave event handler, but we haven't passed 
  class App extends Component {
 +  handleSave(newMessage) {
 +  }
-+ 
++
    render() {
      return (
        <div>
@@ -426,15 +426,15 @@ Next, we need to save the message in state in the App component. Let's add it to
 
 ```diff
  import NewMessageForm from './NewMessageForm';
- 
+
  class App extends Component {
 +  state = { messages: [] };
-+ 
++
    handleSave(newMessage) {
 +    const { messages } = this.state;
 +    this.setState({ messages: [newMessage, ...messages] });
    }
- 
+
    render() {
 ```
 
@@ -444,10 +444,10 @@ Next, to display the messages, let's create another custom component to keep our
  import React, { Component } from 'react';
  import NewMessageForm from './NewMessageForm';
 +import MessageList from './MessageList';
- 
+
  class App extends Component {
 ...
- 
+
    render() {
 +    const { messages } = this.state;
      return (
@@ -475,14 +475,14 @@ Rerun the tests, and, as we expect, we still aren't displaying the message. But 
 
 ```diff
  import React from 'react';
- 
+
  const MessageList = ({ data }) => (
 -  <div />
 +  <ul>
 +    { data.map(message => <li>{message}</li>) }
 +  </ul>
  );
- 
+
  export default MessageList;
 ```
 
