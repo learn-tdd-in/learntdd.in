@@ -31,8 +31,10 @@ Now, run your app and leave it open for the duration of the process:
 Next, we need to add Cypress and some Vue-specific packages as dependencies of our project:
 
 ```
-# npm install --save-dev cypress cypress-vue-unit-test @cypress/webpack-preprocessor
+# npm install --save-dev cypress cypress-vue-unit-test @cypress/webpack-preprocessor@^1.1.3
 ```
+
+Note that we need to lock the version of `@cypress/webpack-preprocessor` to `^1.1.3` to support the version of Webpack that is included with the Vue Webpack template.
 
 Add an NPM script for opening Cypress into your `package.json`:
 
@@ -96,12 +98,9 @@ Replace the contents of `src/App.vue` with the following:
 
 <script>
 export default {
-  name: 'app',
+  name: 'App',
 };
 </script>
-
-<style>
-</style>
 ```
 
 ## The Feature Test
@@ -160,7 +159,7 @@ A common principle in TDD is to **write the code you wish you had.** We could ju
 ```diff
  <template>
    <div>
-+    <new-message-form />
++    <NewMessageForm />
    </div>
  </template>
 
@@ -186,7 +185,7 @@ Next, let's create `src/components/NewMessageForm.vue` with the following conten
 
 <script>
 export default {
-  name: 'new-message-form',
+  name: 'NewMessageForm',
 };
 </script>
 ```
@@ -196,7 +195,10 @@ Now rerun the tests in Cypress. We're still getting the same error, because we h
 ```diff
  <template>
    <div>
-+    <input type="text" data-test="messageText" />
++    <input
++     type="text"
++     data-test="messageText"
++   />
    </div>
  </template>
 ```
@@ -214,8 +216,15 @@ We want the save button to be part of our `NewMessageForm`, so fixing this error
 ```diff
  <template>
    <div>
-     <input type="text" data-test="messageText" />
-+    <button data-test="saveButton">Save</button>
+     <input
+       type="text"
+       data-test="messageText"
+     />
++    <button
++      data-test="saveButton"
++    >
++      Save
++    </button>
    </div>
  </template>
 ```
@@ -276,13 +285,17 @@ Now, we can add the behavior to the component to get this test to pass. First, w
        data-test="messageText"
 +      v-model="inputText"
      />
-     <button data-test="saveButton">Save</button>
+     <button
+       data-test="saveButton"
+     >
+       Save
+     </button>
    </div>
  </template>
 
  <script>
  export default {
-   name: 'new-message-form',
+   name: 'NewMessageForm',
 +  data() {
 +    return {
 +      inputText: '',
@@ -313,7 +326,7 @@ Next, we add a `save()` method that sets the `inputText` data property to the em
 
  <script>
  export default {
-   name: 'new-message-form',
+   name: 'NewMessageForm',
    data() {
      return {
        inputText: '',
@@ -408,8 +421,8 @@ Next, we need to save the message as a data property in the App component. First
 ```diff
  <template>
    <div>
--    <new-message-form />
-+    <new-message-form v-on:save="addMessage"/>
+-    <NewMessageForm />
++    <NewMessageForm @save="addMessage" />
    </div>
  </template>
 ```
@@ -439,8 +452,8 @@ Next, to display the messages, let's create another custom component to keep our
 ```diff
  <template>
    <div>
-     <new-message-form v-on:save="addMessage"/>
-+    <message-list :messages="messages"/>
+     <NewMessageForm v-on:save="addMessage" />
++    <MessageList :messages="messages" />
    </div>
  </template>
 
@@ -465,7 +478,7 @@ Next, we'll create `MessageList.vue` and add an empty implementation:
 
 <script>
 export default {
-  name: 'message-list',
+  name: 'MessageList',
   props: ['messages'],
 };
 </script>
@@ -477,7 +490,9 @@ Rerun the tests, and, as we expect, we still aren't displaying the message. But 
 {% raw %}  <template>
 -  <div></div>
 +  <ul>
-+    <li v-for="message in messages" :key="message">{{ message }}</li>
++    <li v-for="message in messages" :key="message">
++      {{ message }}
++    </li>
 +  </ul>
  </template>{% endraw %}
 ```
