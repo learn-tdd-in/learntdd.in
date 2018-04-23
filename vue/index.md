@@ -474,12 +474,12 @@ export default {
 Rerun the tests, and, as we expect, we still aren't displaying the message. But now that we have a MessageList component, we're ready to finally implement that and make the test pass:
 
 ```diff
- <template>
+{% raw %}  <template>
 -  <div></div>
 +  <ul>
 +    <li v-for="message in messages" :key="message">{{ message }}</li>
 +  </ul>
- </template>
+ </template>{% endraw %}
 ```
 
 Rerun the tests and they pass. We've let the tests drive our first feature!
