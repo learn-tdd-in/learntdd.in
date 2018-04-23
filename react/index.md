@@ -16,20 +16,20 @@ The feature we'll build is a simple list of messages.
 First, create a new React app with [`create-react-app`][create-react-app]:
 
 ```
-# npx create-react-app ReactTDD
+# npx create-react-app learn-tdd-in-react
 ```
 
 Now, run your app and leave it open for the duration of the process:
 
 ```
-# cd ReactTDD
+# cd learn-tdd-in-react
 # npm start
 ```
 
 Next, we need to add Cypress and some React-specific packages as dependencies of our project:
 
 ```
-# npm install --save-dev cypress cypress-react-unit-test @cypress/webpack-preprocessor
+# npm install --save-dev cypress cypress-react-unit-test @cypress/webpack-preprocessor babel-plugin-transform-class-properties
 ```
 
 Add an NPM script for opening Cypress into your `package.json`:
@@ -245,9 +245,9 @@ Instead of adding the behavior directly, let's **step down from the "outside" le
 Create a new file `cypress/integration/NewMessageForm.spec.js` and add the following:
 
 ```javascript
-import NewMessageForm from '../../src/NewMessageForm';
 import React from 'react';
 import { mount } from 'cypress-react-unit-test';
+import NewMessageForm from '../../src/NewMessageForm';
 
 describe('<NewMessageForm />', () => {
   describe('clicking the save button', () => {
@@ -295,7 +295,7 @@ Now, we can add the behavior to the component to get this test to pass. To accom
            type="text"
            data-test="messageText"
 +          value={inputText}
-+          onChange={(e) => this.handleTextChange(e)}
++          onChange={e => this.handleTextChange(e)}
          />
          <button
            data-test="saveButton"
@@ -406,7 +406,7 @@ We changed NewMessageForm to use an onSave event handler, but we haven't passed 
      return (
        <div>
 -        <NewMessageForm />
-+        <NewMessageForm onSave={(newMessage) => this.handleSave(newMessage)} />
++        <NewMessageForm onSave={newMessage => this.handleSave(newMessage)} />
        </div>
      );
    }
@@ -479,7 +479,7 @@ Rerun the tests, and, as we expect, we still aren't displaying the message. But 
  const MessageList = ({ data }) => (
 -  <div />
 +  <ul>
-+    { data.map(message => <li>{message}</li>) }
++    { data.map(message => <li key={message}>{message}</li>) }
 +  </ul>
  );
 
