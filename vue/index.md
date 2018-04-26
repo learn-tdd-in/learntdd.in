@@ -17,8 +17,8 @@ First, create a new Vue app with [`vue-cli`][vue-cli] and the webpack template:
 
 ```
 # npm install -g vue-cli
-# vue init webpack VueTDD
-# cd VueTDD
+# vue init webpack learn-tdd-in-vue
+# cd learn-tdd-in-vue
 # npm install
 ```
 
@@ -58,28 +58,32 @@ Now open Cypress and it will create a `cypress` directory in your app with some 
 Next, set up Cypress to be able to test `.vue` components by replacing the contents of `cypress/plugins.index.js` with the following:
 
 ```javascript
-const webpack = require('@cypress/webpack-preprocessor')
+const webpack = require('@cypress/webpack-preprocessor');
+
 const webpackOptions = {
+  resolve: {
+    extensions: ['.js', '.vue'],
+  },
   module: {
     rules: [
       {
         test: /\.vue$/,
-        loader: 'vue-loader'
-      }
-    ]
-  }
-}
+        loader: 'vue-loader',
+      },
+    ],
+  },
+};
 
 const options = {
   // send in the options from your webpack.config.js, so it works the same
   // as your app's code
   webpackOptions,
-  watchOptions: {}
-}
+  watchOptions: {},
+};
 
-module.exports = on => {
-  on('file:preprocessor', webpack(options))
-}
+module.exports = (on) => {
+  on('file:preprocessor', webpack(options));
+};
 ```
 
 As our last setup step, let's clear out some of the default code to get a clean starting point. Delete the following files:
@@ -159,7 +163,7 @@ A common principle in TDD is to **write the code you wish you had.** We could ju
 ```diff
  <template>
    <div>
-+    <NewMessageForm />
++    <new-message-form />
    </div>
  </template>
 
@@ -245,7 +249,7 @@ Create a new file `cypress/integration/NewMessageForm.spec.js` and add the follo
 
 ```javascript
 import mountVue from 'cypress-vue-unit-test';
-import NewMessageForm from '../../src/components/NewMessageForm.vue';
+import NewMessageForm from '../../src/components/NewMessageForm';
 
 describe('NewMessageForm', () => {
   beforeEach(mountVue(NewMessageForm));
@@ -421,8 +425,8 @@ Next, we need to save the message as a data property in the App component. First
 ```diff
  <template>
    <div>
--    <NewMessageForm />
-+    <NewMessageForm @save="addMessage" />
+-    <new-message-form />
++    <new-message-form @save="addMessage" />
    </div>
  </template>
 ```
@@ -452,8 +456,8 @@ Next, to display the messages, let's create another custom component to keep our
 ```diff
  <template>
    <div>
-     <NewMessageForm v-on:save="addMessage" />
-+    <MessageList :messages="messages" />
+     <new-message-form @save="addMessage" />
++    <message-list :messages="messages" />
    </div>
  </template>
 
