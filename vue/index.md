@@ -7,65 +7,57 @@ logo_alt: Vue logo
 
 {% include tutorial-intro.md %}
 
-To see how TDD works in Vue, let's walk through a simple real-world example of building a feature. We'll be using Vue 2.5 and [Cypress][cypress] for end-to-end and component tests. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/vue) that shows the process step-by-step. This tutorial assumes you have some [familiarity with Vue][vue] and with [automated testing concepts](/learn-tdd/concepts).
+To see how TDD works in Vue, let's walk through a simple real-world example of building a feature. We'll be using Vue 2.5 with Vue CLI 3, which built-in support to use [Cypress][cypress] for end-to-end tests. We'll also add Cypress component testing functionality. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/vue) that shows the process step-by-step. This tutorial assumes you have some [familiarity with Vue][vue] and with [automated testing concepts](/learn-tdd/concepts).
 
-You can also watch a [meetup presentation video](https://youtu.be/CMN8boToKWI) of this tutorial.
+You can also watch a [meetup presentation video](https://youtu.be/CMN8boToKWI) of this tutorial using Vue CLI 2, which requires some extra steps to set up Cypress.
 
 The feature we'll build is a simple list of messages.
 
 ## Setup
 
-First, create a new Vue app with [`vue-cli`][vue-cli] and the webpack template:
+First, ensure you have `@vue/cli` version 3 installed:
 
 ```
-# npm install -g vue-cli
-# vue init webpack learn-tdd-in-vue
+# npm install -g @vue/cli
+# vue -V
+
+3.0.0-rc.3
+```
+
+Create a new Vue app with [`vue-cli`][vue-cli] and the webpack template:
+
+```
+# vue create learn-tdd-in-vue
+```
+
+Choose the following options from the prompts:
+
+- Please pick a preset: Manually select features
+- Check the features needed for your project: add E2E Testing
+- Pick a E2E testing solution: Cypress (Chrome only)
+- Where do you prefer placing config for Babel, PostCSS, ESLint, etc.? In dedicated config files
+- Pick the package manager to use when installing dependencies: pick what you like; this tutorial will use NPM
+
+Cypress is now set up for end-to-end testing, but we need to add some extra packages for component testing:
+
+```
 # cd learn-tdd-in-vue
-# npm install
+# npm install --save-dev cypress-vue-unit-test @cypress/webpack-preprocessor vue-loader
 ```
 
-Now, run your app and leave it open for the duration of the process:
-
-```
-# npm run dev
-```
-
-Next, we need to add Cypress and some Vue-specific packages as dependencies of our project:
-
-```
-# npm install --save-dev cypress cypress-vue-unit-test @cypress/webpack-preprocessor@^1.1.3
-```
-
-Note that we need to lock the version of `@cypress/webpack-preprocessor` to `^1.1.3` to support the version of Webpack that is included with the Vue Webpack template.
-
-Add an NPM script for opening Cypress into your `package.json`:
-
-```diff
- {
-   ...
-   "scripts": {
-     ...
-+    "cypress:open": "cypress open"
-   }
-   ...
- }
-```
-
-Now open Cypress and it will create a `cypress` directory in your app with some initial files:
-
-```
-# npm run cypress:open
-```
-
-Next, set up Cypress to be able to test `.vue` components by replacing the contents of `cypress/plugins.index.js` with the following:
+Next, set up Cypress to be able to load `.vue` components for testing by replacing the contents of `tests/e2e/plugins/index.js` with the following:
 
 ```javascript
 const webpack = require('@cypress/webpack-preprocessor');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 const webpackOptions = {
   resolve: {
     extensions: ['.js', '.vue'],
   },
+  plugins: [
+    new VueLoaderPlugin(),
+  ],
   module: {
     rules: [
       {
@@ -83,16 +75,22 @@ const options = {
   watchOptions: {},
 };
 
-module.exports = (on) => {
+module.exports = (on, config) => {
   on('file:preprocessor', webpack(options));
+  return Object.assign({}, config, {
+    fixturesFolder: 'tests/e2e/fixtures',
+    integrationFolder: 'tests/e2e/specs',
+    screenshotsFolder: 'tests/e2e/screenshots',
+    videosFolder: 'tests/e2e/videos',
+    supportFile: 'tests/e2e/support/index.js',
+  });
 };
 ```
 
 As our last setup step, let's clear out some of the default code to get a clean starting point. Delete the following files:
 
-- `cypress/integration/example_spec.js`
+- `tests/e2e/specs/test.js`
 - `src/components/HelloWorld.vue`
-- `test/unit/specs/HelloWorld.spec.js`
 
 Replace the contents of `src/App.vue` with the following:
 
@@ -113,7 +111,7 @@ export default {
 
 When performing outside-in TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.** For our simple messaging app, the first feature we want is to be able to enter a message, save it, and see it in the list.
 
-Create a file `cypress/integration/creating_a_message_spec.js` and enter the following contents:
+Create a file `tests/e2e/specs/creating_a_message.js` and enter the following contents:
 
 ```javascript
 describe('Creating a message', () => {
@@ -144,10 +142,10 @@ The code describes the steps a user would take interacting with our app:
 
 After we've created our test, the next step in TDD is to **run the test and watch it fail.**  This test will fail (be "red") at first because we haven't yet implemented the functionality.
 
-If you've closed Cypress, reopen it with:
+Open Cypress with:
 
 ```
-# npm run cypress:open
+# npm run test:e2e
 ```
 
 Run the Cypress test by clicking `creating_a_message_spec.js` in the Cypress window. A Chrome window should open, you should see the test run, then in the left-hand test step column you should see the following error:
@@ -247,11 +245,11 @@ We've made it to our first assertion, which is that the message text box should 
 
 Instead of adding the behavior directly, let's **step down from the "outside" level of end-to-end tests to an "inside" component test.** This allows us to more precisely specify the behavior of each piece. Also, since end-to-end tests are slow, component tests prevent us from having to write an end-to-end test for every rare edge case.
 
-Create a new file `cypress/integration/NewMessageForm.spec.js` and add the following:
+Create a new file `tests/e2e/specs/NewMessageForm.js` and add the following:
 
 ```javascript
 import mountVue from 'cypress-vue-unit-test';
-import NewMessageForm from '../../src/components/NewMessageForm';
+import NewMessageForm from '../../../src/components/NewMessageForm';
 
 describe('NewMessageForm', () => {
   beforeEach(mountVue(NewMessageForm));
