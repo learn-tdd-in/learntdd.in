@@ -7,68 +7,102 @@ logo_alt: React Native logo
 
 {% include tutorial-intro.md %}
 
-To see how TDD works in React Native, let's walk through a simple real-world example of building a feature. We'll be using React Native 0.55 and [Detox][detox], an end-to-end test library targeted at React Native. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react-native) that shows the process step-by-step. This tutorial assumes you have some [familiarity with React Native][react-native] and with [automated testing concepts](/learn-tdd/concepts).
+To see how TDD works in React Native, let's walk through a simple real-world example of building a feature. We'll be using React Native 0.55 and two testing libraries: [Enzyme][enzyme] for component tests and [Detox][detox] for end-to-end tests. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react-native) that shows the process step-by-step. This tutorial assumes you have some [familiarity with React Native][react-native] and with [automated testing concepts](/learn-tdd/concepts).
 
 The feature we'll build is a simple list of messages.
 
 ## Setup
 
+It takes a little work to install Enzyme and Detox, but it'll be worth it!
+
 First, make sure you have React Native installed and running. Instead of `create-react-native-app`, we'll be using `react-native-cli`. If you haven't installed it before, go to the [React Native Getting Started][react-native] page and click "Building Projects with Native Code".
 
-Next, let's install the global Detox CLI tool:
+Create a new React Native app with `react-native-cli`:
 
 ```
-# brew tap wix/brew
-# brew install --HEAD applesimutils
-# npm install -g detox-cli
-```
-
-Now we create a new React Native app with `react-native-cli`:
-
-```
-# react-native init ReactNativeTDD
+# react-native init LearnTDDInReactNative
 ```
 
 Let's run it to confirm it works:
 
 ```
-# cd ReactNativeTDD
+# cd LearnTDDInReactNative
 # react-native run-ios
 ```
 
 After a few minutes you should see the welcome screen of the app in the iOS Simulator.
 
-Next, we need to add Detox as a dependency to our project. We'll also install [Mocha][mocha], the recommended test runner for Detox:
+Next, let's install Enzyme and related packages:
 
 ```
-# npm install detox mocha --save-dev
+# yarn add --dev enzyme enzyme-adapter-react-16 @jonny/react-native-mock
+```
+
+Now that these packages are installed, we need to configure Enzyme to use the adapter we installed. Create a tests/setup.js script and add the following:
+
+```javascript
+import Enzyme from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+
+Enzyme.configure({ adapter: new Adapter() });
+```
+
+Then instruct Jest to load this file upon startup by adding the following to package.json:
+
+```
+   "jest": {
+-    "preset": "react-native"
++    "preset": "react-native",
++    "setupFiles": [
++      "./tests/setup.js"
++    ]
+   },
+```
+
+Next, to get Detox working, let's first install the global Detox CLI tool:
+
+```
+# brew tap wix/brew
+# brew install --HEAD applesimutils
+# yarn global add detox-cli
+```
+
+Next, we need to add Detox as a dependency to our project.
+
+```
+# yarn add --dev detox
+```
+
+Then initialize Detox in the project, specifying Jest as the test runner:
+
+```
+# detox init -r jest
 ```
 
 After this, we need to add some config for Detox to our `package.json`. If you have a different app name than `ReactNativeTDD`, be sure to substitute the correct app name below:
 
-```json
-{
-  ...
-  "detox": {
-    "configurations": {
-      "ios.sim.debug": {
-        "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/ReactNativeTDD.app",
-        "build": "xcodebuild -project ios/ReactNativeTDD.xcodeproj -scheme ReactNativeTDD -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
-        "type": "ios.simulator",
-        "name": "iPhone 8"
-      }
+```diff
+ "detox": {
+-  "test-runner": "jest"
++  "test-runner": "jest",
++  "configurations": {
++    "ios.sim.debug": {
++      "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/LearnTDDInReactNative.app",
++      "build": "xcodebuild -project ios/LearnTDDInReactNative.xcodeproj -scheme LearnTDDInReactNative -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
++      "type": "ios.simulator",
++      "name": "iPhone 8"
     }
   }
 }
 ```
 
-Next, initialize Detox in your app to get some config files set up:
+Now, let's run it and see that the initial test fails. If Metro is not still running, start it:
 
 ```
-# detox init
+# react-native start
 ```
 
-Now, let's run it and see that the initial test fails:
+Then, in another terminal, run Detox:
 
 ```
 # detox build
@@ -77,7 +111,17 @@ Now, let's run it and see that the initial test fails:
 
 If you run into trouble, check the [Detox Getting Started Guide][detox-getting-started] for help.
 
-As our last setup step, let's clear out some of the default code to get a clean starting point. Delete `e2e/example.spec.js`, and replace the contents of `App.js` with an empty `View`:
+We want to be able to run our component tests separately from our end-to-end tests, so let's update the `yarn test` command that `react-native-cli` created for us so that it only looks for tests in a folder we'll create:
+
+```diff
+"scripts": {
+  "start": "node node_modules/react-native/local-cli/cli.js start",
+-    "test": "jest"
++    "test": "jest tests/**/*.spec.js"
+},
+```
+
+As our last setup step, let's clear out some of the default code to get a clean starting point. Delete `e2e/firstTest.spec.js`, and replace the contents of `App.js` with an empty `View`:
 
 ```jsx
 import React, { Component } from 'react';
@@ -99,7 +143,7 @@ export default class App extends Component {
 
 When performing TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.** For our simple messaging app, the first feature we want is to be able to enter a message, save it, and see it in the list.
 
-Create a file `e2e/creatingAMessage.spec.js` and enter the following contents:
+Create a file `e2e/creating_a_message.spec.js` and enter the following contents:
 
 ```js
 describe('Creating a message', () => {
@@ -268,15 +312,63 @@ The important parts are:
 
 We've made it to our first assertion, which is that the message text box should be empty -- but it isn't. We haven't yet added the behavior to our app to clear out the message text box.
 
-This is the point where in TDD we would usually consider stepping down to a lower-level test, like a component test. Testing the NewMessageForm directly would allow us to specify this behavior precisely. This works great in React for the web using the Enzyme component testing framework. It's more difficult for React Native, because RN components are implemented in native code. A library called `react-native-mock` addresses this, but unfortunately it [doesn't currently work][react-native-mock-bug] with React 16. So instead of stepping down to a component test, we'll just continue to let the end-to-end test drive our functionality.
+Instead of adding the behavior directly, let's **step down from the "outside" level of end-to-end tests to an "inside" component test.** This allows us to more precisely specify the behavior of each piece. Also, since end-to-end tests are slow, component tests prevent us from having to write an end-to-end test for every rare edge case.
 
-As before, we might run into the temptation to implement all the functionality of NewMessageForm, but let's just implement enough to get the test to pass. We want tapping the Save button to clear out the text input. To accomplish this, we'll need to make the TextInput a [controlled component][controlled-component], so its text is available in the parent component's state:
+Create a `tests/components` folder, then create a `NewMessageForm.spec.js` file inside it. Add the following contents:
+
+```javascript
+import React from 'react';
+import { shallow } from 'enzyme';
+
+import NewMessageForm from '../../NewMessageForm';
+
+describe('NewMessageForm', () => {
+  function testID(id) {
+    return cmp => cmp.props().testID === id;
+  }
+
+  describe('clicking save', () => {
+    const messageText = 'Hello world';
+
+    let wrapper;
+
+    beforeEach(() => {
+      wrapper = shallow(<NewMessageForm />);
+
+      wrapper.findWhere(testID('messageText'))
+        .simulate('changeText', messageText);
+      wrapper.findWhere(testID('saveButton'))
+        .simulate('press');
+    });
+
+    it('clears the message field', () => {
+      expect(wrapper.findWhere(testID('messageText')).props().value)
+        .toEqual('');
+    });
+  });
+});
+```
+
+Enzyme's API is different from Detox's, but we're doing something very similar to what the end-to-end test is doing. We've taken the scenario that caused the end-to-end error and reproduced it at the component level: when a user enters text and taps the save button, the text field should be cleared. Note that we have only specified enough of a component test to reproduce the current end-to-end error.
+
+Run `yarn test` to see the component test fail:
+
+```
+expect(received).toEqual(expected)
+
+Expected value to equal:
+  ""
+Received:
+  undefined
+```
+
+Enzyme is finding the `value` prop of the TextInput to be `undefined`; this is because we aren't passing in a value at all. To fix this, let's make the TextInput a [controlled component][controlled-component], so its text is available in the parent component's state:
 
 ```diff
  export default class NewMessageForm extends Component {
 +  state = { inputText: '' }
 +
-+  handleChangeText(text) {
++  handleChangeText = (text) => {
 +    this.setState({ inputText: text });
 +  }
 +
@@ -287,11 +379,20 @@ As before, we might run into the temptation to implement all the functionality o
          <TextInput
 +          value={inputText}
            testID="messageText"
-+          onChangeText={text => this.handleChangeText(text)}
++          onChangeText={this.handleChangeText}
          />
 ```
 
-Next, we want to clear out `inputText` when the Save button is tapped:
+Now when we rerun `yarn test` we get a different error:
+
+```
+Expected value to equal:
+  ""
+Received:
+  "Hello world"
+```
+
+Now the field is successfully taking in the typed value; it just isn't clearing it out when Save is tapped. Let's fix that:
 
 ```diff
  export default class NewMessageForm extends Component {
@@ -301,7 +402,7 @@ Next, we want to clear out `inputText` when the Save button is tapped:
      this.setState({ inputText: text });
    }
 
-+  handleSave() {
++  handleSave = () => {
 +    this.setState({ inputText: '' });
 +  }
 +
@@ -310,22 +411,60 @@ Next, we want to clear out `inputText` when the Save button is tapped:
          <Button
            title="Save"
            testID="saveButton"
-+          onPress={() => this.handleSave()}
++          onPress={this.handleSave}
          />
 ```
 
-Rerun the test. This gets us past the assertion failure.
+Rerun the component test. This gets us past the assertion failure.
 
-## The Meat
+**Once a component test passes, step back up to the outer end-to-end test to see what the next error is.** Rerun `detox test`. Now our final assertion fails: it can't find a UI element that `hasText('New message')`.
 
-Now our final assertion fails: it can't find a UI element that `hasText('New message')`. Now, finally, the test will drive us to implement the real meat of our feature: storing the message entered and displaying it.
+Now, finally, the test will drive us to implement the real meat of our feature: storing the message entered and displaying it.
 
-The NewMessageForm won't be responsible for displaying this message, though: we'll create a separate MessageList component that also exists in the parent App component.
+The NewMessageForm won't be responsible for displaying this message, though: we'll create a separate MessageList component that also exists in the parent App component. The way we can send data to the parent component is by taking in an event handler and calling it.
 
-The way we can send data to the parent component is by taking in an event handler and calling it. Add the following to `NewMessageForm.js`:
+To add this event handler behavior to NewMessageForm, we want to step back down to the component test. In this case, the component test won't be asserting exactly the same thing as the end-to-end test. The end-to-end test is looking for the 'New message' content on the screen, but the component test will only be asserting the behavior that the NewMessageForm component is responsible for: that it calls the event handler.
 
 ```diff
-   handleSave() {
+   describe('clicking save', () => {
+     const messageText = 'Hello world';
+
++    let saveHandler;
+     let wrapper;
+
+     beforeEach(() => {
+-      wrapper = shallow(<NewMessageForm />);
++      saveHandler = jest.fn().mockName('saveHandler');
++      wrapper = shallow(<NewMessageForm onSave={saveHandler} />);
+...
+       expect(wrapper.findWhere(testID('messageText')).props().value)
+         .toEqual('');
+     });
++
++    it('calls the save handler', () => {
++      expect(saveHandler).toHaveBeenCalledWith(messageText);
++    });
+});
+```
+
+Notice that we **make one assertion per test in component tests.** Having separate test cases for each behavior of the component makes it easy to understand what it does, and easy to see what went wrong if one of the assertions fails. The `beforeEach` block will run through the same steps for each of the two test cases below.
+
+You may recall that this isn't what we did in the end-to-end test, though. Generally you **make *multiple* assertions per test in end-to-end tests.** Why? End-to-end tests are slower, so the overhead of the repeating the steps would significantly slow down our suite as it grows. In fact, larger end-to-end tests tend to turn into "feature tours:" you perform some actions, do some assertions, perform some more actions, do more assertions, etc.
+
+Run the component test again. You'll see the "clears the text field" test pass, and the new 'emits the "save" event' test fail with the error:
+
+```
+expect(saveHandler).toHaveBeenCalledWith(expected)
+
+Expected mock function "saveHandler" to have been called with:
+  ["Hello world"]
+But it was not called.
+```
+
+So the `saveHandler` isn't being called. Let's fix that:
+
+```diff
+   handleSave = () => {
 +    const { inputText } = this.state;
 +    const { onSave } = this.props;
 +
@@ -337,7 +476,7 @@ The way we can send data to the parent component is by taking in an event handle
 
 Before overwriting the `inputText` state with an empty string, it retrieves an `onSave` function passed in as a prop, and passes the previous value of `inputText` to it.
 
-Rerun the tests. We get the same assertion failure, but if you look in the simulator, you'll see that we actually get a runtime error!
+Rerun the component tests and they will pass. Next, rerun the end-to-end tests. We get the same assertion failure, but if you look in the simulator, you'll see that we actually get a runtime error!
 
 ```
 onSave is not a function. (In 'onSave(inputText)', 'onSave' is undefined
@@ -347,20 +486,20 @@ Our NewMessageForm is calling `onSave`, but we haven't yet passed a valid functi
 
 ```diff
  export default class App extends Component {
-+  handleSave(newMessage) {
++  handleSave = (newMessage) => {
 +  }
 +
    render() {
      return (
        <View>
 -        <NewMessageForm />
-+        <NewMessageForm onSave={newMessage => this.handleSave(newMessage)} />
++        <NewMessageForm onSave={this.handleSave} />
        </View>
      );
    }
 ```
 
-Rerun the tests. We no longer get the `onSave` error--now we're back to the same assertion failure, because we're still not displaying the message. But we're a step closer!
+Rerun the end-to-end tests. We no longer get the `onSave` error--now we're back to the same assertion failure, because we're still not displaying the message. But we're a step closer!
 
 Next, we need to save the message in state in the App component. Let's add it to an array:
 
@@ -368,7 +507,7 @@ Next, we need to save the message in state in the App component. Let's add it to
  export default class App extends Component {
 +  state = { messages: [] };
 +
-   handleSave(newMessage) {
+   handleSave = (newMessage) => {
 +    const { messages } = this.state;
 +    this.setState({ messages: [newMessage, ...messages] });
    }
@@ -459,6 +598,6 @@ To learn more about TDD, I recommend:
 [controlled-component]: https://facebook.github.io/react-native/docs/handling-text-input.html
 [detox]: https://github.com/wix/detox/blob/master/docs/README.md#detox-documentation
 [detox-getting-started]: https://github.com/wix/detox/blob/master/docs/Introduction.GettingStarted.md
+[enzyme]: https://github.com/airbnb/enzyme
 [mocha]: https://mochajs.org/
 [react-native]: https://facebook.github.io/react-native/docs/getting-started.html
-[react-native-mock-bug]: https://github.com/RealOrangeOne/react-native-mock/issues/129
