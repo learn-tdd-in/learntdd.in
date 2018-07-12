@@ -49,7 +49,7 @@ Enzyme.configure({ adapter: new Adapter() });
 
 Then instruct Jest to load this file upon startup by adding the following to package.json:
 
-```
+```diff
    "jest": {
 -    "preset": "react-native"
 +    "preset": "react-native",
@@ -91,7 +91,7 @@ After this, we need to add some config for Detox to our `package.json`. If you h
 +      "build": "xcodebuild -project ios/LearnTDDInReactNative.xcodeproj -scheme LearnTDDInReactNative -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
 +      "type": "ios.simulator",
 +      "name": "iPhone 8"
-    }
++   }
   }
 }
 ```
