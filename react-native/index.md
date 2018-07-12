@@ -19,13 +19,13 @@ First, make sure you have React Native installed and running. Instead of `create
 
 Create a new React Native app with `react-native-cli`:
 
-```
+```bash
 # react-native init LearnTDDInReactNative
 ```
 
 Let's run it to confirm it works:
 
-```
+```bash
 # cd LearnTDDInReactNative
 # react-native run-ios
 ```
@@ -34,7 +34,7 @@ After a few minutes you should see the welcome screen of the app in the iOS Simu
 
 Next, let's install Enzyme and related packages:
 
-```
+```bash
 # yarn add --dev enzyme enzyme-adapter-react-16 @jonny/react-native-mock
 ```
 
@@ -61,7 +61,7 @@ Then instruct Jest to load this file upon startup by adding the following to pac
 
 Next, to get Detox working, let's first install the global Detox CLI tool:
 
-```
+```bash
 # brew tap wix/brew
 # brew install --HEAD applesimutils
 # yarn global add detox-cli
@@ -69,13 +69,13 @@ Next, to get Detox working, let's first install the global Detox CLI tool:
 
 Next, we need to add Detox as a dependency to our project.
 
-```
+```bash
 # yarn add --dev detox
 ```
 
 Then initialize Detox in the project, specifying Jest as the test runner:
 
-```
+```bash
 # detox init -r jest
 ```
 
@@ -98,13 +98,13 @@ After this, we need to add some config for Detox to our `package.json`. If you h
 
 Now, let's run it and see that the initial test fails. If Metro is not still running, start it:
 
-```
+```bash
 # react-native start
 ```
 
 Then, in another terminal, run Detox:
 
-```
+```bash
 # detox build
 # detox test
 ```
@@ -172,7 +172,7 @@ After we've created our test, the next step in TDD is to **run the test and watc
 
 Run `detox test` and you should see the following error:
 
-```
+```bash
   Creating a message
     1) should add the message to the list
 
@@ -260,7 +260,7 @@ Now rerun the tests with `detox test`. We're still getting the same error, becau
 
 Rerun the tests. The error has changed! The tests are now able to find the "messageText" element. The new error is:
 
-```
+```bash
      Error: Error: Cannot find UI element.
 Exception with Action: {
   "Action Name" : "Tap",
@@ -297,7 +297,7 @@ We want the save button to be part of our `NewMessageForm`, so fixing this error
 
 Rerun the tests. Now we get a new kind of test failure:
 
-```
+```bash
      Error: Error: An assertion failed.
 Exception with Assertion: {
   "Assertion Criteria" : "assertWithMatcher:(((kindOfClass('UILabel') || kindOfClass('UITextField') || kindOfClass('UITextView')) && hasText('')) || (kindOfClass('RCTText') && an object with accessibilityLabel ""))",
@@ -353,7 +353,7 @@ Enzyme's API is different from Detox's, but we're doing something very similar t
 
 Run `yarn test` to see the component test fail:
 
-```
+```bash
 expect(received).toEqual(expected)
 
 Expected value to equal:
@@ -385,7 +385,7 @@ Enzyme is finding the `value` prop of the TextInput to be `undefined`; this is b
 
 Now when we rerun `yarn test` we get a different error:
 
-```
+```bash
 Expected value to equal:
   ""
 Received:
@@ -453,7 +453,7 @@ You may recall that this isn't what we did in the end-to-end test, though. Gener
 
 Run the component test again. You'll see the "clears the text field" test pass, and the new 'emits the "save" event' test fail with the error:
 
-```
+```bash
 expect(saveHandler).toHaveBeenCalledWith(expected)
 
 Expected mock function "saveHandler" to have been called with:
@@ -478,7 +478,7 @@ Before overwriting the `inputText` state with an empty string, it retrieves an `
 
 Rerun the component tests and they will pass. Next, rerun the end-to-end tests. We get the same assertion failure, but if you look in the simulator, you'll see that we actually get a runtime error!
 
-```
+```bash
 onSave is not a function. (In 'onSave(inputText)', 'onSave' is undefined
 ```
 
