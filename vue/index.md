@@ -18,7 +18,7 @@ The feature we'll build is a simple list of messages.
 First, ensure you have `@vue/cli` version 3 installed:
 
 ```bash
-$ npm install -g @vue/cli
+$ yarn global add @vue/cli
 $ vue -V
 
 3.0.0-rc.3
@@ -36,13 +36,15 @@ Choose the following options from the prompts:
 - Check the features needed for your project: add E2E Testing
 - Pick a E2E testing solution: Cypress (Chrome only)
 - Where do you prefer placing config for Babel, PostCSS, ESLint, etc.? In dedicated config files
-- Pick the package manager to use when installing dependencies: pick what you like; this tutorial will use NPM
+- Pick the package manager to use when installing dependencies: pick what you like; this tutorial will use Yarn
 
 Cypress is now set up for end-to-end testing, but we need to add some extra packages for component testing:
 
 ```bash
 $ cd learn-tdd-in-vue
-$ npm install --save-dev cypress-vue-unit-test @cypress/webpack-preprocessor vue-loader
+$ yarn add --dev cypress-vue-unit-test \
+                 @cypress/webpack-preprocessor
+                 vue-loader
 ```
 
 Next, set up Cypress to be able to load `.vue` components for testing by replacing the contents of `tests/e2e/plugins/index.js` with the following:
@@ -145,7 +147,7 @@ After we've created our test, the next step in TDD is to **run the test and watc
 Open Cypress with:
 
 ```bash
-$ npm run test:e2e
+$ yarn test:e2e
 ```
 
 Run the Cypress test by clicking `creating_a_message_spec.js` in the Cypress window. A Chrome window should open, you should see the test run, then in the left-hand test step column you should see the following error:

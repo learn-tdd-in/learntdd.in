@@ -23,16 +23,16 @@ Now, run your app and leave it open for the duration of the process:
 
 ```bash
 $ cd learn-tdd-in-react
-$ npm start
+$ yarn start
 ```
 
 Next, we need to add Cypress and some React-specific packages as dependencies of our project:
 
 ```bash
-$ npm install --save-dev cypress \
-                         cypress-react-unit-test \
-                         @cypress/webpack-preprocessor \
-                         babel-plugin-transform-class-properties
+$ yarn add --dev cypress \
+                 cypress-react-unit-test \
+                 @cypress/webpack-preprocessor \
+                 babel-plugin-transform-class-properties
 ```
 
 Add an NPM script for opening Cypress into your `package.json`:
@@ -51,7 +51,7 @@ Add an NPM script for opening Cypress into your `package.json`:
 Now open Cypress and it will initialize your app:
 
 ```bash
-$ npm run cypress:open
+$ yarn cypress:open
 ```
 
 Next, set up Cypress to be able to handle the latest ECMAScript features by replacing the contents of `cypress/plugins/index.js` with the following:
@@ -147,7 +147,7 @@ After we've created our test, the next step in TDD is to **run the test and watc
 If you've closed Cypress, reopen it with:
 
 ```bash
-$ npm run cypress:open
+$ yarn cypress:open
 ```
 
 Run the Cypress test by clicking `creating_a_message_spec.js` in the Cypress window. A Chrome window should open, you should see the test run, then in the left-hand test step column you should see the following error:
