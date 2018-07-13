@@ -20,14 +20,14 @@ First, make sure you have React Native installed and running. Instead of `create
 Create a new React Native app with `react-native-cli`:
 
 ```bash
-# react-native init LearnTDDInReactNative
+$ react-native init LearnTDDInReactNative
 ```
 
 Let's run it to confirm it works:
 
 ```bash
-# cd LearnTDDInReactNative
-# react-native run-ios
+$ cd LearnTDDInReactNative
+$ react-native run-ios
 ```
 
 After a few minutes you should see the welcome screen of the app in the iOS Simulator.
@@ -35,7 +35,9 @@ After a few minutes you should see the welcome screen of the app in the iOS Simu
 Next, let's install Enzyme and related packages:
 
 ```bash
-# yarn add --dev enzyme enzyme-adapter-react-16 @jonny/react-native-mock
+$ yarn add --dev enzyme \
+                 enzyme-adapter-react-16 \
+                 @jonny/react-native-mock
 ```
 
 Now that these packages are installed, we need to configure Enzyme to use the adapter we installed. Create a tests/setup.js script and add the following:
@@ -62,21 +64,21 @@ Then instruct Jest to load this file upon startup by adding the following to pac
 Next, to get Detox working, let's first install the global Detox CLI tool:
 
 ```bash
-# brew tap wix/brew
-# brew install --HEAD applesimutils
-# yarn global add detox-cli
+$ brew tap wix/brew
+$ brew install --HEAD applesimutils
+$ yarn global add detox-cli
 ```
 
 Next, we need to add Detox as a dependency to our project.
 
 ```bash
-# yarn add --dev detox
+$ yarn add --dev detox
 ```
 
 Then initialize Detox in the project, specifying Jest as the test runner:
 
 ```bash
-# detox init -r jest
+$ detox init -r jest
 ```
 
 After this, we need to add some config for Detox to our `package.json`. If you have a different app name than `ReactNativeTDD`, be sure to substitute the correct app name below:
@@ -99,14 +101,14 @@ After this, we need to add some config for Detox to our `package.json`. If you h
 Now, let's run it and see that the initial test fails. If Metro is not still running, start it:
 
 ```bash
-# react-native start
+$ react-native start
 ```
 
 Then, in another terminal, run Detox:
 
 ```bash
-# detox build
-# detox test
+$ detox build
+$ detox test
 ```
 
 If you run into trouble, check the [Detox Getting Started Guide][detox-getting-started] for help.

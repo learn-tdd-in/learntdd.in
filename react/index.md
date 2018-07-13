@@ -15,21 +15,24 @@ The feature we'll build is a simple list of messages.
 
 First, create a new React app with [`create-react-app`][create-react-app]:
 
-```
-# npx create-react-app learn-tdd-in-react
+```bash
+$ npx create-react-app learn-tdd-in-react
 ```
 
 Now, run your app and leave it open for the duration of the process:
 
-```
-# cd learn-tdd-in-react
-# npm start
+```bash
+$ cd learn-tdd-in-react
+$ npm start
 ```
 
 Next, we need to add Cypress and some React-specific packages as dependencies of our project:
 
-```
-# npm install --save-dev cypress cypress-react-unit-test @cypress/webpack-preprocessor babel-plugin-transform-class-properties
+```bash
+$ npm install --save-dev cypress \
+                         cypress-react-unit-test \
+                         @cypress/webpack-preprocessor \
+                         babel-plugin-transform-class-properties
 ```
 
 Add an NPM script for opening Cypress into your `package.json`:
@@ -47,8 +50,8 @@ Add an NPM script for opening Cypress into your `package.json`:
 
 Now open Cypress and it will initialize your app:
 
-```
-# npm run cypress:open
+```bash
+$ npm run cypress:open
 ```
 
 Next, set up Cypress to be able to handle the latest ECMAScript features by replacing the contents of `cypress/plugins/index.js` with the following:
@@ -143,13 +146,13 @@ After we've created our test, the next step in TDD is to **run the test and watc
 
 If you've closed Cypress, reopen it with:
 
-```
-# npm run cypress:open
+```bash
+$ npm run cypress:open
 ```
 
 Run the Cypress test by clicking `creating_a_message_spec.js` in the Cypress window. A Chrome window should open, you should see the test run, then in the left-hand test step column you should see the following error:
 
-```
+```bash
 Expected to find element: '[data-test='messageText']', but never found it.
 ```
 
@@ -208,7 +211,7 @@ Now rerun the tests in Cypress. We're still getting the same error, because we h
 
 Rerun the tests. The error has changed! The tests are now able to find the "messageText" element. The new error is:
 
-```
+```bash
 Expected to find element: ‘[data-test=’saveButton’]’, but never found it.
 ```
 
@@ -234,7 +237,7 @@ We want the save button to be part of our `NewMessageForm`, so fixing this error
 
 Rerun the tests. Now we get a new kind of test failure:
 
-```
+```bash
 expected '<input />' to have value '', but the value was 'New message'
 ```
 
@@ -273,7 +276,7 @@ A lot of the test seems the same as the end-to-end test: we still enter a new me
 
 Run `NewMessageForm.spec.js` with Cypress. We get the same error as we did with the end-to-end test:
 
-```
+```bash
 expected '<input />' to have value '', but the value was 'New message'
 ```
 
@@ -325,7 +328,7 @@ Next, we want to clear out `inputText` when the Save button is clicked:
 
 Rerun the component test and it passes. **Once a component test passes, step back up to the outer end-to-end test to see what the next error is.** Rerun `creating_a_message.spec.js`. Now our final assertion fails:
 
-```
+```bash
 Expected to find content: 'New message' but never did.
 ```
 
@@ -372,7 +375,7 @@ You may recall that this isn't what we did in the end-to-end test, though. Gener
 
 Run the component test again. You'll see the "clears the text field" test pass, and the new 'emits the "save" event' test fail with the error:
 
-```
+```bash
 Expected spy to have been called with arguments "New message", but it was never called.
 ```
 
@@ -391,7 +394,7 @@ So the `saveCallback` isn't being called. Let's fix that:
 
 Now the component test passes. That's great! Now we step back up again to run our feature test and we get:
 
-```
+```bash
 Uncaught TypeError: onSave is not a function
 ```
 
@@ -414,7 +417,7 @@ We changed NewMessageForm to use an onSave event handler, but we haven't passed 
 
 Rerun the e2e test and we get:
 
-```
+```bash
 Expected to find content: ‘New message’ but never did.
 ```
 

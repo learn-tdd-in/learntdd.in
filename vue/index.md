@@ -17,17 +17,17 @@ The feature we'll build is a simple list of messages.
 
 First, ensure you have `@vue/cli` version 3 installed:
 
-```
-# npm install -g @vue/cli
-# vue -V
+```bash
+$ npm install -g @vue/cli
+$ vue -V
 
 3.0.0-rc.3
 ```
 
 Create a new Vue app with [`vue-cli`][vue-cli] and the webpack template:
 
-```
-# vue create learn-tdd-in-vue
+```bash
+$ vue create learn-tdd-in-vue
 ```
 
 Choose the following options from the prompts:
@@ -40,9 +40,9 @@ Choose the following options from the prompts:
 
 Cypress is now set up for end-to-end testing, but we need to add some extra packages for component testing:
 
-```
-# cd learn-tdd-in-vue
-# npm install --save-dev cypress-vue-unit-test @cypress/webpack-preprocessor vue-loader
+```bash
+$ cd learn-tdd-in-vue
+$ npm install --save-dev cypress-vue-unit-test @cypress/webpack-preprocessor vue-loader
 ```
 
 Next, set up Cypress to be able to load `.vue` components for testing by replacing the contents of `tests/e2e/plugins/index.js` with the following:
@@ -144,13 +144,13 @@ After we've created our test, the next step in TDD is to **run the test and watc
 
 Open Cypress with:
 
-```
-# npm run test:e2e
+```bash
+$ npm run test:e2e
 ```
 
 Run the Cypress test by clicking `creating_a_message_spec.js` in the Cypress window. A Chrome window should open, you should see the test run, then in the left-hand test step column you should see the following error:
 
-```
+```bash
 Expected to find element: '[data-test='messageText']', but never found it.
 ```
 
@@ -209,7 +209,7 @@ Now rerun the tests in Cypress. We're still getting the same error, because we h
 
 Rerun the tests. The error has changed! The tests are now able to find the "messageText" element. The new error is:
 
-```
+```bash
 Expected to find element: ‘[data-test=’saveButton’]’, but never found it.
 ```
 
@@ -237,7 +237,7 @@ We want the save button to be part of our `NewMessageForm`, so fixing this error
 
 Rerun the tests. Now we get a new kind of test failure:
 
-```
+```bash
 expected '<input />' to have value '', but the value was 'New message'
 ```
 
@@ -275,7 +275,7 @@ A lot of the test seems the same as the end-to-end test: we still enter a new me
 
 Run `NewMessageForm.spec.js` with Cypress. We get the same error as we did with the end-to-end test:
 
-```
+```bash
 expected '<input />' to have value '', but the value was 'New message'
 ```
 
@@ -347,7 +347,7 @@ Next, we add a `save()` method that sets the `inputText` data property to the em
 
 Rerun the component test and it passes. **Once a component test passes, step back up to the outer end-to-end test to see what the next error is.** Rerun `creating_a_message.spec.js`. Now our final assertion fails:
 
-```
+```bash
 Expected to find content: 'New message' but never did.
 ```
 
@@ -394,7 +394,7 @@ You may recall that this isn't what we did in the end-to-end test, though. Gener
 
 Run the component test again. You'll see the "clears the text field" test pass, and the new 'emits the "save" event' test fail with the error:
 
-```
+```bash
 Expected spy to have been called with arguments "New message", but it was never called.
 ```
 
@@ -412,7 +412,7 @@ Let's emit that event in the `save()` method:
 
 Now the component test passes. That's great! Now we step back up again to run our feature test and we get:
 
-```
+```bash
 Expected to find content: ‘New message’ but never did.
 ```
 
