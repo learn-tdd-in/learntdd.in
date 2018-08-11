@@ -4,7 +4,7 @@ require 'dotenv'
 Dotenv.load
 
 puts 'ember'
-system("bin/log2blog generate learn-tdd-in/ember 1137f60 --token #{ENV['GITHUB_OAUTH_TOKEN']} --skip \"tests/unit\" > ember/_commits.md")
+system("bin/log2blog generate learn-tdd-in/ember 4422a1b --token #{ENV['GITHUB_OAUTH_TOKEN']} --skip \"tests/unit\" > ember/_commits.md")
 
 puts 'rails'
 system("bin/log2blog generate learn-tdd-in/rails a5cea8f --token #{ENV['GITHUB_OAUTH_TOKEN']} --skip db/schema.rb > rails/_commits.md")
