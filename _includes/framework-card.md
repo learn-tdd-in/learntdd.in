@@ -1,4 +1,4 @@
-<div class="col-sm-6 col-md-4 mb-4">
+<div class="col-6 col-md-4 mb-4">
   <div class="card">
     <div class="card-body text-center">
       <a href="{{ include.url }}">
