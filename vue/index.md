@@ -19,9 +19,9 @@ First, ensure you have `@vue/cli` version 3 installed:
 
 ```bash
 $ yarn global add @vue/cli
-$ vue -V
+$ vue --version
 
-3.0.0-rc.3
+3.0.1
 ```
 
 Create a new Vue app with [`vue-cli`][vue-cli] and the webpack template:
@@ -43,7 +43,7 @@ Cypress is now set up for end-to-end testing, but we need to add some extra pack
 ```bash
 $ cd learn-tdd-in-vue
 $ yarn add --dev cypress-vue-unit-test \
-                 @cypress/webpack-preprocessor
+                 @cypress/webpack-preprocessor \
                  vue-loader
 ```
 
@@ -91,8 +91,8 @@ module.exports = (on, config) => {
 
 As our last setup step, let's clear out some of the default code to get a clean starting point. Delete the following files:
 
-- `tests/e2e/specs/test.js`
 - `src/components/HelloWorld.vue`
+- `tests/e2e/specs/test.js`
 
 Replace the contents of `src/App.vue` with the following:
 
@@ -150,7 +150,7 @@ Open Cypress with:
 $ yarn test:e2e
 ```
 
-Run the Cypress test by clicking `creating_a_message_spec.js` in the Cypress window. A Chrome window should open, you should see the test run, then in the left-hand test step column you should see the following error:
+Run the Cypress test by clicking `creating_a_message.js` in the Cypress window. A Chrome window should open, you should see the test run, then in the left-hand test step column you should see the following error:
 
 ```bash
 Expected to find element: '[data-test='messageText']', but never found it.
@@ -202,9 +202,9 @@ Now rerun the tests in Cypress. We're still getting the same error, because we h
  <template>
    <div>
 +    <input
-+     type="text"
-+     data-test="messageText"
-+   />
++      type="text"
++      data-test="messageText"
++    />
    </div>
  </template>
 ```
@@ -347,7 +347,7 @@ Next, we add a `save()` method that sets the `inputText` data property to the em
  </script>
 ```
 
-Rerun the component test and it passes. **Once a component test passes, step back up to the outer end-to-end test to see what the next error is.** Rerun `creating_a_message.spec.js`. Now our final assertion fails:
+Rerun the component test and it passes. **Once a component test passes, step back up to the outer end-to-end test to see what the next error is.** Rerun `creating_a_message.js`. Now our final assertion fails:
 
 ```bash
 Expected to find content: 'New message' but never did.
@@ -359,7 +359,7 @@ The NewMessageForm won't be responsible for displaying this message, though: we'
 
 To add this event handler behavior to NewMessageForm, we want to step back down to the component test. In this case, the component test won't be asserting exactly the same thing as the end-to-end test. The end-to-end test is looking for the 'New message' content on the screen, but the component test will only be asserting the behavior that the NewMessageForm component is responsible for: that it calls the event handler.
 
-Add another test case to `NewMessageForm.spec.js`:
+Add another test case to `NewMessageForm.js`:
 
 ```diff
    beforeEach(mountVue(NewMessageForm));
@@ -504,8 +504,6 @@ Rerun the tests, and, as we expect, we still aren't displaying the message. But 
 ```
 
 Rerun the tests and they pass. We've let the tests drive our first feature!
-
-Let's take a look in the simulator. Run the app with `yarn start`. Well, it works, but it's not the prettiest thing in the world. But now we can add styling.
 
 # Why TDD?
 
