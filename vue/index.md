@@ -15,7 +15,7 @@ The feature we'll build is a simple list of messages.
 
 ## Setup
 
-First, ensure you have `@vue/cli` version 3 installed:
+First, ensure you have [`@vue/cli`][vue-cli] version 3 installed:
 
 ```bash
 $ yarn global add @vue/cli
@@ -24,7 +24,7 @@ $ vue --version
 3.0.1
 ```
 
-Create a new Vue app with [`vue-cli`][vue-cli] and the webpack template:
+Create a new Vue app with the Vue CLI:
 
 ```bash
 $ vue create learn-tdd-in-vue
