@@ -1,4 +1,4 @@
-### Specify the feature for creating a blog post [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/9f2c03460cd4ac745a951fd5c3b4f2e5c3201fd7)
+### Specify the feature for creating a blog post [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/46935869a27a711231ae53bbb493f68d88357b4b)
 
 #### tests/acceptance/creating-a-blog-post-test.js
 
@@ -35,7 +35,7 @@ We set up the entire acceptance test at once. This test will guide us through th
 Red: UnrecognizedURLError: /posts/new
 
 
-### Add new blog post route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/96911c4643815fdebfc58805297e226b5a59530a)
+### Add new blog post route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/479e403d25cfb693620444e3bf2925ec98794d2d)
 
 #### app/router.js
 
@@ -77,7 +77,7 @@ Red: Element not found when calling `fillIn('.js-post-form-title')`
 The next error is simple: no title form field is found to fill text into.
 
 
-### Add post-form component scaffold [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/0f2d008c7e7157778500dc1a1bfd74de9c419870)
+### Add post-form component scaffold [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/0150bfb92c544271faa89fb04e13bec8cac56bef)
 
 #### app/components/post-form.js
 
@@ -102,7 +102,7 @@ The next error is simple: no title form field is found to fill text into.
 {% raw %}-{{outlet}}
 +<h1>New Post</h1>
 +
-+{{post-form}}{% endraw %}
++<PostForm />{% endraw %}
 ```
 
 
@@ -142,7 +142,7 @@ The next error is simple: no title form field is found to fill text into.
 Rather than just getting the test to pass by putting a form input on the route's template, we "write the code we wish we had." In this case, we wish we had a `post-form` component to use that would provide the form inputs for us. We generate it and go ahead and render it in our route template.
 
 
-### Specify form component should render the form [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/475f54e69e0ca1d26ef256be085d3c5420cdb850)
+### Specify form component should render the form [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/da1eb88496aca75be46038339eddca72ce154f66)
 
 #### tests/integration/components/post-form-test.js
 
@@ -182,7 +182,7 @@ Inner red:
 ✘ Element .js-post-form-body exists
 
 
-### Add form component markup [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/330db19d80377bfbfa2ab5f5a115ecd0dd94729c)
+### Add form component markup [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/015cba69716ff0b4b4db95d8bb1291ef59802d48)
 
 #### app/templates/components/post-form.hbs
 
@@ -191,7 +191,7 @@ Inner red:
 +<form>
 +  <div>
 +    <label for="js-post-form-title">Title</label>
-+    <input type="text" class="js-post-form-title" />
++    <input type="text" class="js-post-form-title">
 +  </div>
 +  <div>
 +    <label for="js-post-form-body">Body</label>
@@ -208,7 +208,7 @@ Outer red: expected posts.show, actual posts.new
 Now that we're rendering markup for the component, its unit test is able to find the title field and fill it in. The acceptance test also gets past the point of filling in the title, and now it reports that it expected to end up at the posts.show route, but it was still on the posts.new route. This is because we haven't told the component to do anything when the save button is clicked. We need to get Ember handling the form submission.
 
 
-### Specify the component should call the save action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/47c4960c01804fda2808b941dee01a2344008552)
+### Specify the component should call the save action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/d18f8a9ed310138be5ff3c6c2aee4f3a44460558)
 
 #### tests/integration/components/post-form-test.js
 
@@ -248,7 +248,7 @@ Inner Red: Expected submit handler to be called
 Our code doesn't refer to this submitHandler attribute yet, so it's never called.
 
 
-### Add submitForm action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/94c0aba8a04c1d9d44e6f5b2598b6b837c7a416d)
+### Add submitForm action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/a4a10c6892927e01a69ffe22f34d0ca3144adb43)
 
 #### app/components/post-form.js
 
@@ -272,7 +272,7 @@ Our code doesn't refer to this submitHandler attribute yet, so it's never called
    </div>
  
 -  <button type="button" class="js-post-form-save">Save</button>
-+  <button type="button" class="js-post-form-save" onclick={{action 'submitForm'}}>Save</button>
++  <button type="button" class="js-post-form-save" onclick={{action "submitForm"}}>Save</button>
  </form>{% endraw %}
 ```
 
@@ -283,7 +283,7 @@ Inner green; outer red: TypeError: this.submitHandler is not a function
 Now our component test is able to verify that the submit handler is called. Now the acceptance test errors out because submitting the form expects a submitHandler to be passed in, and there isn't one.
 
 
-### Add new post controller for save action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/44468a4d5067fa4c500e8380cecea0dabaf37aa3)
+### Add new post controller for save action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/c000833814e02cf7e9a5d3e8139b31dd698e20e3)
 
 #### app/controllers/posts/new.js
 
@@ -304,8 +304,8 @@ Now our component test is able to verify that the submit handler is called. Now 
 ```diff
 {% raw %} <h1>New Post</h1>
  
--{{post-form}}
-+{{post-form submitHandler=(action 'savePost')}}{% endraw %}
+-<PostForm />
++<PostForm @submitHandler={{action "savePost"}} />{% endraw %}
 ```
 
 `ember g controller posts/new`
@@ -317,7 +317,7 @@ Outer red: expected posts.show, actual posts.new
 Now the acceptance tests reports that the user isn't being transitioned to the posts.show route
 
 
-### Transition to show route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/cd0e7353854f5f2c2c6633dd01fc71cf75150a2e)
+### Transition to show route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/d9f189588211847ec2405f23a652f3cb17ba3a25)
 
 #### app/controllers/posts/new.js
 
@@ -336,7 +336,7 @@ Outer red: The route posts.show was not found
 Now the acceptance test successfully attempts to transition to the `posts.show` route, but it doesn't yet exist.
 
 
-### Add posts.show route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/b447ef4efc3258ae4f82f7a2a5e7ef140f8a5167)
+### Add posts.show route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/96508ef5533ff3d240792486c78ebf96eb0dd9c6)
 
 #### app/router.js
 
@@ -376,7 +376,7 @@ Outer red:
 Now the acceptance test is able to display the `posts.show` route, but it can't find the post's title on the page, because we aren't rendering anything to the screen yet.
 
 
-### Add detail component scaffold [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/247db55ffc40a8406988bcfb0ff1a3a06905b219)
+### Add detail component scaffold [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/d21ca48fecaddb8db8744880be5feb5aa8e06f65)
 
 #### app/components/post-detail.js
 
@@ -401,7 +401,7 @@ Now the acceptance test is able to display the `posts.show` route, but it can't 
 {% raw %}-{{outlet}}
 +<h1>Post</h1>
 +
-+{{post-detail post=model}}{% endraw %}
++<PostDetail @post={{model}} />{% endraw %}
 ```
 
 
@@ -442,7 +442,7 @@ Again, instead of making the acceptance test pass as quickly as possible, we
  "write the code we wish we had": a post display component.
 
 
-### Specify detail component should display model fields [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/6f843d868af5a9ff5a6d3a480540e6a5768c83c8)
+### Specify detail component should display model fields [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/9e1099f1860ddeba2c79f77f71fc153314d7e748)
 
 #### tests/integration/components/post-detail-test.js
 
@@ -487,7 +487,7 @@ Inner red:
 This means that the title field was not found, to be able to retrieve the textContent from it.
 
 
-### Add post detail display markup [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/3c81d8f8712c95228e421c988db58d3efec4c185)
+### Add post detail display markup [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/8fc9f21c0e41d2d3eb4a1ed3a8deb8206c89d019)
 
 #### app/templates/components/post-detail.hbs
 
@@ -509,7 +509,7 @@ Inner green; outer red:
 The acceptance test still has the same error! Why's that? Well, we're not actually saving the post when we click save, and we aren't loading the post on the show page.
 
 
-### Hook routes into post model [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/bcfc079235fb72ee103f32c3186ac14220b6c1a4)
+### Hook routes into post model [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/075712bd574a5c24c75a19cce1c5fe943b81b4cc)
 
 #### app/controllers/posts/new.js
 
@@ -562,7 +562,7 @@ Outer red: Uncaught TypeError: Cannot read property 'create' of undefined
 This isn't a very descriptive error, but it seems to be related to the fact that there _is_ no `post` model.
 
 
-### Add post model [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/410c72d2f9fbd3a65e84e1ec61736d231db3e6ed)
+### Add post model [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/a6b7a8bfd4ba7489b6186756f81041c823622396)
 
 #### app/models/post.js
 
@@ -581,7 +581,7 @@ Outer red: Your Ember app tried to POST '/posts', but there was no route defined
 Next we get an error from Mirage, our fake server. It needs a corresponding post creation endpoint created.
 
 
-### Add post route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/67bf9ba8b13ad91f617b50b01b16ede490355dae)
+### Add post route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/2932870637608600c45f0e05cf0b169e215b53e9)
 
 #### mirage/config.js
 
@@ -596,7 +596,7 @@ Outer red: Your Ember app tried to GET '/posts/1', but there was no route define
 The next error is in Mirage again: we now get to the post show page, but Mirage isn't configured to retrieve a post by ID.
 
 
-### Add mirage get post route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/a432848e13861aac81eba8f2d710b44d619941b3)
+### Add mirage get post route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/c63761105850fb8cfd28a0ff0e9fdb9e7b47d1dd)
 
 #### mirage/config.js
 
@@ -616,7 +616,7 @@ Outer Red:
 The title is not shown because the data from our create post form isn't actually submitted.
 
 
-### Specify form should send the form data [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/50dbf7f0fd41786f35f23f674364a9041bf65a51)
+### Specify form should send the form data [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/0bd769fe1b5543feda5fce323d7d891574551b36)
 
 #### tests/integration/components/post-form-test.js
 
@@ -658,7 +658,7 @@ Inner red: Cannot read property 'title' of undefined
 This means that no postData object is being sent into the submit handler at all.
 
 
-### Send post form data to save action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/d50533aaba5ff163b4bfc9bf98ce73a57deeb03c)
+### Send post form data to save action [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/1a892d3a781c9192cc97d9229df09f2b409a22c9)
 
 #### app/components/post-form.js
 
@@ -684,7 +684,7 @@ This means that no postData object is being sent into the submit handler at all.
 {% raw %} <form>
    <div>
      <label for="js-post-form-title">Title</label>
--    <input type="text" class="js-post-form-title" />
+-    <input type="text" class="js-post-form-title">
 +    {{input type="text" class="js-post-form-title" value=title}}
    </div>
    <div>
@@ -693,7 +693,7 @@ This means that no postData object is being sent into the submit handler at all.
 +    {{textarea class="js-post-form-body" value=body}}
    </div>
  
-   <button type="button" class="js-post-form-save" onclick={{action 'submitForm'}}>Save</button>{% endraw %}
+   <button type="button" class="js-post-form-save" onclick={{action "submitForm"}}>Save</button>{% endraw %}
 ```
 
 We get the component test to pass by making the input an Ember input helper, retrieving the saved value in it, and sending that in an object to the `save` action closure.
@@ -707,7 +707,7 @@ Interestingly, note that the tests didn't drive us to actually add attributes to
 The TDD way to approach this problem is to find the test that will demonstrate the problem with the attributes not being defined. In this case, a test of the post retrieval page pulling up a post from the backend will show the problem.
 
 
-### Specify show page should display model from the database [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/95eb67325ac91ce26fc22566f3bf082fb5fa6c1a)
+### Specify show page should display model from the database [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/7fe92f82404fc1d90c2d7838e467a53a2e03718a)
 
 #### tests/acceptance/viewing-a-blog-post-test.js
 
@@ -744,7 +744,7 @@ that, when the post view page is shown, the post's title and body are visible.
 The test fails because no title is being outputted on the page. This is the problem that happens when we don't define attributes on our model.
 
 
-### Add attributes to model [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/93004e648f6e3a6ad1c0473fa1cad99d54ebd44a)
+### Add attributes to model [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/ember/commit/1d5eecf60f578649a12ba43be4fd447445e3b1b1)
 
 #### app/models/post.js
 
