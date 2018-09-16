@@ -388,12 +388,10 @@ Enzyme's API is different from Detox's, but we're doing something very similar t
 Run `yarn test` to see the component test fail:
 
 ```bash
-expect(received).toEqual(expected)
-
-Expected value to equal:
-  ""
-Received:
-  undefined
+1) NewMessageForm
+     clicking save
+       clears the message field:
+   AssertionError: expected undefined to equal ''
 ```
 
 Enzyme is finding the `value` prop of the TextInput to be `undefined`; this is because we aren't passing in a value at all. To fix this, let's make the TextInput a [controlled component][controlled-component], so its text is available in the parent component's state:
@@ -420,10 +418,7 @@ Enzyme is finding the `value` prop of the TextInput to be `undefined`; this is b
 Now when we rerun `yarn test` we get a different error:
 
 ```bash
-Expected value to equal:
-  ""
-Received:
-  "Hello world"
+AssertionError: expected 'Hello world' to equal ''
 ```
 
 Now the field is successfully taking in the typed value; it just isn't clearing it out when Save is tapped. Let's fix that:
