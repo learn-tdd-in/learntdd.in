@@ -110,7 +110,7 @@ $ brew install --HEAD applesimutils
 $ yarn global add detox-cli
 ```
 
-Next, we need to add Detox as a dependency to our project. We're going to run Detox with the Mocha test runner:
+Next, we need to add Detox as a dependency to our project:
 
 ```bash
 $ yarn add --dev detox
