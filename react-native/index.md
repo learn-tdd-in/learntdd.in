@@ -7,32 +7,66 @@ logo_alt: React Native logo
 
 {% include tutorial-intro.md %}
 
-To see how TDD works in React Native, let's walk through a simple real-world example of building a feature. We'll be using React Native 0.55 and two testing libraries: [Enzyme][enzyme] for component tests and [Detox][detox] for end-to-end tests. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react-native) that shows the process step-by-step. This tutorial assumes you have some [familiarity with React Native][react-native] and with [automated testing concepts](/learn-tdd/concepts).
+To see how TDD works in React Native, let's walk through a simple real-world example of building a feature. We'll be using React Native 0.56, the [Mocha][mocha] test runner, and two testing libraries: [Enzyme][enzyme] for component tests and [Detox][detox] for end-to-end tests. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react-native) that shows the process step-by-step. This tutorial assumes you have some [familiarity with React Native][react-native] and with [automated testing concepts](/learn-tdd/concepts).
 
 The feature we'll build is a simple list of messages.
 
 ## Setup
 
-It takes a little work to install Enzyme and Detox, but it'll be worth it!
+It takes a little work to get our testing setup in place, but it'll be worth it!
 
 First, make sure you have React Native installed and running. Instead of `create-react-native-app`, we'll be using `react-native-cli`. If you haven't installed it before, go to the [React Native Getting Started][react-native] page and click "Building Projects with Native Code".
 
 Create a new React Native app with `react-native-cli`:
 
 ```bash
-$ react-native init LearnTDDInReactNative
+$ react-native init ReactNativeTDD
 ```
 
 Let's run it to confirm it works:
 
 ```bash
-$ cd LearnTDDInReactNative
+$ cd ReactNativeTDD
 $ react-native run-ios
 ```
 
 After a few minutes you should see the welcome screen of the app in the iOS Simulator.
 
-Next, let's install Enzyme and related packages:
+React Native includes the Jest test runner in the default install, but we're going to be using Mocha instead. So let's uninstall Jest:
+
+```bash
+$ yarn remove jest babel-jest
+```
+
+Let's also remove Jest-related configuration from `package.json`:
+
+```diff
+   "scripts": {
+-    "start": "node node_modules/react-native/local-cli/cli.js start",
+-    "test": "jest"
++    "start": "node node_modules/react-native/local-cli/cli.js start"
+   },
+   "dependencies": {
+     "react": "16.4.1",
+     "react-native": "0.56.1"
+   },
+   "devDependencies": {
+     "babel-preset-react-native": "^5",
+     "react-test-renderer": "16.4.1"
+-  },
+-  "jest": {
+-    "preset": "react-native"
+   }
+ }
+```
+
+Next, let's install Mocha and its related testing packages:
+
+```bash
+$ yarn add --dev mocha chai sinon sinon-chai
+```
+
+Now we'll add Enzyme to enable component testing:
 
 ```bash
 $ yarn add --dev enzyme \
@@ -40,24 +74,31 @@ $ yarn add --dev enzyme \
                  @jonny/react-native-mock
 ```
 
-Now that these packages are installed, we need to configure Enzyme to use the adapter we installed. Create a tests/setup.js script and add the following:
+Now that these packages are installed, we need to configure them to work together. Create a tests/setup.js script and add the following:
 
 ```javascript
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
+import '@jonny/react-native-mock/mock';
+import chai from 'chai';
+import sinonChai from 'sinon-chai';
 
 Enzyme.configure({ adapter: new Adapter() });
+chai.use(sinonChai);
 ```
 
-Then instruct Jest to load this file upon startup by adding the following to package.json:
+This does the following:
+- Loads `@jonny/react-native-mock` so we can access React Native APIs in component tests
+- Configure Enzyme to work with React 16
+- Configure Chai to use the sinon-chai assertion library
+
+Next, we'll set up a `test` command that will run Mocha with the appropriate setup:
 
 ```diff
-   "jest": {
--    "preset": "react-native"
-+    "preset": "react-native",
-+    "setupFiles": [
-+      "./tests/setup.js"
-+    ]
+   "scripts": {
+-    "start": "node node_modules/react-native/local-cli/cli.js start"
++    "start": "node node_modules/react-native/local-cli/cli.js start",
++    "test": "mocha --require @babel/register --require tests/setup.js tests/**/*.spec.js"
    },
 ```
 
@@ -69,33 +110,33 @@ $ brew install --HEAD applesimutils
 $ yarn global add detox-cli
 ```
 
-Next, we need to add Detox as a dependency to our project.
+Next, we need to add Detox as a dependency to our project. We're going to run Detox with the Mocha test runner:
 
 ```bash
 $ yarn add --dev detox
 ```
 
-Then initialize Detox in the project, specifying Jest as the test runner:
+Then initialize Detox in the project, specifying Mocha as the test runner:
 
 ```bash
-$ detox init -r jest
+$ detox init -r mocha
 ```
 
 After this, we need to add some config for Detox to our `package.json`. If you have a different app name than `ReactNativeTDD`, be sure to substitute the correct app name below:
 
 ```diff
  "detox": {
--  "test-runner": "jest"
-+  "test-runner": "jest",
+-  "test-runner": "mocha"
++  "test-runner": "mocha",
 +  "configurations": {
 +    "ios.sim.debug": {
-+      "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/LearnTDDInReactNative.app",
-+      "build": "xcodebuild -project ios/LearnTDDInReactNative.xcodeproj -scheme LearnTDDInReactNative -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
++      "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/ReactNativeTDD.app",
++      "build": "xcodebuild -project ios/ReactNativeTDD.xcodeproj -scheme ReactNativeTDD -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
 +      "type": "ios.simulator",
 +      "name": "iPhone 8"
-+   }
-  }
-}
++    }
++  }
+ }
 ```
 
 Now, let's run it and see that the initial test fails. If Metro is not still running, start it:
@@ -112,16 +153,6 @@ $ detox test
 ```
 
 If you run into trouble, check the [Detox Getting Started Guide][detox-getting-started] for help.
-
-We want to be able to run our component tests separately from our end-to-end tests, so let's update the `yarn test` command that `react-native-cli` created for us so that it only looks for tests in a folder we'll create:
-
-```diff
-"scripts": {
-  "start": "node node_modules/react-native/local-cli/cli.js start",
--    "test": "jest"
-+    "test": "jest tests/**/*.spec.js"
-},
-```
 
 As our last setup step, let's clear out some of the default code to get a clean starting point. Delete `e2e/firstTest.spec.js`, and replace the contents of `App.js` with an empty `View`:
 
@@ -319,6 +350,7 @@ Instead of adding the behavior directly, let's **step down from the "outside" le
 Create a `tests/components` folder, then create a `NewMessageForm.spec.js` file inside it. Add the following contents:
 
 ```javascript
+import { expect } from 'chai';
 import React from 'react';
 import { shallow } from 'enzyme';
 
@@ -345,7 +377,7 @@ describe('NewMessageForm', () => {
 
     it('clears the message field', () => {
       expect(wrapper.findWhere(testID('messageText')).props().value)
-        .toEqual('');
+        .to.equal('');
     });
   });
 });
@@ -428,6 +460,13 @@ The NewMessageForm won't be responsible for displaying this message, though: we'
 To add this event handler behavior to NewMessageForm, we want to step back down to the component test. In this case, the component test won't be asserting exactly the same thing as the end-to-end test. The end-to-end test is looking for the 'New message' content on the screen, but the component test will only be asserting the behavior that the NewMessageForm component is responsible for: that it calls the event handler.
 
 ```diff
+ import { expect } from 'chai';
+ import React from 'react';
+ import { shallow } from 'enzyme';
++import { stub } from 'sinon';
+
+ import NewMessageForm from '../../NewMessageForm';
+...
    describe('clicking save', () => {
      const messageText = 'Hello world';
 
@@ -436,7 +475,7 @@ To add this event handler behavior to NewMessageForm, we want to step back down 
 
      beforeEach(() => {
 -      wrapper = shallow(<NewMessageForm />);
-+      saveHandler = jest.fn().mockName('saveHandler');
++      saveHandler = stub();
 +      wrapper = shallow(<NewMessageForm onSave={saveHandler} />);
 ...
        expect(wrapper.findWhere(testID('messageText')).props().value)
@@ -444,7 +483,7 @@ To add this event handler behavior to NewMessageForm, we want to step back down 
      });
 +
 +    it('calls the save handler', () => {
-+      expect(saveHandler).toHaveBeenCalledWith(messageText);
++      expect(saveHandler).to.have.been.calledWith(messageText);
 +    });
 });
 ```
@@ -456,14 +495,13 @@ You may recall that this isn't what we did in the end-to-end test, though. Gener
 Run the component test again. You'll see the "clears the text field" test pass, and the new 'emits the "save" event' test fail with the error:
 
 ```bash
-expect(saveHandler).toHaveBeenCalledWith(expected)
-
-Expected mock function "saveHandler" to have been called with:
-  ["Hello world"]
-But it was not called.
+1) NewMessageForm
+     clicking save
+       calls the save handler:
+   AssertionError: expected stub to have been called with arguments Hello world
 ```
 
-So the `saveHandler` isn't being called. Let's fix that:
+So the `saveHandler` isn't being called correctly. Let's fix that:
 
 ```diff
    handleSave = () => {
