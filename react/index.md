@@ -7,7 +7,7 @@ logo_alt: React logo
 
 {% include tutorial-intro.md %}
 
-To see how TDD works in React, let's walk through a simple real-world example of building a feature. We'll be using React 16.4 and [Cypress][cypress] for end-to-end and component tests. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react) that shows the process step-by-step. This tutorial assumes you have some [familiarity with React][react] and with [automated testing concepts](/learn-tdd/concepts).
+To see how TDD works in React, let's walk through a simple real-world example of building a feature. We'll be using React 16.5 and [Cypress][cypress] for end-to-end and component tests. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react) that shows the process step-by-step. This tutorial assumes you have some [familiarity with React][react] and with [automated testing concepts](/learn-tdd/concepts).
 
 The feature we'll build is a simple list of messages.
 
@@ -32,6 +32,7 @@ Next, we need to add Cypress and some React-specific packages as dependencies of
 $ yarn add --dev cypress \
                  cypress-react-unit-test \
                  @cypress/webpack-preprocessor \
+                 babel-loader@^7.1.5 \
                  babel-plugin-transform-class-properties
 ```
 
@@ -54,7 +55,7 @@ Now open Cypress and it will initialize your app:
 $ yarn cypress:open
 ```
 
-Next, set up Cypress to be able to handle the latest ECMAScript features by replacing the contents of `cypress/plugins/index.js` with the following:
+Next, set up Cypress to be able to handle the latest ECMAScript features in component tests by replacing the contents of `cypress/plugins/index.js` with the following:
 
 ```javascript
 const webpack = require('@cypress/webpack-preprocessor')
@@ -68,26 +69,26 @@ const webpackOptions = {
           presets: ['env', 'react'],
           plugins: ['transform-class-properties'],
         },
-      }
-    ]
-  }
-}
+      },
+    ],
+  },
+};
 
 const options = {
   // send in the options from your webpack.config.js, so it works the same
   // as your app's code
   webpackOptions,
-  watchOptions: {}
-}
+  watchOptions: {},
+};
 
 module.exports = on => {
-  on('file:preprocessor', webpack(options))
-}
+  on('file:preprocessor', webpack(options));
+};
 ```
 
-As our last setup step, let's clear out some of the default code to get a clean starting point. Delete all the following files:
+As our last setup step, let's clear out some of the default code to get a clean starting point. Delete all the following files and folders:
 
-- `cypress/integration/example_spec.js`
+- `cypress/integration/examples/`
 - `src/App.css`
 - `src/App.test.js`
 - `src/logo.svg`
@@ -343,12 +344,12 @@ Add another test case to `NewMessageForm.spec.js`:
 ```diff
  describe('<NewMessageForm />', () => {
    describe('clicking the save button', () => {
-+    let spy;
++    let saveHandler;
 +
      beforeEach(() => {
-+      spy = cy.spy();
++      saveHandler = cy.spy();
 -      mount(<NewMessageForm />);
-+      mount(<NewMessageForm onSave={spy} />);
++      mount(<NewMessageForm onSave={saveHandler} />);
 
        cy.get("[data-test='messageText']")
          .type('New message');
@@ -362,7 +363,7 @@ Add another test case to `NewMessageForm.spec.js`:
          .should('have.value', '');
      });
 +
-+    it('emits the "save" event', () => {
++    it('calls the save handler', () => {
 +      expect(spy).to.have.been.calledWith('New message');
 +    });
    });
@@ -379,7 +380,7 @@ Run the component test again. You'll see the "clears the text field" test pass, 
 Expected spy to have been called with arguments "New message", but it was never called.
 ```
 
-So the `saveCallback` isn't being called. Let's fix that:
+So the `saveHandler` isn't being called. Let's fix that:
 
 ```diff
    handleSave() {
