@@ -15,7 +15,7 @@ The feature we'll build is a simple list of messages.
 
 ## Setup
 
-First, ensure you have [`@vue/cli`][vue-cli] version 3 installed:
+First, ensure you have [`@vue/cli`][Vue CLI] version 3 installed:
 
 ```bash
 $ yarn global add @vue/cli
