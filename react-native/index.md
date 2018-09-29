@@ -9,6 +9,8 @@ logo_alt: React Native logo
 
 To see how TDD works in React Native, let's walk through a simple real-world example of building a feature. We'll be using React Native 0.56, the [Mocha][mocha] test runner, and two testing libraries: [Enzyme][enzyme] for component tests and [Detox][detox] for end-to-end tests. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react-native) that shows the process step-by-step. This tutorial assumes you have some [familiarity with React Native][react-native] and with [automated testing concepts](/learn-tdd/concepts).
 
+You can also watch a [live stream recording](https://youtu.be/iyfsE2f1Q4Y) of this tutorial.
+
 The feature we'll build is a simple list of messages.
 
 ## Setup
@@ -624,6 +626,7 @@ One of React Native's biggest offerings is a quicker development cycle, between 
 
 To learn more about TDD, I recommend:
 
+* ["Test-Driven Development in React Native"](https://www.youtube.com/watch?v=vwIgAHnjc1k&list=PLXXnezSEtvNPZroRdvjhEVzOhURl572Lf) - a free eight-video series of live stream recordings
 * ["Testing & React Native: Lessons from the Battlefield"](https://www.youtube.com/watch?v=cUSUJXAvt6k&feature=share) meetup talk (video)
 {% include tutorial-goos.md %}
 
