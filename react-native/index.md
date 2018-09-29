@@ -543,8 +543,7 @@ Next, we need to save the message in state in the App component. Let's add it to
 +  state = { messages: [] };
 +
    handleSave = (newMessage) => {
-+    const { messages } = this.state;
-+    this.setState({ messages: [newMessage, ...messages] });
++    this.setState(state => ({ messages: [newMessage, ...state.messages] }));
    }
 ```
 
