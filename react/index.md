@@ -32,8 +32,8 @@ Next, we need to add Cypress and some React-specific packages as dependencies of
 $ yarn add --dev cypress \
                  cypress-react-unit-test \
                  @cypress/webpack-preprocessor \
-                 babel-loader@^7.1.5 \
-                 babel-plugin-transform-class-properties
+                 @babel/preset-react \
+                 @babel/plugin-proposal-class-properties
 ```
 
 Add an NPM script for opening Cypress into your `package.json`:
@@ -66,8 +66,8 @@ const webpackOptions = {
         test: /\.(js|jsx|mjs)$/,
         loader: 'babel-loader',
         options: {
-          presets: ['env', 'react'],
-          plugins: ['transform-class-properties'],
+          presets: ['@babel/preset-react'],
+          plugins: ['@babel/plugin-proposal-class-properties'],
         },
       },
     ],
@@ -364,7 +364,7 @@ Add another test case to `NewMessageForm.spec.js`:
      });
 +
 +    it('calls the save handler', () => {
-+      expect(spy).to.have.been.calledWith('New message');
++      expect(saveHandler).to.have.been.calledWith('New message');
 +    });
    });
  });
