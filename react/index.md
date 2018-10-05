@@ -13,7 +13,7 @@ The feature we'll build is a simple list of messages.
 
 ## Setup
 
-First, create a new React app with [`create-react-app`][create-react-app]:
+First, create a new React app:
 
 ```bash
 $ npx create-react-app learn-tdd-in-react
@@ -517,6 +517,6 @@ To learn more about TDD, I recommend:
 {% include tutorial-contact.md %}
 
 [controlled-component]: https://reactjs.org/docs/forms.html#controlled-components
-[create-react-app]: https://github.com/facebookincubator/create-react-app#create-react-app-
+[create-react-app]: https://github.com/facebook/create-react-app
 [cypress]: https://www.cypress.io/
 [react]: https://reactjs.org/docs/hello-world.html
