@@ -7,7 +7,7 @@ logo_alt: React logo
 
 {% include tutorial-intro.md %}
 
-To see how TDD works in React, let's walk through a simple real-world example of building a feature. We'll be using React 16.5 and [Cypress][cypress] for end-to-end and component tests. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react) that shows the process step-by-step. This tutorial assumes you have some [familiarity with React][react] and with [automated testing concepts](/learn-tdd/concepts).
+To see how TDD works in React, let's walk through a simple real-world example of building a feature. We'll be using React 16.5, [Create React App 2.0](https://github.com/facebook/create-react-app) and [Cypress][cypress] for end-to-end and component tests. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react) that shows the process step-by-step. This tutorial assumes you have some [familiarity with React][react] and with [automated testing concepts](/learn-tdd/concepts).
 
 The feature we'll build is a simple list of messages.
 
