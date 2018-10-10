@@ -120,13 +120,13 @@ describe('Creating a message', () => {
   it('Displays the message in the list', () => {
     cy.visit('http://localhost:8080');
 
-    cy.get("[data-test='messageText']")
+    cy.get('[data-test="messageText"]')
       .type('New message');
 
-    cy.get("[data-test='saveButton']")
+    cy.get('[data-test="saveButton"]')
       .click();
 
-    cy.get("[data-test='messageText']")
+    cy.get('[data-test="messageText"]')
       .should('have.value', '');
 
     cy.contains('New message');
@@ -258,15 +258,15 @@ describe('NewMessageForm', () => {
 
   describe('clicking the save button', () => {
     beforeEach(() => {
-      cy.get("[data-test='messageText']")
+      cy.get('[data-test="messageText"]')
         .type('New message');
 
-      cy.get("[data-test='saveButton']")
+      cy.get('[data-test="saveButton"]')
         .click();
     });
 
     it('clears the text field', () => {
-      cy.get("[data-test='messageText']")
+      cy.get('[data-test="messageText"]')
         .should('have.value', '');
     });
   });
