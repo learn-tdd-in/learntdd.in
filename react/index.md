@@ -114,7 +114,7 @@ export default App;
 
 When performing outside-in TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.** For our simple messaging app, the first feature we want is to be able to enter a message, save it, and see it in the list.
 
-Create a file `cypress/integration/creating_a_message_spec.js` and enter the following contents:
+Create a file `cypress/integration/creating_a_message.spec.js` and enter the following contents:
 
 ```javascript
 describe('Creating a message', () => {
@@ -151,7 +151,7 @@ If you've closed Cypress, reopen it with:
 $ yarn cypress:open
 ```
 
-Run the Cypress test by clicking `creating_a_message_spec.js` in the Cypress window. A Chrome window should open, you should see the test run, then in the left-hand test step column you should see the following error:
+Run the Cypress test by clicking `creating_a_message.spec.js` in the Cypress window. A Chrome window should open, you should see the test run, then in the left-hand test step column you should see the following error:
 
 ```bash
 Expected to find element: '[data-test='messageText']', but never found it.
