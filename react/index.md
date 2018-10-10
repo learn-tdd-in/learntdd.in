@@ -121,13 +121,13 @@ describe('Creating a message', () => {
   it('Displays the message in the list', () => {
     cy.visit('http://localhost:3000');
 
-    cy.get("[data-test='messageText']")
+    cy.get('[data-test="messageText"]')
       .type('New message');
 
-    cy.get("[data-test='saveButton']")
+    cy.get('[data-test="saveButton"]')
       .click();
 
-    cy.get("[data-test='messageText']")
+    cy.get('[data-test="messageText"]')
       .should('have.value', '');
 
     cy.contains('New message');
@@ -258,15 +258,15 @@ describe('<NewMessageForm />', () => {
     beforeEach(() => {
       mount(<NewMessageForm />);
 
-      cy.get("[data-test='messageText']")
+      cy.get('[data-test="messageText"]')
         .type('New message');
 
-      cy.get("[data-test='saveButton']")
+      cy.get('[data-test="saveButton"]')
         .click();
     });
 
     it('clears the text field', () => {
-      cy.get("[data-test='messageText']")
+      cy.get('[data-test="messageText"]')
         .should('have.value', '');
     });
   });
@@ -351,15 +351,15 @@ Add another test case to `NewMessageForm.spec.js`:
 -      mount(<NewMessageForm />);
 +      mount(<NewMessageForm onSave={saveHandler} />);
 
-       cy.get("[data-test='messageText']")
+       cy.get('[data-test="messageText"]')
          .type('New message');
 
-       cy.get("[data-test='saveButton']")
+       cy.get('[data-test="saveButton"]')
          .click();
      });
 
      it('clears the text field', () => {
-       cy.get("[data-test='messageText']")
+       cy.get('[data-test="messageText"]')
          .should('have.value', '');
      });
 +
