@@ -112,7 +112,7 @@ export default App;
 
 ## The Feature Test
 
-When performing outside-in TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.** For our simple messaging app, the first feature we want is to be able to enter a message, save it, and see it in the list.
+When performing outside-in TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.** For our simple messaging app, the first feature we want is to be able to enter a message, send it, and see it in the list.
 
 Create a file `cypress/integration/creating_a_message.spec.js` and enter the following contents:
 
@@ -124,7 +124,7 @@ describe('Creating a message', () => {
     cy.get('[data-test="messageText"]')
       .type('New message');
 
-    cy.get('[data-test="saveButton"]')
+    cy.get('[data-test="sendButton"]')
       .click();
 
     cy.get('[data-test="messageText"]')
@@ -139,7 +139,7 @@ The code describes the steps a user would take interacting with our app:
 
 - Visit the web site
 - Entering the text "New message" into a message text field
-- Clicking a save button
+- Clicking a send button
 - Confirming that the message text field is cleared out
 - Confirming that the "New message" we entered appears somewhere on screen
 
@@ -213,21 +213,21 @@ Now rerun the tests in Cypress. We're still getting the same error, because we h
 Rerun the tests. The error has changed! The tests are now able to find the "messageText" element. The new error is:
 
 ```bash
-Expected to find element: ‘[data-test=’saveButton’]’, but never found it.
+Expected to find element: ‘[data-test=’sendButton’]’, but never found it.
 ```
 
-Now there's a different element we can't find: the element with attribute `data-test=’saveButton’`.
+Now there's a different element we can't find: the element with attribute `data-test=’sendButton’`.
 
-We want the save button to be part of our `NewMessageForm`, so fixing this error is easy. We just add a `<button>` to our component:
+We want the send button to be part of our `NewMessageForm`, so fixing this error is easy. We just add a `<button>` to our component:
 
 ```diff
            type="text"
            data-test="messageText"
          />
 +        <button
-+          data-test="saveButton"
++          data-test="sendButton"
 +        >
-+          Save
++          Send
 +        </button>
        </div>
      );
@@ -254,14 +254,14 @@ import { mount } from 'cypress-react-unit-test';
 import NewMessageForm from '../../src/NewMessageForm';
 
 describe('<NewMessageForm />', () => {
-  describe('clicking the save button', () => {
+  describe('clicking the send button', () => {
     beforeEach(() => {
       mount(<NewMessageForm />);
 
       cy.get('[data-test="messageText"]')
         .type('New message');
 
-      cy.get('[data-test="saveButton"]')
+      cy.get('[data-test="sendButton"]')
         .click();
     });
 
@@ -273,7 +273,7 @@ describe('<NewMessageForm />', () => {
 });
 ```
 
-A lot of the test seems the same as the end-to-end test: we still enter a new message and click the save button. But this is testing something very different. Instead of testing the whole app running together, we're testing just the NewMessageForm by itself.
+A lot of the test seems the same as the end-to-end test: we still enter a new message and click the send button. But this is testing something very different. Instead of testing the whole app running together, we're testing just the NewMessageForm by itself.
 
 Run `NewMessageForm.spec.js` with Cypress. We get the same error as we did with the end-to-end test:
 
@@ -302,28 +302,28 @@ Now, we can add the behavior to the component to get this test to pass. To accom
 +          onChange={this.handleTextChange}
          />
          <button
-           data-test="saveButton"
+           data-test="sendButton"
          >
 ```
 
-Next, we want to clear out `inputText` when the Save button is clicked:
+Next, we want to clear out `inputText` when the send button is clicked:
 
 ```diff
    handleTextChange = (event) => {
      this.setState({ inputText: event.target.value });
    }
 
-+  handleSave = () => {
++  handleSend = () => {
 +    this.setState({ inputText: '' });
 +  }
 +
    render() {
 ...
          <button
-           data-test="saveButton"
-+          onClick={this.handleSave}
+           data-test="sendButton"
++          onClick={this.handleSend}
          >
-           Save
+           Send
          </button>
 ```
 
@@ -343,18 +343,18 @@ Add another test case to `NewMessageForm.spec.js`:
 
 ```diff
  describe('<NewMessageForm />', () => {
-   describe('clicking the save button', () => {
-+    let saveHandler;
+   describe('clicking the send button', () => {
++    let sendHandler;
 +
      beforeEach(() => {
-+      saveHandler = cy.spy();
++      sendHandler = cy.spy();
 -      mount(<NewMessageForm />);
-+      mount(<NewMessageForm onSave={saveHandler} />);
++      mount(<NewMessageForm onSend={sendHandler} />);
 
        cy.get('[data-test="messageText"]')
          .type('New message');
 
-       cy.get('[data-test="saveButton"]')
+       cy.get('[data-test="sendButton"]')
          .click();
      });
 
@@ -363,8 +363,8 @@ Add another test case to `NewMessageForm.spec.js`:
          .should('have.value', '');
      });
 +
-+    it('calls the save handler', () => {
-+      expect(saveHandler).to.have.been.calledWith('New message');
++    it('calls the send handler', () => {
++      expect(sendHandler).to.have.been.calledWith('New message');
 +    });
    });
  });
@@ -374,20 +374,20 @@ Notice that we **make one assertion per test in component tests.** Having separa
 
 You may recall that this isn't what we did in the end-to-end test, though. Generally you **make *multiple* assertions per test in end-to-end tests.** Why? End-to-end tests are slower, so the overhead of the repeating the steps would significantly slow down our suite as it grows. In fact, larger end-to-end tests tend to turn into "feature tours:" you perform some actions, do some assertions, perform some more actions, do more assertions, etc.
 
-Run the component test again. You'll see the "clears the text field" test pass, and the new 'emits the "save" event' test fail with the error:
+Run the component test again. You'll see the "clears the text field" test pass, and the new 'emits the "send" event' test fail with the error:
 
 ```bash
 Expected spy to have been called with arguments "New message", but it was never called.
 ```
 
-So the `saveHandler` isn't being called. Let's fix that:
+So the `sendHandler` isn't being called. Let's fix that:
 
 ```diff
-   handleSave = () => {
+   handleSend = () => {
 +    const { inputText } = this.state;
-+    const { onSave } = this.props;
++    const { onSend } = this.props;
 +
-+    onSave(inputText);
++    onSend(inputText);
 +
      this.setState({ inputText: '' });
    }
@@ -396,21 +396,21 @@ So the `saveHandler` isn't being called. Let's fix that:
 Now the component test passes. That's great! Now we step back up again to run our feature test and we get:
 
 ```bash
-Uncaught TypeError: onSave is not a function
+Uncaught TypeError: onSend is not a function
 ```
 
-We changed NewMessageForm to use an onSave event handler, but we haven't passed one to our NewMessageForm in our production code. Let's add an empty one to get past this error:
+We changed NewMessageForm to use an onSend event handler, but we haven't passed one to our NewMessageForm in our production code. Let's add an empty one to get past this error:
 
 ```diff
  class App extends Component {
-+  handleSave = (newMessage) => {
++  handleSend = (newMessage) => {
 +  }
 +
    render() {
      return (
        <div>
 -        <NewMessageForm />
-+        <NewMessageForm onSave={this.handleSave} />
++        <NewMessageForm onSend={this.handleSend} />
        </div>
      );
    }
@@ -422,7 +422,7 @@ Rerun the e2e test and we get:
 Expected to find content: ‘New message’ but never did.
 ```
 
-We no longer get the `onSave` error--now we're back to the same assertion failure, because we're still not displaying the message. But we're a step closer!
+We no longer get the `onSend` error--now we're back to the same assertion failure, because we're still not displaying the message. But we're a step closer!
 
 ## A List
 
@@ -434,7 +434,7 @@ Next, we need to save the message in state in the App component. Let's add it to
  class App extends Component {
 +  state = { messages: [] };
 +
-   handleSave = (newMessage) => {
+   handleSend = (newMessage) => {
 +    this.setState(state => ({
 +      messages: [newMessage, ...state.messages],
 +    }));
@@ -457,7 +457,7 @@ Next, to display the messages, let's create another custom component to keep our
 +    const { messages } = this.state;
      return (
        <div>
-         <NewMessageForm onSave={this.handleSave} />
+         <NewMessageForm onSend={this.handleSend} />
 +        <MessageList data={messages} />
        </div>
      );
