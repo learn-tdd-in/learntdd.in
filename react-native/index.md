@@ -176,7 +176,7 @@ export default class App extends Component {
 
 ## The Feature Test
 
-When performing TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.** For our simple messaging app, the first feature we want is to be able to enter a message, save it, and see it in the list.
+When performing TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.** For our simple messaging app, the first feature we want is to be able to enter a message, send it, and see it in the list.
 
 Create a file `e2e/creating_a_message.spec.js` and enter the following contents:
 
@@ -188,7 +188,7 @@ describe('Creating a message', () => {
 
   it('should add the message to the list', async () => {
     await element(by.id('messageText')).typeText('New message');
-    await element(by.id('saveButton')).tap();
+    await element(by.id('sendButton')).tap();
 
     await expect(element(by.id('messageText'))).toHaveText('');
     await expect(element(by.label('New message'))).toBeVisible();
@@ -199,7 +199,7 @@ describe('Creating a message', () => {
 The code describes the steps a user would take interacting with our app:
 
 - Entering the text "New message" into a message text field
-- Tapping a save button
+- Tapping a send button
 - Confirming that the message text field is cleared out
 - Confirming that the "New message" we entered appears somewhere on screen
 
@@ -299,14 +299,14 @@ Rerun the tests. The error has changed! The tests are now able to find the "mess
      Error: Error: Cannot find UI element.
 Exception with Action: {
   "Action Name" : "Tap",
-  "Element Matcher" : "(((respondsToSelector(accessibilityIdentifier) && accessibilityID('saveButton')) && !(kindOfClass('RCTScrollView'))) || (kindOfClass('UIScrollView') && ((kindOfClass('UIView') || respondsToSelector(accessibilityContainer)) && ancestorThatMatches(((respondsToSelector(accessibilityIdentifier) && accessibilityID('saveButton')) && kindOfClass('RCTScrollView'))))))",
+  "Element Matcher" : "(((respondsToSelector(accessibilityIdentifier) && accessibilityID('sendButton')) && !(kindOfClass('RCTScrollView'))) || (kindOfClass('UIScrollView') && ((kindOfClass('UIView') || respondsToSelector(accessibilityContainer)) && ancestorThatMatches(((respondsToSelector(accessibilityIdentifier) && accessibilityID('sendButton')) && kindOfClass('RCTScrollView'))))))",
   "Recovery Suggestion" : "Check if the element exists in the UI hierarchy printed below. If it exists, adjust the matcher so that it accurately matches element."
 }
 ```
 
-Now there's a different element we can't find: the element with `accessibilityID('saveButton')`.
+Now there's a different element we can't find: the element with `accessibilityID('sendButton')`.
 
-We want the save button to be part of our `NewMessageForm`, so fixing this error is easy. We just add a Button to our component:
+We want the send button to be part of our `NewMessageForm`, so fixing this error is easy. We just add a Button to our component:
 
 ```diff
  import React, { Component } from 'react';
@@ -320,8 +320,8 @@ We want the save button to be part of our `NewMessageForm`, so fixing this error
            testID="messageText"
          />
 +        <Button
-+          title="Save"
-+          testID="saveButton"
++          title="Send"
++          testID="sendButton"
 +        />
        </View>
      );
@@ -363,7 +363,7 @@ describe('NewMessageForm', () => {
     return cmp => cmp.props().testID === id;
   }
 
-  describe('clicking save', () => {
+  describe('clicking send', () => {
     const messageText = 'Hello world';
 
     let wrapper;
@@ -373,7 +373,7 @@ describe('NewMessageForm', () => {
 
       wrapper.findWhere(testID('messageText'))
         .simulate('changeText', messageText);
-      wrapper.findWhere(testID('saveButton'))
+      wrapper.findWhere(testID('sendButton'))
         .simulate('press');
     });
 
@@ -385,13 +385,13 @@ describe('NewMessageForm', () => {
 });
 ```
 
-Enzyme's API is different from Detox's, but we're doing something very similar to what the end-to-end test is doing. We've taken the scenario that caused the end-to-end error and reproduced it at the component level: when a user enters text and taps the save button, the text field should be cleared. Note that we have only specified enough of a component test to reproduce the current end-to-end error.
+Enzyme's API is different from Detox's, but we're doing something very similar to what the end-to-end test is doing. We've taken the scenario that caused the end-to-end error and reproduced it at the component level: when a user enters text and taps the send button, the text field should be cleared. Note that we have only specified enough of a component test to reproduce the current end-to-end error.
 
 Run `yarn test` to see the component test fail:
 
 ```bash
 1) NewMessageForm
-     clicking save
+     clicking send
        clears the message field:
    AssertionError: expected undefined to equal ''
 ```
@@ -423,7 +423,7 @@ Now when we rerun `yarn test` we get a different error:
 AssertionError: expected 'Hello world' to equal ''
 ```
 
-Now the field is successfully taking in the typed value; it just isn't clearing it out when Save is tapped. Let's fix that:
+Now the field is successfully taking in the typed value; it just isn't clearing it out when Send is tapped. Let's fix that:
 
 ```diff
  export default class NewMessageForm extends Component {
@@ -433,16 +433,16 @@ Now the field is successfully taking in the typed value; it just isn't clearing 
      this.setState({ inputText: text });
    }
 
-+  handleSave = () => {
++  handleSend = () => {
 +    this.setState({ inputText: '' });
 +  }
 +
    render() {
 ...
          <Button
-           title="Save"
-           testID="saveButton"
-+          onPress={this.handleSave}
+           title="Send"
+           testID="sendButton"
++          onPress={this.handleSend}
          />
 ```
 
@@ -464,23 +464,23 @@ To add this event handler behavior to NewMessageForm, we want to step back down 
 
  import NewMessageForm from '../../NewMessageForm';
 ...
-   describe('clicking save', () => {
+   describe('clicking send', () => {
      const messageText = 'Hello world';
 
-+    let saveHandler;
++    let sendHandler;
      let wrapper;
 
      beforeEach(() => {
 -      wrapper = shallow(<NewMessageForm />);
-+      saveHandler = stub();
-+      wrapper = shallow(<NewMessageForm onSave={saveHandler} />);
++      sendHandler = stub();
++      wrapper = shallow(<NewMessageForm onSend={sendHandler} />);
 ...
        expect(wrapper.findWhere(testID('messageText')).props().value)
          .toEqual('');
      });
 +
-+    it('calls the save handler', () => {
-+      expect(saveHandler).to.have.been.calledWith(messageText);
++    it('calls the send handler', () => {
++      expect(sendHandler).to.have.been.calledWith(messageText);
 +    });
 });
 ```
@@ -489,54 +489,54 @@ Notice that we **make one assertion per test in component tests.** Having separa
 
 You may recall that this isn't what we did in the end-to-end test, though. Generally you **make *multiple* assertions per test in end-to-end tests.** Why? End-to-end tests are slower, so the overhead of the repeating the steps would significantly slow down our suite as it grows. In fact, larger end-to-end tests tend to turn into "feature tours:" you perform some actions, do some assertions, perform some more actions, do more assertions, etc.
 
-Run the component test again. You'll see the "clears the text field" test pass, and the new 'emits the "save" event' test fail with the error:
+Run the component test again. You'll see the "clears the text field" test pass, and the new 'emits the "send" event' test fail with the error:
 
 ```bash
 1) NewMessageForm
-     clicking save
-       calls the save handler:
+     clicking send
+       calls the send handler:
    AssertionError: expected stub to have been called with arguments Hello world
 ```
 
-So the `saveHandler` isn't being called correctly. Let's fix that:
+So the `sendHandler` isn't being called correctly. Let's fix that:
 
 ```diff
-   handleSave = () => {
+   handleSend = () => {
 +    const { inputText } = this.state;
-+    const { onSave } = this.props;
++    const { onSend } = this.props;
 +
-+    onSave(inputText);
++    onSend(inputText);
 +
      this.setState({ inputText: '' });
    }
 ```
 
-Before overwriting the `inputText` state with an empty string, it retrieves an `onSave` function passed in as a prop, and passes the previous value of `inputText` to it.
+Before overwriting the `inputText` state with an empty string, it retrieves an `onSend` function passed in as a prop, and passes the previous value of `inputText` to it.
 
 Rerun the component tests and they will pass. Next, rerun the end-to-end tests. We get the same assertion failure, but if you look in the simulator, you'll see that we actually get a runtime error!
 
 ```bash
-onSave is not a function. (In 'onSave(inputText)', 'onSave' is undefined
+onSend is not a function. (In 'onSend(inputText)', 'onSend' is undefined
 ```
 
-Our NewMessageForm is calling `onSave`, but we haven't yet passed a valid function into our component in our production code. Let's do so now. Again, we don't want to fully implement that event handler, only add only enough code to get past the current error. Add the following to `App.js`:
+Our NewMessageForm is calling `onSend`, but we haven't yet passed a valid function into our component in our production code. Let's do so now. Again, we don't want to fully implement that event handler, only add only enough code to get past the current error. Add the following to `App.js`:
 
 ```diff
  export default class App extends Component {
-+  handleSave = (newMessage) => {
++  handleSend = (newMessage) => {
 +  }
 +
    render() {
      return (
        <View>
 -        <NewMessageForm />
-+        <NewMessageForm onSave={this.handleSave} />
++        <NewMessageForm onSend={this.handleSend} />
        </View>
      );
    }
 ```
 
-Rerun the end-to-end tests. We no longer get the `onSave` error--now we're back to the same assertion failure, because we're still not displaying the message. But we're a step closer!
+Rerun the end-to-end tests. We no longer get the `onSend` error--now we're back to the same assertion failure, because we're still not displaying the message. But we're a step closer!
 
 Next, we need to save the message in state in the App component. Let's add it to an array:
 
@@ -544,7 +544,7 @@ Next, we need to save the message in state in the App component. Let's add it to
  export default class App extends Component {
 +  state = { messages: [] };
 +
-   handleSave = (newMessage) => {
+   handleSend = (newMessage) => {
 +    this.setState(state => ({ messages: [newMessage, ...state.messages] }));
    }
 ```
@@ -560,7 +560,7 @@ Next, to display the messages, let's create another custom component to keep our
 +    const { messages } = this.state;
      return (
        <View>
-         <NewMessageForm onSave={this.handleSave} />
+         <NewMessageForm onSend={this.handleSend} />
 +        <MessageList data={messages} />
        </View>
      );
