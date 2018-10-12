@@ -111,7 +111,7 @@ export default {
 
 ## The Feature Test
 
-When performing outside-in TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.** For our simple messaging app, the first feature we want is to be able to enter a message, save it, and see it in the list.
+When performing outside-in TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.** For our simple messaging app, the first feature we want is to be able to enter a message, send it, and see it in the list.
 
 Create a file `tests/e2e/specs/creating_a_message.js` and enter the following contents:
 
@@ -123,7 +123,7 @@ describe('Creating a message', () => {
     cy.get('[data-test="messageText"]')
       .type('New message');
 
-    cy.get('[data-test="saveButton"]')
+    cy.get('[data-test="sendButton"]')
       .click();
 
     cy.get('[data-test="messageText"]')
@@ -138,7 +138,7 @@ The code describes the steps a user would take interacting with our app:
 
 - Visit the web site
 - Entering the text "New message" into a message text field
-- Clicking a save button
+- Clicking a send button
 - Confirming that the message text field is cleared out
 - Confirming that the "New message" we entered appears somewhere on screen
 
@@ -212,12 +212,12 @@ Now rerun the tests in Cypress. We're still getting the same error, because we h
 Rerun the tests. The error has changed! The tests are now able to find the "messageText" element. The new error is:
 
 ```bash
-Expected to find element: ‘[data-test=’saveButton’]’, but never found it.
+Expected to find element: ‘[data-test=’sendButton’]’, but never found it.
 ```
 
-Now there's a different element we can't find: the element with attribute `data-test=’saveButton’`.
+Now there's a different element we can't find: the element with attribute `data-test=’sendButton’`.
 
-We want the save button to be part of our `NewMessageForm`, so fixing this error is easy. We just add a `<button>` to our component:
+We want the send button to be part of our `NewMessageForm`, so fixing this error is easy. We just add a `<button>` to our component:
 
 ```diff
  <template>
@@ -227,9 +227,9 @@ We want the save button to be part of our `NewMessageForm`, so fixing this error
        data-test="messageText"
      />
 +    <button
-+      data-test="saveButton"
++      data-test="sendButton"
 +    >
-+      Save
++      Send
 +    </button>
    </div>
  </template>
@@ -256,12 +256,12 @@ import NewMessageForm from '../../../src/components/NewMessageForm';
 describe('NewMessageForm', () => {
   beforeEach(mountVue(NewMessageForm));
 
-  describe('clicking the save button', () => {
+  describe('clicking the send button', () => {
     beforeEach(() => {
       cy.get('[data-test="messageText"]')
         .type('New message');
 
-      cy.get('[data-test="saveButton"]')
+      cy.get('[data-test="sendButton"]')
         .click();
     });
 
@@ -273,7 +273,7 @@ describe('NewMessageForm', () => {
 });
 ```
 
-A lot of the test seems the same as the end-to-end test: we still enter a new message and click the save button. But this is testing something very different. Instead of testing the whole app running together, we're testing just the NewMessageForm by itself.
+A lot of the test seems the same as the end-to-end test: we still enter a new message and click the send button. But this is testing something very different. Instead of testing the whole app running together, we're testing just the NewMessageForm by itself.
 
 Run `NewMessageForm.spec.js` with Cypress. We get the same error as we did with the end-to-end test:
 
@@ -292,9 +292,9 @@ Now, we can add the behavior to the component to get this test to pass. First, w
 +      v-model="inputText"
      />
      <button
-       data-test="saveButton"
+       data-test="sendButton"
      >
-       Save
+       Send
      </button>
    </div>
  </template>
@@ -311,7 +311,7 @@ Now, we can add the behavior to the component to get this test to pass. First, w
  </script>
 ```
 
-Next, we add a `save()` method that sets the `inputText` data property to the empty string. We might be tempted to fully implement `save()` right now, but let's wait until the tests drive us to that behavior. All we need to do to get the current component test to pass is clear the `inputText` data property:
+Next, we add a `send()` method that sets the `inputText` data property to the empty string. We might be tempted to fully implement `send()` right now, but let's wait until the tests drive us to that behavior. All we need to do to get the current component test to pass is clear the `inputText` data property:
 
 ```diff
  <template>
@@ -322,10 +322,10 @@ Next, we add a `save()` method that sets the `inputText` data property to the em
        v-model="inputText"
      />
      <button
-       data-test="saveButton"
-+      @click="save"
+       data-test="sendButton"
++      @click="send"
      >
-       Save
+       Send
      </button>
    </div>
  </template>
@@ -339,7 +339,7 @@ Next, we add a `save()` method that sets the `inputText` data property to the em
      };
    },
 +  methods: {
-+    save() {
++    send() {
 +      this.inputText = '';
 +    },
 +  },
@@ -364,17 +364,17 @@ Add another test case to `NewMessageForm.js`:
 ```diff
    beforeEach(mountVue(NewMessageForm));
 
-   describe('clicking the save button', () => {
+   describe('clicking the send button', () => {
 +    let spy;
 +
      beforeEach(() => {
 +      spy = cy.spy();
-+      Cypress.vue.$on('save', spy);
++      Cypress.vue.$on('send', spy);
 +
        cy.get("[data-test='messageText']")
          .type('New message');
 
-       cy.get("[data-test='saveButton']")
+       cy.get("[data-test='sendButton']")
          .click();
      });
 
@@ -383,7 +383,7 @@ Add another test case to `NewMessageForm.js`:
          .should('have.value', '');
      });
 +
-+    it('emits the "save" event', () => {
++    it('emits the "send" event', () => {
 +      expect(spy).to.have.been.calledWith('New message');
 +    });
    });
@@ -394,19 +394,19 @@ Notice that we **make one assertion per test in component tests.** Having separa
 
 You may recall that this isn't what we did in the end-to-end test, though. Generally you **make *multiple* assertions per test in end-to-end tests.** Why? End-to-end tests are slower, so the overhead of the repeating the steps would significantly slow down our suite as it grows. In fact, larger end-to-end tests tend to turn into "feature tours:" you perform some actions, do some assertions, perform some more actions, do more assertions, etc.
 
-Run the component test again. You'll see the "clears the text field" test pass, and the new 'emits the "save" event' test fail with the error:
+Run the component test again. You'll see the "clears the text field" test pass, and the new 'emits the "send" event' test fail with the error:
 
 ```bash
 Expected spy to have been called with arguments "New message", but it was never called.
 ```
 
-Let's emit that event in the `save()` method:
+Let's emit that event in the `send()` method:
 
 ```diff
    },
    methods: {
-     save() {
-+      this.$emit('save', this.inputText);
+     send() {
++      this.$emit('send', this.inputText);
        this.inputText = '';
      },
    },
@@ -422,13 +422,13 @@ We still have the same assertion failure, because we're still not displaying the
 
 ## A List
 
-Next, we need to save the message as a data property in the App component. First, we add an event listener to call an `addMessage()` function when the `new-message-form` emits the `save` event:
+Next, we need to save the message as a data property in the App component. First, we add an event listener to call an `addMessage()` function when the `new-message-form` emits the `send` event:
 
 ```diff
  <template>
    <div>
 -    <new-message-form />
-+    <new-message-form @save="addMessage" />
++    <new-message-form @send="addMessage" />
    </div>
  </template>
 ```
@@ -458,7 +458,7 @@ Next, to display the messages, let's create another custom component to keep our
 ```diff
  <template>
    <div>
-     <new-message-form @save="addMessage" />
+     <new-message-form @send="addMessage" />
 +    <message-list :messages="messages" />
    </div>
  </template>
