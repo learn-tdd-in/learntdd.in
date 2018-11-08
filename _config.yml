@@ -11,7 +11,7 @@ email: tdd@need-bee.com
 description: > # this means to ignore newlines until "baseurl:"
   Learn test-driven development in your framework of choice.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://learntdd.in" # the base hostname & protocol for your site
+url: "https://learntdd.in" # the base hostname & protocol for your site
 twitter_username: CodingItWrong
 github_username:  learn-tdd-in
 google_analytics: 'UA-80822752-1'
