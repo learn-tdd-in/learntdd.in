@@ -58,7 +58,7 @@ $ yarn cypress:open
 Next, set up Cypress to be able to handle the latest ECMAScript features in component tests by replacing the contents of `cypress/plugins/index.js` with the following:
 
 ```javascript
-const webpack = require('@cypress/webpack-preprocessor')
+const webpack = require('@cypress/webpack-preprocessor');
 const webpackOptions = {
   module: {
     rules: [
