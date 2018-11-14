@@ -9,7 +9,7 @@ logo_alt: Vue logo
 
 To see how TDD works in Vue, let's walk through a simple real-world example of building a feature. We'll be using Vue 2.5 with Vue CLI 3, which built-in support to use [Cypress][cypress] for end-to-end tests. We'll also add Cypress component testing functionality. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/vue) that shows the process step-by-step. This tutorial assumes you have some [familiarity with Vue][vue] and with [automated testing concepts](/learn-tdd/concepts).
 
-You can also watch a [conference talk](https://www.vuemastery.com/conferences/connect-tech-2018/) version of this tutorial.
+You can also watch a [conference talk](https://www.vuemastery.com/conferences/connect-tech-2018/Test-Driven-Development-in-Vue-with-Cypress/) version of this tutorial.
 
 The feature we'll build is a simple list of messages.
 
