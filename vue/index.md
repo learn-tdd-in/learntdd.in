@@ -15,7 +15,7 @@ The feature we'll build is a simple list of messages.
 
 ## Setup
 
-First, ensure you have [`@vue/cli`][Vue CLI] version 3 installed:
+First, ensure you have [`Vue CLI`][vue-cli] version 3 installed:
 
 ```bash
 $ yarn global add @vue/cli
@@ -531,4 +531,4 @@ To learn more about TDD, I recommend:
 
 [cypress]: https://www.cypress.io/
 [vue]: https://vuejs.org/v2/guide/index.html
-[vue-cli]: https://github.com/vuejs/vue-cli
+[vue-cli]: https://cli.vuejs.org/
