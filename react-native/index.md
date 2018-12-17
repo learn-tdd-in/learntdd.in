@@ -76,7 +76,7 @@ This does the following:
 
 Next, create a `test/mocha.opts` file to configure Mocha:
 
-```
+```bash
 --require @babel/register
 --require test/setup.js
 test/**/*.spec.js
