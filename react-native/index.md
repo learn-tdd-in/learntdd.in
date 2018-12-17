@@ -56,7 +56,7 @@ $ yarn add --dev enzyme \
                  @jonny/react-native-mock
 ```
 
-Now that these packages are installed, we need to configure them to work together. Create a tests/setup.js script and add the following:
+Now that these packages are installed, we need to configure them to work together. Create a `test/setup.js` script and add the following:
 
 ```javascript
 import Enzyme from 'enzyme';
@@ -74,14 +74,22 @@ This does the following:
 - Configure Enzyme to work with React 16
 - Configure Chai to use the sinon-chai assertion library
 
-Next, we'll set up a `test` command that will run Mocha with the appropriate setup:
+Next, create a `test/mocha.opts` file to configure Mocha:
+
+```
+--require @babel/register
+--require test/setup.js
+test/**/*.spec.js
+```
+
+Next, we'll set up a `test` command that will run Mocha:
 
 ```diff
    "scripts": {
      "start": "expo start",
      "android": "expo start --android",
      "ios": "expo start --ios",
-+    "test": "mocha --require @babel/register --require tests/setup.js tests/**/*.spec.js",
++    "test": "mocha",
      "eject": "expo eject"
    },
 ```
@@ -349,7 +357,7 @@ We've made it to our first assertion, which is that the message text box should 
 
 Instead of adding the behavior directly, let's **step down from the "outside" level of end-to-end tests to an "inside" component test.** This allows us to more precisely specify the behavior of each piece. Also, since end-to-end tests are slow, component tests prevent us from having to write an end-to-end test for every rare edge case.
 
-Create a `tests/components` folder, then create a `NewMessageForm.spec.js` file inside it. Add the following contents:
+Create a `test/components` folder, then create a `NewMessageForm.spec.js` file inside it. Add the following contents:
 
 ```javascript
 import { expect } from 'chai';
