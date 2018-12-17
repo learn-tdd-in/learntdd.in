@@ -7,9 +7,13 @@ logo_alt: React Native logo
 
 {% include tutorial-intro.md %}
 
-To see how TDD works in React Native, let's walk through a simple real-world example of building a feature. We'll be using React Native 0.56, the [Mocha][mocha] test runner, and two testing libraries: [Enzyme][enzyme] for component tests and [Detox][detox] for end-to-end tests. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react-native) that shows the process step-by-step. This tutorial assumes you have some [familiarity with React Native][react-native] and with [automated testing concepts](/learn-tdd/concepts).
+To see how TDD works in React Native, let's walk through a simple real-world example of building a feature. We'll be using [Expo][expo] 31, but the steps below are almost exactly the same if you're using React Native CLI -- just follow the [Getting Started instructions on Detox's web site][detox-getting-started] instead of the Detox instructions below.
 
-You can also watch a [live stream recording](https://www.youtube.com/watch?v=iyfsE2f1Q4Y&list=PLXXnezSEtvNPZroRdvjhEVzOhURl572Lf&index=3&t=0s) of this tutorial.
+We'll be testing with the [Mocha][mocha] test runner and two testing libraries: [Enzyme][enzyme] for component tests and [Detox][detox] for end-to-end tests.
+
+This tutorial assumes you have some [familiarity with React Native][react-native] and with [automated testing concepts](/learn-tdd/concepts).
+
+You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react-native) that shows the process step-by-step. You can also watch a [live stream recording](https://www.youtube.com/watch?v=iyfsE2f1Q4Y&list=PLXXnezSEtvNPZroRdvjhEVzOhURl572Lf&index=3&t=0s) of this tutorial.
 
 The feature we'll build is a simple list of messages.
 
@@ -17,50 +21,26 @@ The feature we'll build is a simple list of messages.
 
 It takes a little work to get our testing setup in place, but it'll be worth it!
 
-First, make sure you have React Native installed and running. Instead of `create-react-native-app`, we'll be using `react-native-cli`. If you haven't installed it before, go to the [React Native Getting Started][react-native] page and click "Building Projects with Native Code".
-
-Create a new React Native app with `react-native-cli`:
+First, if you don't have the Expo CLI installed, install it:
 
 ```bash
-$ react-native init ReactNativeTDD
+$ npm install -g expo-cli
+```
+
+Create a new Expo app:
+
+```bash
+$ expo init --template blank react-native-tdd
 ```
 
 Let's run it to confirm it works:
 
 ```bash
-$ cd ReactNativeTDD
-$ react-native run-ios
+$ cd react-native-tdd
+$ yarn ios
 ```
 
 After a few minutes you should see the welcome screen of the app in the iOS Simulator.
-
-React Native includes the Jest test runner in the default install, but we're going to be using Mocha instead. So let's uninstall Jest:
-
-```bash
-$ yarn remove jest babel-jest
-```
-
-Let's also remove Jest-related configuration from `package.json`:
-
-```diff
-   "scripts": {
--    "start": "node node_modules/react-native/local-cli/cli.js start",
--    "test": "jest"
-+    "start": "node node_modules/react-native/local-cli/cli.js start"
-   },
-   "dependencies": {
-     "react": "16.4.1",
-     "react-native": "0.56.1"
-   },
-   "devDependencies": {
-     "babel-preset-react-native": "^5",
-     "react-test-renderer": "16.4.1"
--  },
--  "jest": {
--    "preset": "react-native"
-   }
- }
-```
 
 Next, let's install Mocha and its related testing packages:
 
@@ -98,9 +78,11 @@ Next, we'll set up a `test` command that will run Mocha with the appropriate set
 
 ```diff
    "scripts": {
--    "start": "node node_modules/react-native/local-cli/cli.js start"
-+    "start": "node node_modules/react-native/local-cli/cli.js start",
-+    "test": "mocha --require @babel/register --require tests/setup.js tests/**/*.spec.js"
+     "start": "expo start",
+     "android": "expo start --android",
+     "ios": "expo start --ios",
++    "test": "mocha --require @babel/register --require tests/setup.js tests/**/*.spec.js",
+     "eject": "expo eject"
    },
 ```
 
@@ -112,10 +94,12 @@ $ brew install --HEAD applesimutils
 $ yarn global add detox-cli
 ```
 
-Next, we need to add Detox as a dependency to our project:
+Next, we need to add Detox and a few Expo integration packages to our project:
 
 ```bash
-$ yarn add --dev detox
+$ yarn add --dev detox \
+                 detox-expo-helpers \
+                 expo-detox-hook
 ```
 
 Then initialize Detox in the project, specifying Mocha as the test runner:
@@ -124,37 +108,50 @@ Then initialize Detox in the project, specifying Mocha as the test runner:
 $ detox init -r mocha
 ```
 
-After this, we need to add some config for Detox to our `package.json`. If you have a different app name than `ReactNativeTDD`, be sure to substitute the correct app name below:
+We need to make one tweak to the generated test file to work with Expo:
 
 ```diff
- "detox": {
--  "test-runner": "mocha"
-+  "test-runner": "mocha",
-+  "configurations": {
-+    "ios.sim.debug": {
-+      "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/ReactNativeTDD.app",
-+      "build": "xcodebuild -project ios/ReactNativeTDD.xcodeproj -scheme ReactNativeTDD -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
-+      "type": "ios.simulator",
-+      "name": "iPhone 8"
++const { reloadApp } = require('detox-expo-helpers');
++
+ describe('Example', () => {
+   beforeEach(async () => {
+-    await device.reloadReactNative();
++    await reloadApp();
+   });
+```
+
+Next, we need to download a built version of Expo that Detox can use to hook into. Go to [the Expo Tools page](https://expo.io/tools#client) and click the "Download IPA" link. Expand the downloaded archive, then change the name of the folder to "Exponent.app". Create a `bin` folder in your project and move "Exponent.app" into it.
+
+After this, we need to add some config for Detox to our `package.json`:
+
+```diff
+ {
+   ...
+   "detox": {
+-    "test-runner": "mocha"
++    "test-runner": "mocha",
++    "configurations": {
++      "ios.sim": {
++        "binaryPath": "bin/Exponent.app",
++        "type": "ios.simulator",
++        "name": "iPhone 7"
++      }
 +    }
-+  }
+   }
  }
 ```
 
-Now, let's run it and see that the initial test fails. If Metro is not still running, start it:
+Now, let's run it and see that the initial test fails. If Expo and the iOS Simulator are not still running, start them:
 
 ```bash
-$ react-native start
+$ yarn ios
 ```
 
 Then, in another terminal, run Detox:
 
 ```bash
-$ detox build
 $ detox test
 ```
-
-If you run into trouble, check the [Detox Getting Started Guide][detox-getting-started] for help.
 
 As our last setup step, let's clear out some of the default code to get a clean starting point. Delete `e2e/firstTest.spec.js`, and replace the contents of `App.js` with an empty `View`:
 
@@ -181,12 +178,15 @@ When performing TDD, our first step is to **create an end-to-end test describing
 Create a file `e2e/creating_a_message.spec.js` and enter the following contents:
 
 ```js
+const { reloadApp } = require('detox-expo-helpers');
+
 describe('Creating a message', () => {
   beforeEach(async () => {
-    await device.reloadReactNative();
+    await reloadApp();
   });
 
   it('should add the message to the list', async () => {
+    await element(by.id('messageText')).tap();
     await element(by.id('messageText')).typeText('New message');
     await element(by.id('sendButton')).tap();
 
@@ -198,7 +198,8 @@ describe('Creating a message', () => {
 
 The code describes the steps a user would take interacting with our app:
 
-- Entering the text "New message" into a message text field
+- Tapping on a message text field to bring up a keyboard
+- Entering the text "New message" into the text field
 - Tapping a send button
 - Confirming that the message text field is cleared out
 - Confirming that the "New message" we entered appears somewhere on screen
@@ -211,17 +212,16 @@ Run `detox test` and you should see the following error:
   Creating a message
     1) should add the message to the list
 
-
-  0 passing (8s)
+  0 passing (24s)
   1 failing
 
   1) Creating a message
        should add the message to the list:
      Error: Error: Cannot find UI element.
 Exception with Action: {
-  "Action Name" : "Type 'New message'",
-  "Element Matcher" : "(((respondsToSelector(accessibilityIdentifier) && accessibilityID('messageText')) && !(kindOfClass('RCTScrollView'))) || (kindOfClass('UIScrollView') && ((kindOfClass('UIView') || respondsToSelector(accessibilityContainer)) && ancestorThatMatches(((respondsToSelector(accessibilityIdentifier) && accessibilityID('messageText')) && kindOfClass('RCTScrollView'))))))",
-  "Recovery Suggestion" : "Check if the element exists in the UI hierarchy printed below. If it exists, adjust the matcher so that it accurately matches element."
+  "Action Name":  "Tap",
+  "Element Matcher":  "((!(kindOfClass('RCTScrollView')) && (respondsToSelector(accessibilityIdentifier) && accessibilityID('messageText'))) || (((kindOfClass('UIView') || respondsToSelector(accessibilityContainer)) && parentThatMatches(kindOfClass('RCTScrollView'))) && ((kindOfClass('UIView') || respondsToSelector(accessibilityContainer)) && parentThatMatches((respondsToSelector(accessibilityIdentifier) && accessibilityID('messageText'))))))",
+  "Recovery Suggestion":  "Check if the element exists in the UI hierarchy printed below. If it exists, adjust the matcher so that it accurately matches element."
 }
 ```
 
@@ -293,7 +293,7 @@ Now rerun the tests with `detox test`. We're still getting the same error, becau
  }
 ```
 
-Rerun the tests. The error has changed! The tests are now able to find the "messageText" element. The new error is:
+Rerun the tests. The error has changed! The tests are now able to find and type text into the "messageText" element. The new error is:
 
 ```bash
      Error: Error: Cannot find UI element.
@@ -516,7 +516,7 @@ Before overwriting the `inputText` state with an empty string, it retrieves an `
 Rerun the component tests and they will pass. Next, rerun the end-to-end tests. We get the same assertion failure, but if you look in the simulator, you'll see that we actually get a runtime error!
 
 ```bash
-onSend is not a function. (In 'onSend(inputText)', 'onSend' is undefined
+onSend is not a function. (In 'onSend(inputText)', 'onSend' is undefined…)
 ```
 
 Our NewMessageForm is calling `onSend`, but we haven't yet passed a valid function into our component in our production code. Let's do so now. Again, we don't want to fully implement that event handler, only add only enough code to get past the current error. Add the following to `App.js`:
@@ -635,6 +635,7 @@ To learn more about TDD, I recommend:
 [controlled-component]: https://facebook.github.io/react-native/docs/handling-text-input.html
 [detox]: https://github.com/wix/detox/blob/master/docs/README.md#detox-documentation
 [detox-getting-started]: https://github.com/wix/detox/blob/master/docs/Introduction.GettingStarted.md
+[expo]: https://expo.io
 [enzyme]: https://github.com/airbnb/enzyme
 [mocha]: https://mochajs.org/
 [react-native]: https://facebook.github.io/react-native/docs/getting-started.html
