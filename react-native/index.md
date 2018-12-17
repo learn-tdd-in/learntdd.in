@@ -19,7 +19,7 @@ The feature we'll build is a simple list of messages.
 
 ## Setup
 
-It takes a little work to get our testing setup in place, but it'll be worth it!
+It takes a little work to get our testing setup in place, but it'll be worth it! (Alternatively, you can automate many of these setup steps using [`nativeup`][nativeup], a tool for bootstrapping a new React Native project with testing support.)
 
 First, if you don't have the Expo CLI installed, install it:
 
@@ -646,4 +646,5 @@ To learn more about TDD, I recommend:
 [expo]: https://expo.io
 [enzyme]: https://github.com/airbnb/enzyme
 [mocha]: https://mochajs.org/
+[nativeup]: https://github.com/CodingItWrong/nativeup
 [react-native]: https://facebook.github.io/react-native/docs/getting-started.html
