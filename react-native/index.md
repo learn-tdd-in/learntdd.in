@@ -9,17 +9,17 @@ logo_alt: React Native logo
 
 To see how TDD works in React Native, let's walk through a simple real-world example of building a feature. We'll be using [Expo][expo] 31, but the steps below are almost exactly the same if you're using React Native CLI -- just follow the [Getting Started instructions on Detox's web site][detox-getting-started] instead of the Detox instructions below.
 
-We'll be testing with the [Mocha][mocha] test runner and two testing libraries: [Enzyme][enzyme] for component tests and [Detox][detox] for end-to-end tests.
+We'll be testing with the [Jest][jest] test runner and two testing libraries: [react-native-testing-library][react-native-testing-library] for component tests and [Detox][detox] for end-to-end tests.
 
 This tutorial assumes you have some [familiarity with React Native][react-native] and with [automated testing concepts](/learn-tdd/concepts).
 
-You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react-native) that shows the process step-by-step. You can also watch a [live stream recording](https://www.youtube.com/watch?v=iyfsE2f1Q4Y&list=PLXXnezSEtvNPZroRdvjhEVzOhURl572Lf&index=3&t=0s) of this tutorial.
+You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react-native) that shows the process step-by-step. You can also watch a [live stream recording](https://www.youtube.com/watch?v=iyfsE2f1Q4Y&list=PLXXnezSEtvNPZroRdvjhEVzOhURl572Lf&index=3&t=0s) of this tutorial with slightly different tooling.
 
 The feature we'll build is a simple list of messages.
 
 ## Setup
 
-It takes a little work to get our testing setup in place, but it'll be worth it! (Alternatively, you can automate many of these setup steps using [`nativeup`][nativeup], a tool for bootstrapping a new React Native project with testing support.)
+It takes a little work to get our testing setup in place, but it'll be worth it!
 
 First, if you don't have the Expo CLI installed, install it:
 
@@ -42,56 +42,39 @@ $ yarn ios
 
 After a few minutes you should see the welcome screen of the app in the iOS Simulator.
 
-Next, let's install Mocha and its related testing packages:
+Next, let's install Jest. Since we're using Expo, there is an Expo-specific Jest package we can use:
 
 ```bash
-$ yarn add --dev mocha chai sinon sinon-chai
+$ yarn add --dev jest-expo
 ```
 
-Now we'll add Enzyme to enable component testing:
-
-```bash
-$ yarn add --dev enzyme \
-                 enzyme-adapter-react-16 \
-                 @jonny/react-native-mock
-```
-
-Now that these packages are installed, we need to configure them to work together. Create a `test/setup.js` script and add the following:
-
-```javascript
-import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-import '@jonny/react-native-mock/mock';
-import chai from 'chai';
-import sinonChai from 'sinon-chai';
-
-Enzyme.configure({ adapter: new Adapter() });
-chai.use(sinonChai);
-```
-
-This does the following:
-- Loads `@jonny/react-native-mock` so we can access React Native APIs in component tests
-- Configure Enzyme to work with React 16
-- Configure Chai to use the sinon-chai assertion library
-
-Next, create a `test/mocha.opts` file to configure Mocha:
-
-```bash
---require @babel/register
---require test/setup.js
-test/**/*.spec.js
-```
-
-Next, we'll set up a `test` command that will run Mocha:
+Add the following to `package.json`:
 
 ```diff
-   "scripts": {
-     "start": "expo start",
      "android": "expo start --android",
      "ios": "expo start --ios",
-+    "test": "mocha",
++    "test": "node_modules/.bin/jest test/**/*.spec.js",
      "eject": "expo eject"
    },
+...
+     "eslint-plugin-import": "^2.14.0",
+     "eslint-plugin-jest": "^22.1.2",
+     "eslint-plugin-jsx-a11y": "^6.1.2",
+-    "eslint-plugin-react": "^7.11.1"
++    "eslint-plugin-react": "^7.11.1",
++    "jest-expo": "^31.0.0"
+   },
++  "jest": {
++    "preset": "jest-expo"
++  },
+   "private": true
+```
+
+Now we'll add react-native-testing-library to enable component testing:
+
+```bash
+$ yarn add --dev react-native-testing-library \
+                 react-test-renderer
 ```
 
 Next, to get Detox working, let's first install the global Detox CLI tool:
@@ -110,10 +93,10 @@ $ yarn add --dev detox \
                  expo-detox-hook
 ```
 
-Then initialize Detox in the project, specifying Mocha as the test runner:
+Then initialize Detox in the project, specifying Jest as the test runner:
 
 ```bash
-$ detox init -r mocha
+$ detox init -r jest
 ```
 
 We need to make one tweak to the generated test file to work with Expo:
@@ -136,13 +119,13 @@ After this, we need to add some config for Detox to our `package.json`:
  {
    ...
    "detox": {
--    "test-runner": "mocha"
-+    "test-runner": "mocha",
+-    "test-runner": "jest"
++    "test-runner": "jest",
 +    "configurations": {
 +      "ios.sim": {
 +        "binaryPath": "bin/Exponent.app",
 +        "type": "ios.simulator",
-+        "name": "iPhone 7"
++        "name": "iPhone 8"
 +      }
 +    }
    }
@@ -217,20 +200,23 @@ After we've created our test, the next step in TDD is to **run the test and watc
 Run `detox test` and you should see the following error:
 
 ```bash
-  Creating a message
-    1) should add the message to the list
+Creating a message
+  ✕ should add the message to the list (12841ms)
 
-  0 passing (24s)
-  1 failing
+● Creating a message › should add the message to the list
 
-  1) Creating a message
-       should add the message to the list:
-     Error: Error: Cannot find UI element.
-Exception with Action: {
-  "Action Name":  "Tap",
-  "Element Matcher":  "((!(kindOfClass('RCTScrollView')) && (respondsToSelector(accessibilityIdentifier) && accessibilityID('messageText'))) || (((kindOfClass('UIView') || respondsToSelector(accessibilityContainer)) && parentThatMatches(kindOfClass('RCTScrollView'))) && ((kindOfClass('UIView') || respondsToSelector(accessibilityContainer)) && parentThatMatches((respondsToSelector(accessibilityIdentifier) && accessibilityID('messageText'))))))",
-  "Recovery Suggestion":  "Check if the element exists in the UI hierarchy printed below. If it exists, adjust the matcher so that it accurately matches element."
-}
+
+  Failed: Error: Error: Cannot find UI element.
+  Exception with Action: {
+    "Action Name":  "Tap",
+    "Element Matcher":  "((!(kindOfClass('RCTScrollView')) && (respondsToSelector(accessibilityIde
+ntifier) && accessibilityID('messageText'))) || (((kindOfClass('UIView') || respondsToSelector(acces
+sibilityContainer)) && parentThatMatches(kindOfClass('RCTScrollView'))) && ((kindOfClass('UIView') |
+| respondsToSelector(accessibilityContainer)) && parentThatMatches((respondsToSelector(accessibility
+Identifier) && accessibilityID('messageText'))))))",
+    "Recovery Suggestion":  "Check if the element exists in the UI hierarchy printed below. If it
+exists, adjust the matcher so that it accurately matches element."
+  }
 ```
 
 The output is a bit verbose, but the important parts are:
@@ -304,11 +290,11 @@ Now rerun the tests with `detox test`. We're still getting the same error, becau
 Rerun the tests. The error has changed! The tests are now able to find and type text into the "messageText" element. The new error is:
 
 ```bash
-     Error: Error: Cannot find UI element.
+Failed: Error: Error: Cannot find UI element.
 Exception with Action: {
-  "Action Name" : "Tap",
-  "Element Matcher" : "(((respondsToSelector(accessibilityIdentifier) && accessibilityID('sendButton')) && !(kindOfClass('RCTScrollView'))) || (kindOfClass('UIScrollView') && ((kindOfClass('UIView') || respondsToSelector(accessibilityContainer)) && ancestorThatMatches(((respondsToSelector(accessibilityIdentifier) && accessibilityID('sendButton')) && kindOfClass('RCTScrollView'))))))",
-  "Recovery Suggestion" : "Check if the element exists in the UI hierarchy printed below. If it exists, adjust the matcher so that it accurately matches element."
+  "Action Name":  "Tap",
+  "Element Matcher":  "((!(kindOfClass('RCTScrollView')) && (respondsToSelector(accessibilityIdentifier) && accessibilityID('sendButton'))) || (((kindOfClass('UIView') || respondsToSelector(accessibilityContainer)) && parentThatMatches(kindOfClass('RCTScrollView'))) && ((kindOfClass('UIView') || respondsToSelector(accessibilityContainer)) && parentThatMatches((respondsToSelector(accessibilityIdentifier) && accessibilityID('sendButton'))))))",
+  "Recovery Suggestion":  "Check if the element exists in the UI hierarchy printed below. If it exists, adjust the matcher so that it accurately matches element."
 }
 ```
 
@@ -341,10 +327,10 @@ We want the send button to be part of our `NewMessageForm`, so fixing this error
 Rerun the tests. Now we get a new kind of test failure:
 
 ```bash
-     Error: Error: An assertion failed.
+Failed: Error: Error: An assertion failed.
 Exception with Assertion: {
-  "Assertion Criteria" : "assertWithMatcher:(((kindOfClass('UILabel') || kindOfClass('UITextField') || kindOfClass('UITextView')) && hasText('')) || (kindOfClass('RCTText') && an object with accessibilityLabel ""))",
-  "Element Matcher" : "(((respondsToSelector(accessibilityIdentifier) && accessibilityID('messageText')) && !(kindOfClass('RCTScrollView'))) || (kindOfClass('UIScrollView') && ((kindOfClass('UIView') || respondsToSelector(accessibilityContainer)) && ancestorThatMatches(((respondsToSelector(accessibilityIdentifier) && accessibilityID('messageText')) && kindOfClass('RCTScrollView'))))))"
+  "Assertion Criteria":  "assertWithMatcher:(((kindOfClass('UILabel') || kindOfClass('UITextField') || kindOfClass('UITextView')) && hasText('')) || (kindOfClass('RCTTextView') && an object with accessibilityLabel ""))",
+  "Element Matcher":  "((!(kindOfClass('RCTScrollView')) && (respondsToSelector(accessibilityIdentifier) && accessibilityID('messageText'))) || (((kindOfClass('UIView') || respondsToSelector(accessibilityContainer)) && parentThatMatches(kindOfClass('RCTScrollView'))) && ((kindOfClass('UIView') || respondsToSelector(accessibilityContainer)) && parentThatMatches((respondsToSelector(accessibilityIdentifier) && accessibilityID('messageText'))))))"
 }
 ```
 
@@ -360,48 +346,43 @@ Instead of adding the behavior directly, let's **step down from the "outside" le
 Create a `test/components` folder, then create a `NewMessageForm.spec.js` file inside it. Add the following contents:
 
 ```javascript
-import { expect } from 'chai';
 import React from 'react';
-import { shallow } from 'enzyme';
-
+import { render, fireEvent } from 'react-native-testing-library';
 import NewMessageForm from '../../NewMessageForm';
 
 describe('NewMessageForm', () => {
-  function testID(id) {
-    return cmp => cmp.props().testID === id;
-  }
-
   describe('clicking send', () => {
     const messageText = 'Hello world';
 
-    let wrapper;
+    let getByTestId;
 
     beforeEach(() => {
-      wrapper = shallow(<NewMessageForm />);
+      ({ getByTestId } = render(<NewMessageForm />));
 
-      wrapper.findWhere(testID('messageText'))
-        .simulate('changeText', messageText);
-      wrapper.findWhere(testID('sendButton'))
-        .simulate('press');
+      fireEvent.changeText(getByTestId('messageText'), messageText);
+      fireEvent.press(getByTestId('sendButton'));
     });
 
     it('clears the message field', () => {
-      expect(wrapper.findWhere(testID('messageText')).props().value)
-        .to.equal('');
+      expect(getByTestId('messageText').props.value).toEqual('');
     });
   });
 });
 ```
 
-Enzyme's API is different from Detox's, but we're doing something very similar to what the end-to-end test is doing. We've taken the scenario that caused the end-to-end error and reproduced it at the component level: when a user enters text and taps the send button, the text field should be cleared. Note that we have only specified enough of a component test to reproduce the current end-to-end error.
+This component test uses `react-native-testing-library`. it has a different API from Detox's, but we're doing something very similar to what the end-to-end test is doing. We've taken the scenario that caused the end-to-end error and reproduced it at the component level: when a user enters text and taps the send button, the text field should be cleared. Note that we have only specified enough of a component test to reproduce the current end-to-end error.
 
 Run `yarn test` to see the component test fail:
 
 ```bash
-1) NewMessageForm
-     clicking send
-       clears the message field:
-   AssertionError: expected undefined to equal ''
+● NewMessageForm › clicking send › clears the message field
+
+  expect(received).toEqual(expected)
+
+  Expected value to equal:
+    ""
+  Received:
+    undefined
 ```
 
 Enzyme is finding the `value` prop of the TextInput to be `undefined`; this is because we aren't passing in a value at all. To fix this, let's make the TextInput a [controlled component][controlled-component], so its text is available in the parent component's state:
@@ -428,7 +409,10 @@ Enzyme is finding the `value` prop of the TextInput to be `undefined`; this is b
 Now when we rerun `yarn test` we get a different error:
 
 ```bash
-AssertionError: expected 'Hello world' to equal ''
+  Expected value to equal:
+    ""
+  Received:
+    "Hello world"
 ```
 
 Now the field is successfully taking in the typed value; it just isn't clearing it out when Send is tapped. Let's fix that:
@@ -465,32 +449,30 @@ The NewMessageForm won't be responsible for displaying this message, though: we'
 To add this event handler behavior to NewMessageForm, we want to step back down to the component test. In this case, the component test won't be asserting exactly the same thing as the end-to-end test. The end-to-end test is looking for the 'New message' content on the screen, but the component test will only be asserting the behavior that the NewMessageForm component is responsible for: that it calls the event handler.
 
 ```diff
- import { expect } from 'chai';
- import React from 'react';
- import { shallow } from 'enzyme';
-+import { stub } from 'sinon';
-
- import NewMessageForm from '../../NewMessageForm';
-...
    describe('clicking send', () => {
      const messageText = 'Hello world';
 
 +    let sendHandler;
-     let wrapper;
+     let getByTestId;
 
      beforeEach(() => {
--      wrapper = shallow(<NewMessageForm />);
-+      sendHandler = stub();
-+      wrapper = shallow(<NewMessageForm onSend={sendHandler} />);
++      sendHandler = jest.fn();
+
+-      ({ getByTestId } = render(<NewMessageForm />));
++      ({ getByTestId } = render(<NewMessageForm onSend={sendHandler} />));
+
+       fireEvent.changeText(getByTestId('messageText'), messageText);
+       fireEvent.press(getByTestId('sendButton'));
 ...
-       expect(wrapper.findWhere(testID('messageText')).props().value)
-         .toEqual('');
+     it('clears the message field', () => {
+       expect(getByTestId('messageText').props.value).toEqual('');
      });
 +
 +    it('calls the send handler', () => {
-+      expect(sendHandler).to.have.been.calledWith(messageText);
++      expect(sendHandler).toHaveBeenCalledWith(messageText);
 +    });
-});
+   });
+ });
 ```
 
 Notice that we **make one assertion per test in component tests.** Having separate test cases for each behavior of the component makes it easy to understand what it does, and easy to see what went wrong if one of the assertions fails. The `beforeEach` block will run through the same steps for each of the two test cases below.
@@ -500,10 +482,13 @@ You may recall that this isn't what we did in the end-to-end test, though. Gener
 Run the component test again. You'll see the "clears the text field" test pass, and the new 'emits the "send" event' test fail with the error:
 
 ```bash
-1) NewMessageForm
-     clicking send
-       calls the send handler:
-   AssertionError: expected stub to have been called with arguments Hello world
+● NewMessageForm › clicking send › calls the send handler
+
+  expect(jest.fn()).toHaveBeenCalledWith(expected)
+
+  Expected mock function to have been called with:
+    ["Hello world"]
+  But it was not called.
 ```
 
 So the `sendHandler` isn't being called correctly. Let's fix that:
@@ -616,7 +601,7 @@ Rerun the tests, and, as we expect, we still aren't displaying the message. But 
 
 Rerun the tests and they pass. We've let the tests drive our first feature!
 
-Let's take a look in the simulator. Run the app with `react-native run-ios`. Well, it works, but it's not the prettiest thing in the world. But now we can add styling.
+Let's take a look in the simulator. Run the app by opening the browser tab that is running Expo, and clicking "Run on iOS Simulator". Well, it works, but it's not the prettiest thing in the world. But now we can add styling.
 
 # Why TDD?
 
@@ -644,7 +629,6 @@ To learn more about TDD, I recommend:
 [detox]: https://github.com/wix/detox/blob/master/docs/README.md#detox-documentation
 [detox-getting-started]: https://github.com/wix/detox/blob/master/docs/Introduction.GettingStarted.md
 [expo]: https://expo.io
-[enzyme]: https://github.com/airbnb/enzyme
-[mocha]: https://mochajs.org/
-[nativeup]: https://github.com/CodingItWrong/nativeup
+[jest]: https://jestjs.io/
 [react-native]: https://facebook.github.io/react-native/docs/getting-started.html
+[react-native-testing-library]: https://github.com/callstack/react-native-testing-library
