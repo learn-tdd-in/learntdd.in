@@ -57,12 +57,7 @@ Add the following to `package.json`:
      "eject": "expo eject"
    },
 ...
-     "eslint-plugin-import": "^2.14.0",
-     "eslint-plugin-jest": "^22.1.2",
-     "eslint-plugin-jsx-a11y": "^6.1.2",
--    "eslint-plugin-react": "^7.11.1"
-+    "eslint-plugin-react": "^7.11.1",
-+    "jest-expo": "^31.0.0"
+     "jest-expo": "^31.0.0"
    },
 +  "jest": {
 +    "preset": "jest-expo"
@@ -99,7 +94,7 @@ Then initialize Detox in the project, specifying Jest as the test runner:
 $ detox init -r jest
 ```
 
-We need to make one tweak to the generated test file to work with Expo:
+One of the files this command generates is a sample test file, `e2e/firstTest.spec.js`. We need to make one tweak to this file for it to work with Expo:
 
 ```diff
 +const { reloadApp } = require('detox-expo-helpers');
@@ -142,6 +137,18 @@ Then, in another terminal, run Detox:
 
 ```bash
 $ detox test
+```
+
+You should see the Expo app launched in a simulator a few times in a row, then you should see output including something like the following:
+
+```bash
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 3 total
+Snapshots:   0 total
+Time:        107.741s
+Ran all test suites matching /e2e/i with tests matching "^((?!:android:).)*$".
+child_process.js:650
+    throw err;
 ```
 
 As our last setup step, let's clear out some of the default code to get a clean starting point. Delete `e2e/firstTest.spec.js`, and replace the contents of `App.js` with an empty `View`:
