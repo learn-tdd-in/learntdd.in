@@ -294,14 +294,25 @@ Now rerun the tests with `detox test`. We're still getting the same error, becau
  }
 ```
 
-Rerun the tests. The error has changed! The tests are now able to find and type text into the "messageText" element. The new error is:
+NOTE ABOUT "Description":  "Failed to type string 'New message', because keyboard was not shown on screen.",
+
+Rerun the tests. The error has changed! You might have gotten one of two errors:
+
+If you got the error "Failed to type string 'New message', because keyboard was not shown on screen" then that isn't a problem with your code; the simulator just wasn't set up to show the on-screen keyboard. To fix this, within the simulator press command-K to show the keyboard. Then rerun the test.
+
+Once the tests are now able to find and type text into the "messageText" element. The new error is:
 
 ```bash
 Failed: Error: Error: Cannot find UI element.
 Exception with Action: {
   "Action Name":  "Tap",
-  "Element Matcher":  "((!(kindOfClass('RCTScrollView')) && (respondsToSelector(accessibilityIdentifier) && accessibilityID('sendButton'))) || (((kindOfClass('UIView') || respondsToSelector(accessibilityContainer)) && parentThatMatches(kindOfClass('RCTScrollView'))) && ((kindOfClass('UIView') || respondsToSelector(accessibilityContainer)) && parentThatMatches((respondsToSelector(accessibilityIdentifier) && accessibilityID('sendButton'))))))",
-  "Recovery Suggestion":  "Check if the element exists in the UI hierarchy printed below. If it exists, adjust the matcher so that it accurately matches element."
+  "Element Matcher":  "((!(kindOfClass('RCTScrollView')) && (respondsToSelector(accessibilityIdentif
+ier) && accessibilityID('sendButton'))) || (((kindOfClass('UIView') || respondsToSelector(accessibil
+ityContainer)) && parentThatMatches(kindOfClass('RCTScrollView'))) && ((kindOfClass('UIView') || res
+pondsToSelector(accessibilityContainer)) && parentThatMatches((respondsToSelector(accessibilityIdent
+ifier) && accessibilityID('sendButton'))))))",
+  "Recovery Suggestion":  "Check if the element exists in the UI hierarchy printed below. If it exis
+ts, adjust the matcher so that it accurately matches element."
 }
 ```
 
@@ -336,8 +347,14 @@ Rerun the tests. Now we get a new kind of test failure:
 ```bash
 Failed: Error: Error: An assertion failed.
 Exception with Assertion: {
-  "Assertion Criteria":  "assertWithMatcher:(((kindOfClass('UILabel') || kindOfClass('UITextField') || kindOfClass('UITextView')) && hasText('')) || (kindOfClass('RCTTextView') && an object with accessibilityLabel ""))",
-  "Element Matcher":  "((!(kindOfClass('RCTScrollView')) && (respondsToSelector(accessibilityIdentifier) && accessibilityID('messageText'))) || (((kindOfClass('UIView') || respondsToSelector(accessibilityContainer)) && parentThatMatches(kindOfClass('RCTScrollView'))) && ((kindOfClass('UIView') || respondsToSelector(accessibilityContainer)) && parentThatMatches((respondsToSelector(accessibilityIdentifier) && accessibilityID('messageText'))))))"
+  "Assertion Criteria":  "assertWithMatcher:(((kindOfClass('UILabel') || kindOfClass('UITextField') 
+|| kindOfClass('UITextView')) && hasText('')) || (kindOfClass('RCTTextView') && an object with acces
+sibilityLabel ""))",
+  "Element Matcher":  "((!(kindOfClass('RCTScrollView')) && (respondsToSelector(accessibilityIdentif
+ier) && accessibilityID('messageText'))) || (((kindOfClass('UIView') || respondsToSelector(accessibi
+lityContainer)) && parentThatMatches(kindOfClass('RCTScrollView'))) && ((kindOfClass('UIView') || re
+spondsToSelector(accessibilityContainer)) && parentThatMatches((respondsToSelector(accessibilityIden
+tifier) && accessibilityID('messageText'))))))"
 }
 ```
 
@@ -542,7 +559,7 @@ Next, we need to save the message in state in the App component. Let's add it to
 
 ```diff
  export default class App extends Component {
-+  state = { messages: [] };
++  state = { messages: [] }
 +
    handleSend = (newMessage) => {
 +    this.setState(state => ({ messages: [newMessage, ...state.messages] }));
