@@ -294,8 +294,6 @@ Now rerun the tests with `detox test`. We're still getting the same error, becau
  }
 ```
 
-NOTE ABOUT "Description":  "Failed to type string 'New message', because keyboard was not shown on screen.",
-
 Rerun the tests. The error has changed! You might have gotten one of two errors:
 
 If you got the error "Failed to type string 'New message', because keyboard was not shown on screen" then that isn't a problem with your code; the simulator just wasn't set up to show the on-screen keyboard. To fix this, within the simulator press command-K to show the keyboard. Then rerun the test.
