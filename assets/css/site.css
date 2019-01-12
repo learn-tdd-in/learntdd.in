@@ -1,3 +1,9 @@
+@media (min-width: 992px) {
+  .container {
+    max-width: 740px;
+  }
+}
+
 article.post {
   font-family: serif;
   font-size: 21px;
