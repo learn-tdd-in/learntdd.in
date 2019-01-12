@@ -65,7 +65,7 @@ Add the following to `package.json`:
    "private": true
 ```
 
-Now we'll add react-native-testing-library to enable component testing:
+Now we'll add `react-native-testing-library` to enable component testing:
 
 ```bash
 $ yarn add --dev react-native-testing-library \
@@ -204,7 +204,7 @@ The code describes the steps a user would take interacting with our app:
 
 After we've created our test, the next step in TDD is to **run the test and watch it fail.**  This test will fail (be "red") at first because we haven't yet implemented the functionality.
 
-Run `detox test` and you should see the following error:
+Run `detox test`. You’ll get a lot of output, but if you scroll up, you should see the following error:
 
 ```bash
 Creating a message
@@ -226,7 +226,7 @@ exists, adjust the matcher so that it accurately matches element."
   }
 ```
 
-The output is a bit verbose, but the important parts are:
+The important parts of the output are:
 
 - `"Error: Cannot find UI element"`: the test tried to find something in the UI but couldn't.
 - `"Element Matcher: …accessibilityID('messageText')"`: it was trying to find an element by accessibility ID "messageText".
@@ -296,9 +296,9 @@ Now rerun the tests with `detox test`. We're still getting the same error, becau
 
 Rerun the tests. The error has changed! You might have gotten one of two errors:
 
-If you got the error "Failed to type string 'New message', because keyboard was not shown on screen" then that isn't a problem with your code; the simulator just wasn't set up to show the on-screen keyboard. To fix this, within the simulator press command-K to show the keyboard. Then rerun the test.
+If you got the error `"Failed to type string 'New message', because keyboard was not shown on screen"` then that isn't a problem with your code; the simulator just wasn't set up to show the on-screen keyboard. To fix this, within the simulator press command-K to show the keyboard. Then rerun the test.
 
-Once the tests are now able to find and type text into the "messageText" element. The new error is:
+Once the tests are able to find and type text into the "messageText" element, the new error is:
 
 ```bash
 Failed: Error: Error: Cannot find UI element.
@@ -316,7 +316,7 @@ ts, adjust the matcher so that it accurately matches element."
 
 Now there's a different element we can't find: the element with `accessibilityID('sendButton')`.
 
-We want the send button to be part of our `NewMessageForm`, so fixing this error is easy. We just add a Button to our component:
+We want the send button to be part of our `NewMessageForm`, so fixing this error is easy. We just add a `Button` to our component:
 
 ```diff
  import React, { Component } from 'react';
@@ -345,7 +345,7 @@ Rerun the tests. Now we get a new kind of test failure:
 ```bash
 Failed: Error: Error: An assertion failed.
 Exception with Assertion: {
-  "Assertion Criteria":  "assertWithMatcher:(((kindOfClass('UILabel') || kindOfClass('UITextField') 
+  "Assertion Criteria":  "assertWithMatcher:(((kindOfClass('UILabel') || kindOfClass('UITextField')
 || kindOfClass('UITextView')) && hasText('')) || (kindOfClass('RCTTextView') && an object with acces
 sibilityLabel ""))",
   "Element Matcher":  "((!(kindOfClass('RCTScrollView')) && (respondsToSelector(accessibilityIdentif
@@ -392,7 +392,7 @@ describe('NewMessageForm', () => {
 });
 ```
 
-This component test uses `react-native-testing-library`. it has a different API from Detox's, but we're doing something very similar to what the end-to-end test is doing. We've taken the scenario that caused the end-to-end error and reproduced it at the component level: when a user enters text and taps the send button, the text field should be cleared. Note that we have only specified enough of a component test to reproduce the current end-to-end error.
+This component test uses `react-native-testing-library`. It has a different API from Detox's, but we're doing something very similar to what the end-to-end test is doing. **We've taken the scenario that caused the end-to-end error and reproduced it at the component level:** when a user enters text and taps the send button, the text field should be cleared. Note that we have only specified enough of a component test to reproduce the current end-to-end error.
 
 Run `yarn test` to see the component test fail:
 
@@ -407,7 +407,7 @@ Run `yarn test` to see the component test fail:
     undefined
 ```
 
-Enzyme is finding the `value` prop of the TextInput to be `undefined`; this is because we aren't passing in a value at all. To fix this, let's make the TextInput a [controlled component][controlled-component], so its text is available in the parent component's state:
+`react-native-testing-library` is finding the `value` prop of the `TextInput` to be `undefined`; this is because we aren't passing in a value at all. To fix this, let's make the TextInput a [controlled component][controlled-component], so its text is available in the parent component's state:
 
 ```diff
  export default class NewMessageForm extends Component {
@@ -466,9 +466,9 @@ Rerun the component test. This gets us past the assertion failure.
 
 Now, finally, the test will drive us to implement the real meat of our feature: storing the message entered and displaying it.
 
-The NewMessageForm won't be responsible for displaying this message, though: we'll create a separate MessageList component that also exists in the parent App component. The way we can send data to the parent component is by taking in an event handler and calling it.
+The `NewMessageForm` won't be responsible for displaying this message, though: we'll create a separate `MessageList` component that also exists in the parent `App` component. The way we have `NewMessageForm` send data to the parent component is by taking in a function prop and calling it.
 
-To add this event handler behavior to NewMessageForm, we want to step back down to the component test. In this case, the component test won't be asserting exactly the same thing as the end-to-end test. The end-to-end test is looking for the 'New message' content on the screen, but the component test will only be asserting the behavior that the NewMessageForm component is responsible for: that it calls the event handler.
+To add this event handler behavior to NewMessageForm, we want to step back down to the component test. In this case, the component test won't be asserting exactly the same thing as the end-to-end test. The end-to-end test is looking for the "New message" content on the screen, but the component test will only be asserting the behavior that the `NewMessageForm` component is responsible for: that it calls the function prop.
 
 ```diff
    describe('clicking send', () => {
@@ -499,7 +499,7 @@ To add this event handler behavior to NewMessageForm, we want to step back down 
 
 Notice that we **make one assertion per test in component tests.** Having separate test cases for each behavior of the component makes it easy to understand what it does, and easy to see what went wrong if one of the assertions fails. The `beforeEach` block will run through the same steps for each of the two test cases below.
 
-You may recall that this isn't what we did in the end-to-end test, though. Generally you **make *multiple* assertions per test in end-to-end tests.** Why? End-to-end tests are slower, so the overhead of the repeating the steps would significantly slow down our suite as it grows. In fact, larger end-to-end tests tend to turn into "feature tours:" you perform some actions, do some assertions, perform some more actions, do more assertions, etc.
+You may recall that this isn't what we did in the end-to-end test, though. Although you make one assertion per test in component tests, you generally **make *multiple* assertions per test in end-to-end tests.** Why? End-to-end tests are slower, so the overhead of the repeating the steps would significantly slow down our suite as it grows. In fact, larger end-to-end tests tend to turn into "feature tours:" you perform some actions, do some assertions, perform some more actions, do more assertions, etc.
 
 Run the component test again. You'll see the "clears the text field" test pass, and the new 'emits the "send" event' test fail with the error:
 
@@ -526,7 +526,7 @@ So the `sendHandler` isn't being called correctly. Let's fix that:
    }
 ```
 
-Before overwriting the `inputText` state with an empty string, it retrieves an `onSend` function passed in as a prop, and passes the previous value of `inputText` to it.
+Before overwriting the `inputText` state with an empty string, we retrieve an `onSend` function passed in as a prop, and call it with the previous value of `inputText`.
 
 Rerun the component tests and they will pass. Next, rerun the end-to-end tests. We get the same assertion failure, but if you look in the simulator, you'll see that we actually get a runtime error!
 
@@ -564,7 +564,7 @@ Next, we need to save the message in state in the App component. Let's add it to
    }
 ```
 
-Next, to display the messages, let's create another custom component to keep our App component nice and simple. We'll call it MessageList. We'll write the code we wish we had in `App.js`:
+Next, to display the messages, let's create another custom component to keep our App component nice and simple. We'll call it `MessageList`. We'll write the code we wish we had in `App.js`:
 
 ```diff
  import NewMessageForm from './NewMessageForm';
