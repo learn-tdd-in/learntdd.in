@@ -7,7 +7,7 @@ logo_alt: Vue logo
 
 {% include tutorial-intro.md %}
 
-To see how TDD works in Vue, let's walk through a simple real-world example of building a feature. We'll be using Vue 2.5 with Vue CLI 3, which built-in support to use [Cypress][cypress] for end-to-end tests. We'll also add Cypress component testing functionality. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/vue) that shows the process step-by-step. This tutorial assumes you have some [familiarity with Vue][vue] and with [automated testing concepts](/learn-tdd/concepts).
+To see how TDD works in Vue, let's walk through a simple real-world example of building a feature. We'll be using Vue 2.6 with Vue CLI 3, with built-in support to use [Cypress][cypress] for end-to-end tests and [Mocha][mocha] for unit tests. We'll also use [vue-test-utils][vue-test-utils] for component tests. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/vue) that shows the process step-by-step. This tutorial assumes you have some [familiarity with Vue][vue] and with [automated testing concepts](/learn-tdd/concepts).
 
 You can also watch a [conference talk](https://www.vuemastery.com/conferences/connect-tech-2018/Test-Driven-Development-in-Vue-with-Cypress/) version of this tutorial.
 
@@ -15,13 +15,13 @@ The feature we'll build is a simple list of messages.
 
 ## Setup
 
-First, ensure you have [`Vue CLI`][vue-cli] version 3 installed:
+First, ensure you have [`Vue CLI`][vue-cli] version 3.4.0 or later installed:
 
 ```bash
 $ yarn global add @vue/cli
 $ vue --version
 
-3.0.1
+3.4.0
 ```
 
 Create a new Vue app with the Vue CLI:
@@ -33,66 +33,24 @@ $ vue create learn-tdd-in-vue
 Choose the following options from the prompts:
 
 - Please pick a preset: Manually select features
-- Check the features needed for your project: add E2E Testing
+- Check the features needed for your project: add Unit and E2E Testing
+- Pick a unit testing solution: Mocha + Chai
 - Pick a E2E testing solution: Cypress (Chrome only)
 - Where do you prefer placing config for Babel, PostCSS, ESLint, etc.? In dedicated config files
-- Pick the package manager to use when installing dependencies: pick what you like; this tutorial will use Yarn
+- If you're prompted to pick the package manager to use when installing dependencies, you can pick what you like; this tutorial will use Yarn
 
-Cypress is now set up for end-to-end testing, but we need to add some extra packages for component testing:
+Next let's add `vue-test-utils` for component testing:
 
 ```bash
 $ cd learn-tdd-in-vue
-$ yarn add --dev cypress-vue-unit-test \
-                 @cypress/webpack-preprocessor \
-                 vue-loader
-```
-
-Next, set up Cypress to be able to load `.vue` components for testing by replacing the contents of `tests/e2e/plugins/index.js` with the following:
-
-```javascript
-const webpack = require('@cypress/webpack-preprocessor');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
-
-const webpackOptions = {
-  resolve: {
-    extensions: ['.js', '.vue'],
-  },
-  plugins: [
-    new VueLoaderPlugin(),
-  ],
-  module: {
-    rules: [
-      {
-        test: /\.vue$/,
-        loader: 'vue-loader',
-      },
-    ],
-  },
-};
-
-const options = {
-  // send in the options from your webpack.config.js, so it works the same
-  // as your app's code
-  webpackOptions,
-  watchOptions: {},
-};
-
-module.exports = (on, config) => {
-  on('file:preprocessor', webpack(options));
-  return Object.assign({}, config, {
-    fixturesFolder: 'tests/e2e/fixtures',
-    integrationFolder: 'tests/e2e/specs',
-    screenshotsFolder: 'tests/e2e/screenshots',
-    videosFolder: 'tests/e2e/videos',
-    supportFile: 'tests/e2e/support/index.js',
-  });
-};
+$ yarn add --dev @vue/test-utils vue-template-compiler
 ```
 
 As our last setup step, let's clear out some of the default code to get a clean starting point. Delete the following files:
 
 - `src/components/HelloWorld.vue`
 - `tests/e2e/specs/test.js`
+- `tests/unit/example.spec.js`
 
 Replace the contents of `src/App.vue` with the following:
 
@@ -118,7 +76,7 @@ Create a file `tests/e2e/specs/creating_a_message.js` and enter the following co
 ```javascript
 describe('Creating a message', () => {
   it('Displays the message in the list', () => {
-    cy.visit('http://localhost:8080');
+    cy.visit('/');
 
     cy.get('[data-test="messageText"]')
       .type('New message');
@@ -173,7 +131,7 @@ A common principle in TDD is to **write the code you wish you had.** We could ju
 +import NewMessageForm from './components/NewMessageForm';
 +
  export default {
-   name: 'app',
+   name: 'App',
 +  components: {
 +    NewMessageForm,
 +  },
@@ -247,38 +205,49 @@ We've made it to our first assertion, which is that the message text box should 
 
 Instead of adding the behavior directly, let's **step down from the "outside" level of end-to-end tests to an "inside" component test.** This allows us to more precisely specify the behavior of each piece. Also, since end-to-end tests are slow, component tests prevent us from having to write an end-to-end test for every rare edge case.
 
-Create a new file `tests/e2e/specs/NewMessageForm.js` and add the following:
+Create a new file `tests/unit/NewMessageForm.spec.js` and add the following:
 
 ```javascript
-import mountVue from 'cypress-vue-unit-test';
-import NewMessageForm from '../../../src/components/NewMessageForm';
+import { expect } from 'chai';
+import { mount } from '@vue/test-utils';
+import NewMessageForm from '../../src/components/NewMessageForm';
 
 describe('NewMessageForm', () => {
-  beforeEach(mountVue(NewMessageForm));
+  let wrapper;
+
+  beforeEach(() => {
+    wrapper = mount(NewMessageForm);
+  });
 
   describe('clicking the send button', () => {
     beforeEach(() => {
-      cy.get('[data-test="messageText"]')
-        .type('New message');
+      wrapper
+        .find('[data-test="messageText"]')
+        .setValue('New message');
 
-      cy.get('[data-test="sendButton"]')
-        .click();
+      wrapper
+        .find('[data-test="sendButton"]')
+        .trigger('click');
     });
 
     it('clears the text field', () => {
-      cy.get('[data-test="messageText"]')
-        .should('have.value', '');
+      expect(
+        wrapper.find('[data-test="messageText"]').element.value,
+      ).to.equal('');
     });
   });
 });
 ```
 
-A lot of the test seems the same as the end-to-end test: we still enter a new message and click the send button. But this is testing something very different. Instead of testing the whole app running together, we're testing just the NewMessageForm by itself.
+vue-test-util's API is different from Cypress's, but a lot of the test seems the same as the end-to-end test: we still enter a new message and click the send button. But this is testing something very different. Instead of testing the whole app running together, we're testing just the NewMessageForm by itself.
 
-Run `NewMessageForm.spec.js` with Cypress. We get the same error as we did with the end-to-end test:
+Run `yarn test:unit` to run the component test. We get the following error:
 
 ```bash
-expected '<input />' to have value '', but the value was 'New message'
+AssertionError: expected 'New message' to equal ''
++ expected - actual
+
+-New message
 ```
 
 Now, we can add the behavior to the component to get this test to pass. First, we add an `inputText` data property and bind it to the input with `v-model`:
@@ -347,7 +316,7 @@ Next, we add a `send()` method that sets the `inputText` data property to the em
  </script>
 ```
 
-Rerun the component test and it passes. **Once a component test passes, step back up to the outer end-to-end test to see what the next error is.** Rerun `creating_a_message.js`. Now our final assertion fails:
+Rerun the component test and it passes. **Once a component test passes, step back up to the outer end-to-end test to see what the next error is.** Rerun the end-to-end test in Cypress. Now our final assertion fails:
 
 ```bash
 Expected to find content: 'New message' but never did.
@@ -359,36 +328,23 @@ The NewMessageForm won't be responsible for displaying this message, though: we'
 
 To add this event handler behavior to NewMessageForm, we want to step back down to the component test. In this case, the component test won't be asserting exactly the same thing as the end-to-end test. The end-to-end test is looking for the 'New message' content on the screen, but the component test will only be asserting the behavior that the NewMessageForm component is responsible for: that it calls the event handler.
 
-Add another test case to `NewMessageForm.js`:
+Add another test case to `NewMessageForm.spec.js`:
 
 ```diff
-   beforeEach(mountVue(NewMessageForm));
-
-   describe('clicking the send button', () => {
-+    let spy;
-+
-     beforeEach(() => {
-+      spy = cy.spy();
-+      Cypress.vue.$on('send', spy);
-+
-       cy.get("[data-test='messageText']")
-         .type('New message');
-
-       cy.get("[data-test='sendButton']")
-         .click();
-     });
-
      it('clears the text field', () => {
-       cy.get("[data-test='messageText']")
-         .should('have.value', '');
+       expect(
+         wrapper.find('[data-test="messageText"]').element.value,
+       ).to.equal('');
      });
 +
 +    it('emits the "send" event', () => {
-+      expect(spy).to.have.been.calledWith('New message');
++      expect(wrapper.emitted().send[0]).to.deep.equal(['New message']);
 +    });
    });
  });
 ```
+
+The wrapper's `emitted()` function returns an object recording each event that was emitted. If a `send` event is emitted, the object will have a `send` property that is an array of each time it was emitted. The value of each element is the payload passed with the emitted event. So to test that a `send` event was emitted with payload "New message", we check that `wrapper.emitted().send[0]` is equal to `['New message']`.
 
 Notice that we **make one assertion per test in component tests.** Having separate test cases for each behavior of the component makes it easy to understand what it does, and easy to see what went wrong if one of the assertions fails. The `beforeEach` block will run through the same steps for each of the two test cases below.
 
@@ -397,8 +353,10 @@ You may recall that this isn't what we did in the end-to-end test, though. Gener
 Run the component test again. You'll see the "clears the text field" test pass, and the new 'emits the "send" event' test fail with the error:
 
 ```bash
-Expected spy to have been called with arguments "New message", but it was never called.
+TypeError: Cannot read property '0' of undefined
 ```
+
+We try to access property "0" on `wrapper.emitted().send`, so this means that no "send" event was emitted.
 
 Let's emit that event in the `send()` method:
 
@@ -412,7 +370,7 @@ Let's emit that event in the `send()` method:
    },
 ```
 
-Now the component test passes. That's great! Now we step back up again to run our feature test and we get:
+Now the component test passes. That's great! Now we step back up again to run our end-to-end test and we get:
 
 ```bash
 Expected to find content: ‘New message’ but never did.
@@ -530,5 +488,7 @@ To learn more about TDD, I recommend:
 {% include tutorial-contact.md %}
 
 [cypress]: https://www.cypress.io/
+[mocha]: https://mochajs.org/
 [vue]: https://vuejs.org/v2/guide/index.html
 [vue-cli]: https://cli.vuejs.org/
+[vue-test-utils]: https://vue-test-utils.vuejs.org/
