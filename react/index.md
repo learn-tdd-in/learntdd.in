@@ -7,7 +7,7 @@ logo_alt: React logo
 
 {% include tutorial-intro.md %}
 
-To see how TDD works in React, let's walk through a simple real-world example of building a feature. We'll be using React 16.6, [Create React App 2.0](https://github.com/facebook/create-react-app), and [Cypress][cypress] for end-to-end and component tests. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react) that shows the process step-by-step. This tutorial assumes you have some [familiarity with React][react] and with [automated testing concepts](/learn-tdd/concepts).
+To see how TDD works in React, let's walk through a simple real-world example of building a feature. We'll be using React 16.8 via [Create React App](https://github.com/facebook/create-react-app). We'll implement end-to-end tests with [Cypress][cypress] and component tests with [Jest][jest] and [react-testing-library][react-testing-library]. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react) that shows the process step-by-step. This tutorial assumes you have some [familiarity with React][react] and with [automated testing concepts](/learn-tdd/concepts).
 
 You can also watch a [conference talk](https://vimeo.com/298277470) version of this tutorial.
 
@@ -28,14 +28,16 @@ $ cd learn-tdd-in-react
 $ yarn start
 ```
 
-Next, we need to add Cypress and some React-specific packages as dependencies of our project:
+`create-react-app` comes with Jest preinstalled, so all we need to add for component testing is `react-testing-library`:
 
 ```bash
-$ yarn add --dev cypress \
-                 cypress-react-unit-test \
-                 @cypress/webpack-preprocessor \
-                 @babel/preset-react \
-                 @babel/plugin-proposal-class-properties
+$ yarn add --dev react-testing-library
+```
+
+Next, we need to add Cypress:
+
+```bash
+$ yarn add --dev cypress
 ```
 
 Add an NPM script for opening Cypress into your `package.json`:
@@ -55,37 +57,6 @@ Now open Cypress and it will initialize your app:
 
 ```bash
 $ yarn cypress:open
-```
-
-Next, set up Cypress to be able to handle the latest ECMAScript features in component tests by replacing the contents of `cypress/plugins/index.js` with the following:
-
-```javascript
-const webpack = require('@cypress/webpack-preprocessor');
-const webpackOptions = {
-  module: {
-    rules: [
-      {
-        test: /\.(js|jsx|mjs)$/,
-        loader: 'babel-loader',
-        options: {
-          presets: ['@babel/preset-react'],
-          plugins: ['@babel/plugin-proposal-class-properties'],
-        },
-      },
-    ],
-  },
-};
-
-const options = {
-  // send in the options from your webpack.config.js, so it works the same
-  // as your app's code
-  webpackOptions,
-  watchOptions: {},
-};
-
-module.exports = on => {
-  on('file:preprocessor', webpack(options));
-};
 ```
 
 As our last setup step, let's clear out some of the default code to get a clean starting point. Delete all the following files and folders:
@@ -112,6 +83,8 @@ class App extends Component {
 export default App;
 ```
 
+Note that although React 16.8 supports hooks, for this tutorial we're still using class components. But the tests we'll write will work just the same if you write the components with hooks instead! That's one of the great things about tests that aren't coupled to implementation details.
+
 ## The Feature Test
 
 When performing outside-in TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.** For our simple messaging app, the first feature we want is to be able to enter a message, send it, and see it in the list.
@@ -123,13 +96,13 @@ describe('Creating a message', () => {
   it('Displays the message in the list', () => {
     cy.visit('http://localhost:3000');
 
-    cy.get('[data-test="messageText"]')
+    cy.get('[data-testid="messageText"]')
       .type('New message');
 
-    cy.get('[data-test="sendButton"]')
+    cy.get('[data-testid="sendButton"]')
       .click();
 
-    cy.get('[data-test="messageText"]')
+    cy.get('[data-testid="messageText"]')
       .should('have.value', '');
 
     cy.contains('New message');
@@ -156,7 +129,7 @@ $ yarn cypress:open
 Run the Cypress test by clicking `creating_a_message.spec.js` in the Cypress window. A Chrome window should open, you should see the test run, then in the left-hand test step column you should see the following error:
 
 ```bash
-Expected to find element: '[data-test='messageText']', but never found it.
+Expected to find element: '[data-testid='messageText']', but never found it.
 ```
 
 ## Write The Code You Wish You Had
@@ -195,7 +168,7 @@ export default class NewMessageForm extends Component {
 }
 ```
 
-Now rerun the tests in Cypress. We're still getting the same error, because we haven't actually added a text input. But we're a step closer because we've written the code we wish we had: a component to wrap it. Now we can add the input tag directly. We give it a `data-test` attribute of "messageText": that's the attribute that our test uses to find the component.
+Now rerun the tests in Cypress. We're still getting the same error, because we haven't actually added a text input. But we're a step closer because we've written the code we wish we had: a component to wrap it. Now we can add the input tag directly. We give it a `data-testid` attribute of "messageText": that's the attribute that our test uses to find the component.
 
 ```diff
  export default class NewMessageForm extends Component {
@@ -204,7 +177,7 @@ Now rerun the tests in Cypress. We're still getting the same error, because we h
        <div>
 +        <input
 +          type="text"
-+          data-test="messageText"
++          data-testid="messageText"
 +        />
        </div>
      );
@@ -215,7 +188,7 @@ Now rerun the tests in Cypress. We're still getting the same error, because we h
 Rerun the tests. The error has changed! The tests are now able to find the "messageText" element. The new error is:
 
 ```bash
-Expected to find element: ‘[data-test=’sendButton’]’, but never found it.
+Expected to find element: ‘[data-testid=’sendButton’]’, but never found it.
 ```
 
 Now there's a different element we can't find: the element with attribute `data-test=’sendButton’`.
@@ -224,10 +197,10 @@ We want the send button to be part of our `NewMessageForm`, so fixing this error
 
 ```diff
            type="text"
-           data-test="messageText"
+           data-testid="messageText"
          />
 +        <button
-+          data-test="sendButton"
++          data-testid="sendButton"
 +        >
 +          Send
 +        </button>
@@ -248,39 +221,54 @@ We've made it to our first assertion, which is that the message text box should 
 
 Instead of adding the behavior directly, let's **step down from the "outside" level of end-to-end tests to an "inside" component test.** This allows us to more precisely specify the behavior of each piece. Also, since end-to-end tests are slow, component tests prevent us from having to write an end-to-end test for every rare edge case.
 
-Create a new file `cypress/integration/NewMessageForm.spec.js` and add the following:
+Create a `src/__tests__` folder, then create a file `src/__tests__/NewMessageForm.spec.js` and add the following:
 
 ```javascript
 import React from 'react';
-import { mount } from 'cypress-react-unit-test';
-import NewMessageForm from '../../src/NewMessageForm';
+import {
+  render,
+  fireEvent,
+  cleanup,
+} from 'react-testing-library';
+import NewMessageForm from '../NewMessageForm';
 
 describe('<NewMessageForm />', () => {
+  let getByTestId;
+
+  afterEach(cleanup);
+
   describe('clicking the send button', () => {
     beforeEach(() => {
-      mount(<NewMessageForm />);
+      ({ getByTestId } = render(<NewMessageForm />));
 
-      cy.get('[data-test="messageText"]')
-        .type('New message');
+      fireEvent.change(
+        getByTestId('messageText'),
+        {
+          target: {
+            value: 'New message',
+          },
+        },
+      );
 
-      cy.get('[data-test="sendButton"]')
-        .click();
+      fireEvent.click(getByTestId('sendButton'));
     });
 
     it('clears the text field', () => {
-      cy.get('[data-test="messageText"]')
-        .should('have.value', '');
+      expect(getByTestId('messageText').value).toEqual('');
     });
   });
 });
 ```
 
-A lot of the test seems the same as the end-to-end test: we still enter a new message and click the send button. But this is testing something very different. Instead of testing the whole app running together, we're testing just the NewMessageForm by itself.
+`react-testing-library` has a different API than Cypress, but a lot of the test seems the same as the end-to-end test: we still enter a new message and click the send button. But this is testing something very different. Instead of testing the whole app running together, we're testing just the NewMessageForm by itself.
 
-Run `NewMessageForm.spec.js` with Cypress. We get the same error as we did with the end-to-end test:
+Run `yarn test` to run the component test. We get the same error as we did with the end-to-end test:
 
 ```bash
-expected '<input />' to have value '', but the value was 'New message'
+Expected value to equal:
+  ""
+Received:
+  "New message"
 ```
 
 Now, we can add the behavior to the component to get this test to pass. To accomplish this, we'll need to make the input a [controlled component][controlled-component], so its text is available in the parent component's state:
@@ -299,12 +287,12 @@ Now, we can add the behavior to the component to get this test to pass. To accom
        <div>
          <input
            type="text"
-           data-test="messageText"
+           data-testid="messageText"
 +          value={inputText}
 +          onChange={this.handleTextChange}
          />
          <button
-           data-test="sendButton"
+           data-testid="sendButton"
          >
 ```
 
@@ -322,7 +310,7 @@ Next, we want to clear out `inputText` when the send button is clicked:
    render() {
 ...
          <button
-           data-test="sendButton"
+           data-testid="sendButton"
 +          onClick={this.handleSend}
          >
            Send
@@ -344,29 +332,24 @@ To add this event handler behavior to NewMessageForm, we want to step back down 
 Add another test case to `NewMessageForm.spec.js`:
 
 ```diff
- describe('<NewMessageForm />', () => {
+   afterEach(cleanup);
+
    describe('clicking the send button', () => {
 +    let sendHandler;
 +
      beforeEach(() => {
-+      sendHandler = cy.spy();
--      mount(<NewMessageForm />);
-+      mount(<NewMessageForm onSend={sendHandler} />);
++      sendHandler = jest.fn();
+-      ({ getByTestId } = render(<NewMessageForm />));
++      ({ getByTestId } = render(<NewMessageForm onSend={sendHandler} />));
 
-       cy.get('[data-test="messageText"]')
-         .type('New message');
-
-       cy.get('[data-test="sendButton"]')
-         .click();
-     });
-
+       fireEvent.change(
+...
      it('clears the text field', () => {
-       cy.get('[data-test="messageText"]')
-         .should('have.value', '');
+       expect(getByTestId('messageText').value).toEqual('');
      });
 +
 +    it('calls the send handler', () => {
-+      expect(sendHandler).to.have.been.calledWith('New message');
++      expect(sendHandler).toHaveBeenCalledWith('New message');
 +    });
    });
  });
@@ -379,7 +362,9 @@ You may recall that this isn't what we did in the end-to-end test, though. Gener
 Run the component test again. You'll see the "clears the text field" test pass, and the new 'emits the "send" event' test fail with the error:
 
 ```bash
-Expected spy to have been called with arguments "New message", but it was never called.
+Expected mock function to have been called with:
+  ["New message"]
+But it was not called.
 ```
 
 So the `sendHandler` isn't being called. Let's fix that:
@@ -524,4 +509,6 @@ To learn more about TDD, I recommend:
 [controlled-component]: https://reactjs.org/docs/forms.html#controlled-components
 [create-react-app]: https://github.com/facebook/create-react-app
 [cypress]: https://www.cypress.io/
+[jest]: https://jestjs.io/
 [react]: https://reactjs.org/docs/hello-world.html
+[react-testing-library]: https://testing-library.com/docs/react-testing-library/intro
