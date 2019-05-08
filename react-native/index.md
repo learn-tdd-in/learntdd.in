@@ -7,9 +7,7 @@ logo_alt: React Native logo
 
 {% include tutorial-intro.md %}
 
-To see how TDD works in React Native, let's walk through a simple real-world example of building a feature. We'll be using [Expo][expo] 31, but the steps below are almost exactly the same if you're using React Native CLI -- just follow the [Getting Started instructions on Detox's web site][detox-getting-started] instead of the Detox instructions below.
-
-We'll be testing with the [Jest][jest] test runner and two testing libraries: [react-native-testing-library][react-native-testing-library] for component tests and [Detox][detox] for end-to-end tests.
+To see how TDD works in React Native, let's walk through a simple real-world example of building a feature. We'll be using React Native 0.59, the [Jest][jest] test runner, and two testing libraries: [react-native-testing-library][react-native-testing-library] for component tests and [Detox][detox] for end-to-end tests.
 
 This tutorial assumes you have some [familiarity with React Native][react-native] and with [automated testing concepts](/learn-tdd/concepts).
 
@@ -21,92 +19,52 @@ The feature we'll build is a simple list of messages.
 
 It takes a little work to get our testing setup in place, but it'll be worth it!
 
-First, if you don't have the Expo CLI installed, install it:
+First, if you don't have the React Native CLI installed, install it:
 
-```bash
-$ npm install -g expo-cli
+```sh
+$ npm install -g react-native-cli
 ```
 
-Create a new Expo app:
+Create a new React Native app:
 
-```bash
-$ expo init --template blank react-native-tdd
+```sh
+$ react-native init ReactNativeTDD
 ```
 
 Let's run it to confirm it works:
 
-```bash
-$ cd react-native-tdd
-$ yarn ios
+```sh
+$ cd ReactNativeTDD
+$ react-native run-ios
 ```
 
 After a few minutes you should see the welcome screen of the app in the iOS Simulator.
 
-Next, let's install Jest. Since we're using Expo, there is an Expo-specific Jest package we can use:
-
-```bash
-$ yarn add --dev jest-expo
-```
-
-Add the following to `package.json`:
-
-```diff
-     "android": "expo start --android",
-     "ios": "expo start --ios",
-+    "test": "node_modules/.bin/jest test/**/*.spec.js",
-     "eject": "expo eject"
-   },
-...
-     "jest-expo": "^31.0.0"
-   },
-+  "jest": {
-+    "preset": "jest-expo"
-+  },
-   "private": true
-```
-
 Now we'll add `react-native-testing-library` to enable component testing:
 
-```bash
-$ yarn add --dev react-native-testing-library \
-                 react-test-renderer
+```sh
+$ yarn add --dev react-native-testing-library
 ```
 
 Next, to get Detox working, let's first install the global Detox CLI tool:
 
-```bash
+```sh
 $ brew tap wix/brew
 $ brew install --HEAD applesimutils
-$ yarn global add detox-cli
+$ npm install -g detox-cli
 ```
 
-Next, we need to add Detox and a few Expo integration packages to our project:
+Next, we need to add Detox to our project:
 
-```bash
-$ yarn add --dev detox \
-                 detox-expo-helpers \
-                 expo-detox-hook
+```sh
+$ yarn add --dev detox
 ```
 
 Then initialize Detox in the project, specifying Jest as the test runner:
 
-```bash
+```sh
 $ detox init -r jest
 ```
-
-One of the files this command generates is a sample test file, `e2e/firstTest.spec.js`. We need to make one tweak to this file for it to work with Expo:
-
-```diff
-+const { reloadApp } = require('detox-expo-helpers');
-+
- describe('Example', () => {
-   beforeEach(async () => {
--    await device.reloadReactNative();
-+    await reloadApp();
-   });
-```
-
-Next, we need to download a built version of Expo that Detox can use to hook into. Go to [the Expo Tools page](https://expo.io/tools#client) and click the "Download IPA" link. Expand the downloaded archive, then change the name of the folder to "Exponent.app". Create a `bin` folder in your project and move "Exponent.app" into it.
 
 After this, we need to add some config for Detox to our `package.json`:
 
@@ -117,8 +75,9 @@ After this, we need to add some config for Detox to our `package.json`:
 -    "test-runner": "jest"
 +    "test-runner": "jest",
 +    "configurations": {
-+      "ios.sim": {
-+        "binaryPath": "bin/Exponent.app",
++      "ios.sim.debug": {
++        "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/ReactNativeTDD.app",
++        "build": "xcodebuild -project ios/ReactNativeTDD.xcodeproj -scheme ReactNativeTDD -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build -UseModernBuildSystem=NO",
 +        "type": "ios.simulator",
 +        "name": "iPhone 8"
 +      }
@@ -127,21 +86,22 @@ After this, we need to add some config for Detox to our `package.json`:
  }
 ```
 
-Now, let's run it and see that the initial test fails. If Expo and the iOS Simulator are not still running, start them:
+Now, let's run it and see that the initial test fails. If React Native and the iOS Simulator are not still running, start them:
 
-```bash
-$ yarn ios
+```sh
+$ react-native run-ios
 ```
 
-Then, in another terminal, run Detox:
+Then, build the Detox version of the binary, and run the tests:
 
-```bash
+```sh
+$ detox build
 $ detox test
 ```
 
-You should see the Expo app launched in a simulator a few times in a row, then you should see output including something like the following:
+You should see the React Native app launched in a simulator, then you should see output including something like the following:
 
-```bash
+```sh
 Test Suites: 1 failed, 1 total
 Tests:       3 failed, 3 total
 Snapshots:   0 total
@@ -151,7 +111,7 @@ child_process.js:650
     throw err;
 ```
 
-As our last setup step, let's clear out some of the default code to get a clean starting point. Delete `e2e/firstTest.spec.js`, and replace the contents of `App.js` with an empty `View`:
+As our last setup step, let's clear out some of the default code to get a clean starting point. Delete `e2e/firstTest.spec.js` and `__tests__/App-test.js`, and replace the contents of `App.js` with an empty `View`:
 
 ```jsx
 import React, { Component } from 'react';
@@ -176,11 +136,9 @@ When performing TDD, our first step is to **create an end-to-end test describing
 Create a file `e2e/creating_a_message.spec.js` and enter the following contents:
 
 ```js
-const { reloadApp } = require('detox-expo-helpers');
-
 describe('Creating a message', () => {
   beforeEach(async () => {
-    await reloadApp();
+    await device.reloadReactNative();
   });
 
   it('should add the message to the list', async () => {
@@ -365,12 +323,12 @@ We've made it to our first assertion, which is that the message text box should 
 
 Instead of adding the behavior directly, let's **step down from the "outside" level of end-to-end tests to an "inside" component test.** This allows us to more precisely specify the behavior of each piece. Also, since end-to-end tests are slow, component tests prevent us from having to write an end-to-end test for every rare edge case.
 
-Create a `test/components` folder, then create a `NewMessageForm.spec.js` file inside it. Add the following contents:
+In the `__tests__` folder, create a `NewMessageForm.spec.js` file inside it. Add the following contents:
 
 ```javascript
 import React from 'react';
 import { render, fireEvent } from 'react-native-testing-library';
-import NewMessageForm from '../../NewMessageForm';
+import NewMessageForm from '../NewMessageForm';
 
 describe('NewMessageForm', () => {
   describe('clicking send', () => {
