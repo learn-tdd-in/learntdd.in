@@ -7,7 +7,7 @@ logo_alt: React logo
 
 {% include tutorial-intro.md %}
 
-To see how TDD works in React, let's walk through a simple real-world example of building a feature. We'll be using React 16.8 via [Create React App](https://github.com/facebook/create-react-app). We'll implement end-to-end tests with [Cypress][cypress] and component tests with [Jest][jest] and [react-testing-library][react-testing-library]. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react) that shows the process step-by-step. This tutorial assumes you have some [familiarity with React][react] and with [automated testing concepts](/learn-tdd/concepts).
+To see how TDD works in React, let's walk through a simple real-world example of building a feature. We'll be using React 16.8 via [Create React App](https://github.com/facebook/create-react-app). We'll implement end-to-end tests with [Cypress][cypress] and component tests with [Jest][jest] and [React Testing Library][react-testing-library]. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react) that shows the process step-by-step. This tutorial assumes you have some [familiarity with React][react] and with [automated testing concepts](/learn-tdd/concepts).
 
 You can also watch a [conference talk](https://vimeo.com/298277470) version of this tutorial.
 
@@ -28,10 +28,10 @@ $ cd learn-tdd-in-react
 $ yarn start
 ```
 
-`create-react-app` comes with Jest preinstalled, so all we need to add for component testing is `react-testing-library`:
+`create-react-app` comes with Jest preinstalled, so all we need to add for component testing is React Testing Library:
 
 ```bash
-$ yarn add --dev react-testing-library
+$ yarn add --dev @testing-library/react
 ```
 
 Next, we need to add Cypress:
@@ -229,7 +229,7 @@ import {
   render,
   fireEvent,
   cleanup,
-} from 'react-testing-library';
+} from '@testing-library/react';
 import NewMessageForm from '../NewMessageForm';
 
 describe('<NewMessageForm />', () => {
