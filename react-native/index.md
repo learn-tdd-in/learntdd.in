@@ -102,13 +102,18 @@ $ detox test
 You should see the React Native app launched in a simulator, then you should see output including something like the following:
 
 ```sh
-Test Suites: 1 failed, 1 total
-Tests:       3 failed, 3 total
-Snapshots:   0 total
-Time:        107.741s
-Ran all test suites matching /e2e/i with tests matching "^((?!:android:).)*$".
-child_process.js:650
-    throw err;
+Example: should have welcome screen
+Example: should have welcome screen [FAIL]
+Example: should show hello screen after tap
+Example: should show hello screen after tap [FAIL]
+Example: should show world screen after tap
+Example: should show world screen after tap [FAIL]
+
+ FAIL  e2e/firstTest.spec.js (90.608s)
+  Example
+    ✕ should have welcome screen (936ms)
+    ✕ should show hello screen after tap (867ms)
+    ✕ should show world screen after tap (865ms)
 ```
 
 As our last setup step, let's clear out some of the default code to get a clean starting point. Delete `e2e/firstTest.spec.js` and `__tests__/App-test.js`, and replace the contents of `App.js` with an empty `View`:
