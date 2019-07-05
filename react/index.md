@@ -112,7 +112,7 @@ describe('Creating a message', () => {
 
 The code describes the steps a user would take interacting with our app:
 
-- Visit the web site
+- Visiting the web site
 - Entering the text "New message" into a message text field
 - Clicking a send button
 - Confirming that the message text field is cleared out
