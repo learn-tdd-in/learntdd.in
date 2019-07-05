@@ -462,7 +462,7 @@ To add this event handler behavior to NewMessageForm, we want to step back down 
 
 Notice that we **make one assertion per test in component tests.** Having separate test cases for each behavior of the component makes it easy to understand what it does, and easy to see what went wrong if one of the assertions fails. The `beforeEach` block will run through the same steps for each of the two test cases below.
 
-You may recall that this isn't what we did in the end-to-end test, though. Although you make one assertion per test in component tests, you generally **make *multiple* assertions per test in end-to-end tests.** Why? End-to-end tests are slower, so the overhead of the repeating the steps would significantly slow down our suite as it grows. In fact, larger end-to-end tests tend to turn into "feature tours:" you perform some actions, do some assertions, perform some more actions, do more assertions, etc.
+You may recall that this isn't what we did in the end-to-end test, though. Although you make one assertion per test in component tests, you generally **make *multiple* assertions per test in end-to-end tests.** Why? End-to-end tests are slower, so the overhead of the repeating the steps would significantly slow down our suite as it grows. In fact, larger end-to-end tests tend to turn into "[feature tours][feature-tours]:" you perform some actions, do some assertions, perform some more actions, do more assertions, etc.
 
 Run the component test again. You'll see the "clears the text field" test pass, and the new 'emits the "send" event' test fail with the error:
 
@@ -614,6 +614,7 @@ To learn more about TDD, I recommend:
 [detox]: https://github.com/wix/detox/blob/master/docs/README.md#detox-documentation
 [detox-getting-started]: https://github.com/wix/detox/blob/master/docs/Introduction.GettingStarted.md
 [expo]: https://expo.io
+[feature-tours]: https://iamvery.com/2018/11/14/feature-tours.html
 [jest]: https://jestjs.io/
 [react-native]: https://facebook.github.io/react-native/docs/getting-started.html
 [react-native-testing-library]: https://github.com/callstack/react-native-testing-library
