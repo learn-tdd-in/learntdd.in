@@ -7,7 +7,7 @@ logo_alt: React Native logo
 
 {% include tutorial-intro.md %}
 
-To see how TDD works in React Native, let's walk through a simple real-world example of building a feature. We'll be using React Native 0.59, the [Jest][jest] test runner, and two testing libraries: [react-native-testing-library][react-native-testing-library] for component tests and [Detox][detox] for end-to-end tests.
+To see how TDD works in React Native, let's walk through a simple real-world example of building a feature. We'll be using React Native 0.60, the [Jest][jest] test runner, and two testing libraries: [react-native-testing-library][react-native-testing-library] for component tests and [Detox][detox] for end-to-end tests.
 
 This tutorial assumes you have some [familiarity with React Native][react-native] and with [automated testing concepts](/learn-tdd/concepts).
 
@@ -77,7 +77,7 @@ After this, we need to add some config for Detox to our `package.json`:
 +    "configurations": {
 +      "ios.sim.debug": {
 +        "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/ReactNativeTDD.app",
-+        "build": "xcodebuild -project ios/ReactNativeTDD.xcodeproj -scheme ReactNativeTDD -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build -UseModernBuildSystem=NO",
++        "build": "xcodebuild -workspace ios/ReactNativeTDD.xcworkspace -scheme ReactNativeTDD -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
 +        "type": "ios.simulator",
 +        "name": "iPhone 8"
 +      }
