@@ -380,10 +380,10 @@ So the `sendHandler` isn't being called. Let's fix that:
 +const NewMessageForm = ({ onSend }) => {
    const [inputText, setInputText] = useState('');
 ...
-  const handleSend = () => {
-+   onSend(inputText);
-    setInputText('');
-  };
+   const handleSend = () => {
++    onSend(inputText);
+     setInputText('');
+   };
 ```
 
 Now the component test passes. That's great! Now we step back up again to run our feature test and we get:
