@@ -7,7 +7,7 @@ logo_alt: React Native logo
 
 {% include tutorial-intro.md %}
 
-To see how TDD works in React Native, let's walk through a simple real-world example of building a feature. We'll be using React Native 0.60, the [Jest][jest] test runner, and two testing libraries: [react-native-testing-library][react-native-testing-library] for component tests and [Detox][detox] for end-to-end tests.
+To see how TDD works in React Native, let's walk through a simple real-world example of building a feature. We'll be using React Native 0.61, the [Jest][jest] test runner, and two testing libraries: [react-native-testing-library][react-native-testing-library] for component tests and [Detox][detox] for end-to-end tests.
 
 This tutorial assumes you have some [familiarity with React Native][react-native] and with [automated testing concepts](/learn-tdd/concepts).
 
@@ -79,7 +79,7 @@ After this, we need to add some config for Detox to our `package.json`:
 +        "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/ReactNativeTDD.app",
 +        "build": "xcodebuild -workspace ios/ReactNativeTDD.xcworkspace -scheme ReactNativeTDD -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
 +        "type": "ios.simulator",
-+        "name": "iPhone 8"
++        "name": "iPhone 11"
 +      }
 +    }
    }
@@ -116,23 +116,35 @@ Example: should show world screen after tap [FAIL]
     ✕ should show world screen after tap (865ms)
 ```
 
-As our last setup step, let's clear out some of the default code to get a clean starting point. Delete `e2e/firstTest.spec.js` and `__tests__/App-test.js`, and replace the contents of `App.js` with an empty `View`:
+As our last setup step, let's clear out some of the default code to get a clean starting point. Delete `e2e/firstTest.spec.js` and `__tests__`, and replace the contents of `App.js` with this app skeleton:
 
 ```jsx
-import React, { Component } from 'react';
-import {
-  View,
-} from 'react-native';
+import React from 'react';
+import {SafeAreaView, StatusBar, View} from 'react-native';
 
-export default class App extends Component {
-  render() {
-    return (
-      <View>
-      </View>
-    );
-  }
-}
+const App = () => {
+  return (
+    <>
+      <StatusBar barStyle="dark-content" />
+      <SafeAreaView>
+        <View>
+        </View>
+      </SafeAreaView>
+    </>
+  );
+};
+
+export default App;
 ```
+
+Fiinally, let's update our `test` NPM script so it won't try to run our Detox tests, since those need to be run separately using the `detox` command:
+
+```diff
+-"test": "jest",
++"test": "jest src",
+```
+
+This provides a status bar and keeps the content in the phone's safe area, but other than that the app is empty.
 
 ## The Feature Test
 
@@ -201,38 +213,30 @@ The next step of TDD is to **write only enough production code to fix the curren
 A common principle in TDD is to **write the code you wish you had.** We could just add a `<TextInput>` element to the `<App>` directly. But say we want to keep our `<App>` simple and wrap everything related to the input in a custom component. We might call that component `<NewMessageForm>`. We wish we had it, so let's go ahead and add it to `App.js`:
 
 ```diff
- import {
-   View,
- } from 'react-native';
-+import NewMessageForm from './NewMessageForm';
-
- export default class App extends Component {
-   render() {
-     return (
-       <View>
-+        <NewMessageForm />
-       </View>
-     );
-   }
- }
+ import {SafeAreaView, StatusBar, View} from 'react-native';
++import NewMessageForm from './src/NewMessageForm';
+...
+         <View>
++          <NewMessageForm />
+         </View>
 ```
 
-Next, let's create `NewMessageForm.js` with the following contents. It's tempting to fully build out this component. But we want to wait until the test guides us in what to build. Let's just make it an empty but functioning component:
+Next, let's create a `src` folder, then a `NewMessageForm.js` inside it with the following contents. It's tempting to fully build out this component. But we want to wait until the test guides us in what to build. Let's just make it an empty but functioning component:
 
 ```jsx
-import React, { Component } from 'react';
+import React from 'react';
 import {
   View,
 } from 'react-native';
 
-export default class NewMessageForm extends Component {
-  render() {
-    return (
-      <View>
-      </View>
-    );
-  }
-}
+const NewMessageForm = () => {
+  return (
+    <View>
+    </View>
+  );
+};
+
+export default NewMessageForm;
 ```
 
 Now rerun the tests with `detox test`. We're still getting the same error, because we haven't actually added a text input. But we're a step closer because we've written the code we wish we had: a component to wrap it. Now we can add the TextInput directly. We give it a `testID` of "messageText": that's the ID that the Detox test uses to find the component.
@@ -244,24 +248,18 @@ Now rerun the tests with `detox test`. We're still getting the same error, becau
    View,
  } from 'react-native';
 
- export default class NewMessageForm extends Component {
-   render() {
-     return (
-       <View>
-+        <TextInput
-+          testID="messageText"
-+        />
-       </View>
-     );
-   }
+ const NewMessageForm = () => {
+   return (
+     <View>
++      <TextInput
++        testID="messageText"
++      />
+     </View>
+   );
  }
 ```
 
-Rerun the tests. The error has changed! You might have gotten one of two errors:
-
-If you got the error `"Failed to type string 'New message', because keyboard was not shown on screen"` then that isn't a problem with your code; the simulator just wasn't set up to show the on-screen keyboard. To fix this, within the simulator press command-K to show the keyboard. Then rerun the test.
-
-Once the tests are able to find and type text into the "messageText" element, the new error is:
+Rerun the tests. The error has changed! The new error is:
 
 ```bash
 Failed: Error: Error: Cannot find UI element.
@@ -289,16 +287,14 @@ We want the send button to be part of our `NewMessageForm`, so fixing this error
    View,
  } from 'react-native';
 ...
-         <TextInput
-           testID="messageText"
-         />
-+        <Button
-+          title="Send"
-+          testID="sendButton"
-+        />
-       </View>
-     );
-   }
+       <TextInput
+         testID="messageText"
+       />
++      <Button
++        title="Send"
++        testID="sendButton"
++      />
+     </View>
 ```
 
 ## Implementing Component Behavior
@@ -328,11 +324,11 @@ We've made it to our first assertion, which is that the message text box should 
 
 Instead of adding the behavior directly, let's **step down from the "outside" level of end-to-end tests to an "inside" component test.** This allows us to more precisely specify the behavior of each piece. Also, since end-to-end tests are slow, component tests prevent us from having to write an end-to-end test for every rare edge case.
 
-In the `__tests__` folder, create a `NewMessageForm.spec.js` file inside it. Add the following contents:
+Create a new `src/__tests__` folder, then a `NewMessageForm.spec.js` file inside it. Add the following contents:
 
 ```javascript
 import React from 'react';
-import { render, fireEvent } from 'react-native-testing-library';
+import {render, fireEvent} from 'react-native-testing-library';
 import NewMessageForm from '../NewMessageForm';
 
 describe('NewMessageForm', () => {
@@ -342,7 +338,7 @@ describe('NewMessageForm', () => {
     let getByTestId;
 
     beforeEach(() => {
-      ({ getByTestId } = render(<NewMessageForm />));
+      ({getByTestId} = render(<NewMessageForm />));
 
       fireEvent.changeText(getByTestId('messageText'), messageText);
       fireEvent.press(getByTestId('sendButton'));
@@ -362,65 +358,51 @@ Run `yarn test` to see the component test fail:
 ```bash
 ● NewMessageForm › clicking send › clears the message field
 
-  expect(received).toEqual(expected)
+  expect(received).toEqual(expected) // deep equality
 
-  Expected value to equal:
-    ""
-  Received:
-    undefined
+  Expected: ""
+  Received: undefined
 ```
 
 `react-native-testing-library` is finding the `value` prop of the `TextInput` to be `undefined`; this is because we aren't passing in a value at all. To fix this, let's make the TextInput a [controlled component][controlled-component], so its text is available in the parent component's state:
 
 ```diff
- export default class NewMessageForm extends Component {
-+  state = { inputText: '' }
+ const NewMessageForm = () => {
++  const [inputText, setInputText] = useState('');
 +
-+  handleChangeText = (text) => {
-+    this.setState({ inputText: text });
-+  }
-+
-   render() {
-+    const { inputText } = this.state;
-     return (
-       <View>
-         <TextInput
-+          value={inputText}
-           testID="messageText"
-+          onChangeText={this.handleChangeText}
-         />
+   return (
+     <View>
+       <TextInput
+         testID="messageText"
++        value={inputText}
++        onChangeText={setInputText}
+       />
 ```
 
 Now when we rerun `yarn test` we get a different error:
 
 ```bash
-  Expected value to equal:
-    ""
-  Received:
-    "Hello world"
+  Expected: ""
+  Received: "Hello world"
 ```
 
 Now the field is successfully taking in the typed value; it just isn't clearing it out when Send is tapped. Let's fix that:
 
 ```diff
- export default class NewMessageForm extends Component {
-   state = { inputText: '' }
+ const NewMessageForm = () => {
+   const [inputText, setInputText] = useState('');
 
-   handleChangeText = (text) => {
-     this.setState({ inputText: text });
-   }
-
-+  handleSend = () => {
-+    this.setState({ inputText: '' });
++  const handleSend = () => {
++    setInputText('');
 +  }
 +
-   render() {
+   return (
 ...
-         <Button
-           title="Send"
-           testID="sendButton"
-+          onPress={this.handleSend}
-         />
+       <Button
+         title="Send"
+         testID="sendButton"
++        onPress={handleSend}
+       />
 ```
 
 Rerun the component test. This gets us past the assertion failure.
@@ -443,8 +425,8 @@ To add this event handler behavior to NewMessageForm, we want to step back down 
      beforeEach(() => {
 +      sendHandler = jest.fn();
 
--      ({ getByTestId } = render(<NewMessageForm />));
-+      ({ getByTestId } = render(<NewMessageForm onSend={sendHandler} />));
+-      ({getByTestId} = render(<NewMessageForm />));
++      ({getByTestId} = render(<NewMessageForm onSend={sendHandler} />));
 
        fireEvent.changeText(getByTestId('messageText'), messageText);
        fireEvent.press(getByTestId('sendButton'));
@@ -469,24 +451,24 @@ Run the component test again. You'll see the "clears the text field" test pass, 
 ```bash
 ● NewMessageForm › clicking send › calls the send handler
 
-  expect(jest.fn()).toHaveBeenCalledWith(expected)
+  expect(jest.fn()).toHaveBeenCalledWith(...expected)
 
-  Expected mock function to have been called with:
-    ["Hello world"]
-  But it was not called.
+  Expected: "Hello world"
+
+  Number of calls: 0
 ```
 
 So the `sendHandler` isn't being called correctly. Let's fix that:
 
 ```diff
-   handleSend = () => {
-+    const { inputText } = this.state;
-+    const { onSend } = this.props;
-+
+-const NewMessageForm = () => {
++const NewMessageForm = ({onSend}) => {
+   const [inputText, setInputText] = useState('');
+...
+   const handleSend = () => {
 +    onSend(inputText);
-+
-     this.setState({ inputText: '' });
-   }
+     setInputText('');
+   };
 ```
 
 Before overwriting the `inputText` state with an empty string, we retrieve an `onSend` function passed in as a prop, and call it with the previous value of `inputText`.
@@ -500,18 +482,16 @@ onSend is not a function. (In 'onSend(inputText)', 'onSend' is undefined…)
 Our NewMessageForm is calling `onSend`, but we haven't yet passed a valid function into our component in our production code. Let's do so now. Again, we don't want to fully implement that event handler, only add only enough code to get past the current error. Add the following to `App.js`:
 
 ```diff
- export default class App extends Component {
-+  handleSend = (newMessage) => {
-+  }
+ const App = () => {
++  const handleSend = newMessage => {
++  };
 +
    render() {
-     return (
-       <View>
--        <NewMessageForm />
-+        <NewMessageForm onSend={this.handleSend} />
-       </View>
-     );
-   }
+...
+         <View>
+-          <NewMessageForm />
++          <NewMessageForm onSend={handleSend} />
+         </View>
 ```
 
 Rerun the end-to-end tests. We no longer get the `onSend` error--now we're back to the same assertion failure, because we're still not displaying the message. But we're a step closer!
@@ -519,33 +499,30 @@ Rerun the end-to-end tests. We no longer get the `onSend` error--now we're back 
 Next, we need to save the message in state in the App component. Let's add it to an array:
 
 ```diff
- export default class App extends Component {
-+  state = { messages: [] }
-+
-   handleSend = (newMessage) => {
-+    this.setState(state => ({ messages: [newMessage, ...state.messages] }));
-   }
+-import React from 'react';
++import React, {useState} from 'react';
+ import {SafeAreaView, StatusBar, View} from 'react-native';
+...
+ const App = () => {
++  const [messages, setMessages] = useState([]);
+   const handleSend = newMessage => {
++    setMessages([newMessage, ...messages]);
+   };
 ```
 
 Next, to display the messages, let's create another custom component to keep our App component nice and simple. We'll call it `MessageList`. We'll write the code we wish we had in `App.js`:
 
 ```diff
- import NewMessageForm from './NewMessageForm';
-+import MessageList from './MessageList';
-
+ import NewMessageForm from './src/NewMessageForm';
++import MessageList from './src/MessageList';
 ...
-   render() {
-+    const { messages } = this.state;
-     return (
-       <View>
-         <NewMessageForm onSend={this.handleSend} />
-+        <MessageList data={messages} />
-       </View>
-     );
-   }
+         <View>
+           <NewMessageForm onSend={handleSend} />
++          <MessageList data={messages} />
+         </View>
 ```
 
-Next, we'll create `MessageList.js` and add an empty implementation. Since this component won't have any state, it can be a functional component instead of a class component:
+Next, we'll create `MessageList.js` and add an empty implementation:
 
 ```jsx
 import React from 'react';
@@ -553,7 +530,7 @@ import {
   View,
 } from 'react-native';
 
-const MessageList = ({ data }) => (
+const MessageList = ({data}) => (
   <View />
 );
 
@@ -570,16 +547,16 @@ Rerun the tests, and, as we expect, we still aren't displaying the message. But 
 +  Text,
  } from 'react-native';
 
- const MessageList = ({ data }) => (
+ const MessageList = ({data}) => (
 -  <View />
 +  <FlatList
 +    data={data}
 +    keyExtractor={item => item}
-+    renderItem={({ item }) => <Message text={item} />}
++    renderItem={({item}) => <Message text={item} />}
 +  />
  );
 
-+const Message = ({ text }) => <Text>{text}</Text>;
++const Message = ({text}) => <Text>{text}</Text>;
 +
  export default MessageList;
 ```
