@@ -7,7 +7,7 @@ logo_alt: React logo
 
 {% include tutorial-intro.md %}
 
-To see how TDD works in React, let's walk through a simple real-world example of building a feature. We'll be using React 16.8 via [Create React App](https://github.com/facebook/create-react-app). We'll implement end-to-end tests with [Cypress][cypress] and component tests with [Jest][jest] and [React Testing Library][react-testing-library]. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react) that shows the process step-by-step. This tutorial assumes you have some [familiarity with React][react] and with [automated testing concepts](/learn-tdd/concepts).
+To see how TDD works in React, let's walk through a simple real-world example of building a feature. We'll be using React 16.11 via [Create React App](https://github.com/facebook/create-react-app). We'll implement end-to-end tests with [Cypress][cypress] and component tests with [Jest][jest] and [React Testing Library][react-testing-library]. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react) that shows the process step-by-step. This tutorial assumes you have some [familiarity with React][react] and with [automated testing concepts](/learn-tdd/concepts).
 
 You can also watch a [conference talk](https://vimeo.com/298277470) version of this tutorial.
 
@@ -69,21 +69,19 @@ As our last setup step, let's clear out some of the default code to get a clean 
 Replace the contents of `src/App.js` with the following:
 
 ```jsx
-import React, { Component } from 'react';
+import React from 'react';
 
-class App extends Component {
-  render() {
-    return (
-      <div>
-      </div>
-    );
-  }
-}
+const App = () => {
+  return (
+    <div>
+    </div>
+  );
+};
 
 export default App;
 ```
 
-Note that although React 16.8 supports hooks, for this tutorial we're still using class components. But the tests we'll write will work just the same if you write the components with hooks instead! That's one of the great things about tests that aren't coupled to implementation details.
+Note that for this tutorial we're still using class components. But the tests we'll write will work just the same if you write class components instead. That's one of the great things about tests that aren't coupled to implementation details.
 
 ## The Feature Test
 
@@ -142,47 +140,43 @@ A common principle in TDD is to **write the code you wish you had.** We could ju
  import React, { Component } from 'react';
 +import NewMessageForm from './NewMessageForm';
 
- class App extends Component {
-   render() {
-     return (
-       <div>
-+        <NewMessageForm />
-       </div>
-     );
-   }
- }
+ const App = () => {
+   return (
+     <div>
++      <NewMessageForm />
+     </div>
+   );
+ };
 ```
 
 Next, let's create `NewMessageForm.js` with the following contents. It's tempting to fully build out this component. But we want to wait until the test guides us in what to build. Let's just make it an empty but functioning component:
 
 ```jsx
-import React, { Component } from 'react';
+import React from 'react';
 
-export default class NewMessageForm extends Component {
-  render() {
-    return (
-      <div>
-      </div>
-    );
-  }
-}
+const NewMessageForm = () => {
+  return (
+    <div>
+    </div>
+  );
+};
+
+export default NewMessageForm;
 ```
 
 Now rerun the tests in Cypress. We're still getting the same error, because we haven't actually added a text input. But we're a step closer because we've written the code we wish we had: a component to wrap it. Now we can add the input tag directly. We give it a `data-testid` attribute of "messageText": that's the attribute that our test uses to find the component.
 
 ```diff
- export default class NewMessageForm extends Component {
-   render() {
-     return (
-       <div>
-+        <input
-+          type="text"
-+          data-testid="messageText"
-+        />
-       </div>
-     );
-   }
- }
+ const NewMessageForm = () => {
+   return (
+     <div>
++      <input
++        type="text"
++        data-testid="messageText"
++      />
+     </div>
+   );
+ };
 ```
 
 Rerun the tests. The error has changed! The tests are now able to find the "messageText" element. The new error is:
@@ -196,17 +190,21 @@ Now there's a different element we can't find: the element with attribute `data-
 We want the send button to be part of our `NewMessageForm`, so fixing this error is easy. We just add a `<button>` to our component:
 
 ```diff
-           type="text"
-           data-testid="messageText"
-         />
-+        <button
-+          data-testid="sendButton"
-+        >
-+          Send
-+        </button>
-       </div>
-     );
-   }
+ const NewMessageForm = () => {
+   return (
+     <div>
+       <input
+         type="text"
+         data-testid="messageText"
+       />
++      <button
++        data-testid="sendButton"
++      >
++        Send
++      </button>
+     </div>
+   );
+ };
 ```
 
 ## Implementing Component Behavior
@@ -265,53 +263,59 @@ React Testing Library has a different API than Cypress, but a lot of the test se
 Run `yarn test` to run the component test. We get the same error as we did with the end-to-end test:
 
 ```bash
-Expected value to equal:
-  ""
-Received:
-  "New message"
+expect(received).toEqual(expected) // deep equality
+
+Expected: ""
+Received: "New message"
 ```
 
 Now, we can add the behavior to the component to get this test to pass. To accomplish this, we'll need to make the input a [controlled component][controlled-component], so its text is available in the parent component's state:
 
 ```diff
- export default class NewMessageForm extends Component {
-+  state = { inputText: '' }
+-import React from 'react';
++import React, { useState } from 'react';
+
+ const NewMessageForm = () => {
++  const [inputText, setInputText] = useState('');
 +
-+  handleTextChange = (event) => {
-+    this.setState({ inputText: event.target.value });
-+  }
++  const handleTextChange = event => {
++    setInputText(event.target.value);
++  };
 +
-   render() {
-+    const { inputText } = this.state;
-     return (
-       <div>
-         <input
-           type="text"
-           data-testid="messageText"
-+          value={inputText}
-+          onChange={this.handleTextChange}
-         />
-         <button
-           data-testid="sendButton"
-         >
+   return (
+     <div>
+       <input
+         type="text"
+         data-testid="messageText"
++        value={inputText}
++        onChange={handleTextChange}
+       />
+       <button
+         data-testid="sendButton"
+       >
+         Send
+       </button>
+     </div>
+   );
+ };
 ```
 
 Next, we want to clear out `inputText` when the send button is clicked:
 
 ```diff
-   handleTextChange = (event) => {
-     this.setState({ inputText: event.target.value });
+   handleTextChange = event => {
+     setInputText(event.target.value);
    }
 
 +  handleSend = () => {
-+    this.setState({ inputText: '' });
++    setInputText('');
 +  }
 +
    render() {
 ...
          <button
            data-testid="sendButton"
-+          onClick={this.handleSend}
++          onClick={handleSend}
          >
            Send
          </button>
@@ -362,22 +366,24 @@ You may recall that this isn't what we did in the end-to-end test, though. Gener
 Run the component test again. You'll see the "clears the text field" test pass, and the new 'emits the "send" event' test fail with the error:
 
 ```bash
-Expected mock function to have been called with:
-  ["New message"]
-But it was not called.
+expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+Expected: "New message"
+
+Number of calls: 0
 ```
 
 So the `sendHandler` isn't being called. Let's fix that:
 
 ```diff
-   handleSend = () => {
-+    const { inputText } = this.state;
-+    const { onSend } = this.props;
-+
-+    onSend(inputText);
-+
-     this.setState({ inputText: '' });
-   }
+-const NewMessageForm = () => {
++const NewMessageForm = ({ onSend }) => {
+   const [inputText, setInputText] = useState('');
+...
+  const handleSend = () => {
++   onSend(inputText);
+    setInputText('');
+  };
 ```
 
 Now the component test passes. That's great! Now we step back up again to run our feature test and we get:
@@ -390,14 +396,13 @@ We changed NewMessageForm to use an onSend event handler, but we haven't passed 
 
 ```diff
  class App extends Component {
-+  handleSend = (newMessage) => {
-+  }
++  const handleSend = newMessage => {};
 +
    render() {
      return (
        <div>
 -        <NewMessageForm />
-+        <NewMessageForm onSend={this.handleSend} />
++        <NewMessageForm onSend={handleSend} />
        </div>
      );
    }
@@ -416,18 +421,15 @@ We no longer get the `onSend` error--now we're back to the same assertion failur
 Next, we need to save the message in state in the App component. Let's add it to an array:
 
 ```diff
+-import React from 'react';
++import React, { useState } from 'react';
  import NewMessageForm from './NewMessageForm';
 
- class App extends Component {
-+  state = { messages: [] };
-+
-   handleSend = (newMessage) => {
-+    this.setState(state => ({
-+      messages: [newMessage, ...state.messages],
-+    }));
-   }
-
-   render() {
+ const App = () => {
++  const [messages, setMessages] = useState([]);
+   const handleSend = newMessage => {
++    setMessages([newMessage, ...messages]);
+   };
 ```
 
 Next, to display the messages, let's create another custom component to keep our App component nice and simple. We'll call it MessageList. We'll write the code we wish we had in `App.js`:
@@ -437,21 +439,17 @@ Next, to display the messages, let's create another custom component to keep our
  import NewMessageForm from './NewMessageForm';
 +import MessageList from './MessageList';
 
- class App extends Component {
+ const App = () => {
 ...
-
-   render() {
-+    const { messages } = this.state;
-     return (
-       <div>
-         <NewMessageForm onSend={this.handleSend} />
-+        <MessageList data={messages} />
-       </div>
-     );
-   }
+   return (
+     <div>
+       <NewMessageForm onSend={handleSend} />
++      <MessageList data={messages} />
+     </div>
+   );
 ```
 
-Next, we'll create `MessageList.js` and add an empty implementation. Since this component won't have any state, it can be a functional component instead of a class component:
+Next, we'll create `MessageList.js` and add an empty implementation:
 
 ```jsx
 import React from 'react';
