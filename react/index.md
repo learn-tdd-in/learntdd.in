@@ -81,7 +81,7 @@ const App = () => {
 export default App;
 ```
 
-Note that for this tutorial we're still using class components. But the tests we'll write will work just the same if you write class components instead. That's one of the great things about tests that aren't coupled to implementation details.
+Note that for this tutorial we'll use function components and hooks. But the tests we'll write will work just the same if you write class components instead. That's one of the great things about tests that aren't coupled to implementation details.
 
 ## The Feature Test
 
@@ -395,7 +395,7 @@ Uncaught TypeError: onSend is not a function
 We changed NewMessageForm to use an onSend event handler, but we haven't passed one to our NewMessageForm in our production code. Let's add an empty one to get past this error:
 
 ```diff
- class App extends Component {
+ const App = () => {
 +  const handleSend = newMessage => {};
 +
    render() {
