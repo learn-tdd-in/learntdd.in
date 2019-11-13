@@ -15,7 +15,6 @@ url: "https://learntdd.in" # the base hostname & protocol for your site
 twitter_username: CodingItWrong
 github_username:  learn-tdd-in
 google_analytics: 'UA-80822752-1'
-port: 4002
 
 # Build settings
 markdown: kramdown
