@@ -6,6 +6,8 @@ Test-Driven Development is the practice of writing a test for functionality befo
 
 Why would you want to practice Test-Driven Development? Let’s talk about a few extremely common problems in programming that Test-Driven Development addresses in a unique way.
 
+If you'd rather watch a video, [James Shore's Assert(js) 2019 talk "Thinking in Tests"](https://www.youtube.com/watch?v=UOOuW5tqT8M&feature=share) hits a lot of similar points.
+
 ## Regression Safety
 As you add new features and change existing features, you need a way to make sure you don’t change any functionality except what you intend. Manual retesting is impractical as the application grows larger and larger, so an automated test suite is needed. The common practice is to write these tests after the code is written, but this "test-after development" approach has several downsides.
 
