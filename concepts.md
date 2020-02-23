@@ -45,7 +45,7 @@ title: Testing Concepts
 * **<a name="exploratory-test"></a>Exploratory Test**: tests written against a pre-existing system to understand its current behavior. Includes both first-party and third-party code. Similar to [characterization tests](#characterization-test), but tends to be less comprehensive and more disposable.
 * **<a name="functional-test"></a>Functional Test**: a test of a controller in an MVC application.
 * **<a name="integration-test"></a>Integration Test**: multiple usages:
-	* Aby test that exercises more than one production class; the opposite of an [isolation test](#isolation-test).
+	* Any test that exercises more than one production class; the opposite of an [isolation test](#isolation-test).
 	* A test that checks that the application's code works correctly with third-party code.
 * **<a name="isolation-test"></a>Isolation Test**: a test that exercises only one production class. Any [dependencies](#dependency) of that class are replaced by [test doubles](#test-double).
 * **<a name="request-test"></a>Request Test**: a test of a request sent into a system, such as an HTTP request to a server-rendered web application or a web service.
