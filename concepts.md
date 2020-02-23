@@ -43,7 +43,6 @@ title: Testing Concepts
 * **<a name="characterization-test"></a>Characterization Test**: tests written against a pre-existing system to document its current behavior, bugs and all. Includes both first-party and third-party code. Similar to [exploratory tests](#exploratory-test), but tends to be more comprehensive and permanent.
 * **<a name="end-to-end-test"></a>End-to-End Test**: a test that accesses the entire system from the outside, e.g. through the user interface or HTTP requests. Often used to accomplish [acceptance testing](#acceptance-test).
 * **<a name="exploratory-test"></a>Exploratory Test**: tests written against a pre-existing system to understand its current behavior. Includes both first-party and third-party code. Similar to [characterization tests](#characterization-test), but tends to be less comprehensive and more disposable.
-* **<a name="functional-test"></a>Functional Test**: a test of a controller in an MVC application.
 * **<a name="integration-test"></a>Integration Test**: multiple usages:
 	* Any test that exercises more than one production class; the opposite of an [isolation test](#isolation-test).
 	* A test that checks that the application's code works correctly with third-party code.
@@ -68,6 +67,6 @@ title: Testing Concepts
 * [*Growing Object-Oriented Software, Guided by Tests*](http://www.informit.com/store/growing-object-oriented-software-guided-by-tests-9780321503626)
 * ["Introducing BDD"](https://dannorth.net/introducing-bdd/), DanNorth.net
 * ["Mocks Aren't Stubs"](http://martinfowler.com/articles/mocksArentStubs.html), MartinFowler.com
-* [*Practical Object-Oriented Design in Ruby*](http://www.poodr.com/)
+* [*Practical Object-Oriented Design*](http://www.poodr.com/)
 * ["Test Doubles"](http://www.martinfowler.com/bliki/TestDouble.html), MartinFowler.com
 * [*Test-Driven Development by Example*](https://www.amazon.com/Test-Driven-Development-Kent-Beck/dp/0321146530)
