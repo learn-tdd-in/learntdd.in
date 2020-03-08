@@ -1,5 +1,6 @@
 ---
 title: Why Test-Driven Development?
+permalink: /why-tdd/
 ---
 
 Test-Driven Development is the practice of writing a test for functionality before you write the functionality itself. It follows the “Red-Green-Refactor Cycle:” first you write a failing test, then you write the minimum functionality to pass the test, then you rearrange the code if necessary to be simpler and clearer while still passing the test. Then the cycle begins again.

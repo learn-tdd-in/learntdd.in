@@ -1,5 +1,6 @@
 ---
 title: Testing Concepts
+permalink: /concepts/
 ---
 
 * [Object-Oriented Concepts](#oo-concepts)
