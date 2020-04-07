@@ -497,10 +497,9 @@ End-to-end testing has had major payoffs for server-rendered apps, and with Cypr
 
 To learn more about TDD, I recommend:
 
+* [Outside-In Frontend Development in React][outsideindev] - a free online book walking through this style of TDD.
 * ["Test-Driven Development in React"](https://www.youtube.com/playlist?list=PLXXnezSEtvNMlfJFd1Z2wilxymcOaVl9Q) - a free nine-video series of live stream recordings
-* [Testing React with Enzyme and Jest](https://javascriptplayground.com/testing-react-enzyme-jest/) - a great tutorial on component-level TDD using a different testing tool, Enzyme
 {% include tutorial-goos.md %}
-* ["JavaScript Jabber 224: Cypress.js"](https://devchat.tv/js-jabber/224-jsj-cypress-js-with-brian-mann) podcast episode
 
 {% include tutorial-contact.md %}
 
@@ -509,5 +508,6 @@ To learn more about TDD, I recommend:
 [cypress]: https://www.cypress.io/
 [feature-tours]: https://iamvery.com/2018/11/14/feature-tours.html
 [jest]: https://jestjs.io/
+[outsideindev]: https://outsidein.dev/
 [react]: https://reactjs.org/docs/hello-world.html
 [react-testing-library]: https://testing-library.com/docs/react-testing-library/intro

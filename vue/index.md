@@ -480,16 +480,17 @@ End-to-end testing has had major payoffs for server-rendered apps, and with Cypr
 
 To learn more about TDD, I recommend:
 
+* [Outside-In Frontend Development in Vue][outsideindev] - a free online book walking through this style of TDD.
 {% include tutorial-goos.md %}
-* ["JavaScript Jabber 224: Cypress.js"](https://devchat.tv/js-jabber/224-jsj-cypress-js-with-brian-mann) podcast episode
 * ["Unit Testing Vue Components"](https://www.youtube.com/watch?v=LxXsGNXsMo8) (video) - a talk by Edd Yerburgh that provides a detailed perspective on writing valuable Vue component tests
-* [_Testing Vue.js Applications_](https://www.manning.com/books/testing-vuejs-applications) - an early-access book by Edd that goes into more detail on the above
+* [_Testing Vue.js Applications_](https://www.manning.com/books/testing-vuejs-applications) - a book by Edd that goes into more detail on the above
 
 {% include tutorial-contact.md %}
 
 [cypress]: https://www.cypress.io/
 [feature-tours]: https://iamvery.com/2018/11/14/feature-tours.html
 [mocha]: https://mochajs.org/
+[outsideindev]: https://outsidein.dev/
 [vue]: https://vuejs.org/v2/guide/index.html
 [vue-cli]: https://cli.vuejs.org/
 [vue-test-utils]: https://vue-test-utils.vuejs.org/
