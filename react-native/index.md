@@ -9,7 +9,7 @@ logo_alt: React Native logo
 
 To see how TDD works in React Native, let's walk through a simple real-world example of building a feature. We'll be using React Native 0.61, the [Jest][jest] test runner, and two testing libraries: [react-native-testing-library][react-native-testing-library] for component tests and [Detox][detox] for end-to-end tests.
 
-This tutorial assumes you have some [familiarity with React Native][react-native] and with [automated testing concepts](/learn-tdd/concepts).
+This tutorial assumes you have some [familiarity with React Native][react-native] and with [automated testing concepts](/concepts).
 
 You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react-native) that shows the process step-by-step. You can also watch a [live stream recording](https://www.youtube.com/watch?v=iyfsE2f1Q4Y&list=PLXXnezSEtvNPZroRdvjhEVzOhURl572Lf&index=3&t=0s) of this tutorial with slightly different tooling.
 
