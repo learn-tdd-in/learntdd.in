@@ -19,7 +19,7 @@ The [classic](http://www.amazon.com/Test-Driven-Development-Kent-Beck/dp/0321146
 You can contribute to Learn TDD by:
 
 - Submitting links to articles, videos, and books on Test-Driven Development for a framework.
-- Suggest changes to one of our [Learn TDD Git repos](https://github.com/learntdd) by [forking it](https://help.github.com/articles/fork-a-repo/) and [submitting a pull request](https://help.github.com/articles/using-pull-requests/), for things like:
+- Suggest changes to one of our [Learn TDD Git repos](https://github.com/learn-tdd-in) by [forking it](https://help.github.com/articles/fork-a-repo/) and [submitting a pull request](https://help.github.com/articles/using-pull-requests/), for things like:
   - Correcting errors.
   - Improving practices to framework standards.
   - Updating to a newer version of the framework.
