@@ -89,8 +89,8 @@ test('it shows the message in the list', async function(assert) {
   const message = 'Hello World';
   await visit('/');
 
-  fillIn('[data-test-message-text]', message);
-  click('[data-test-send-button]');
+  await fillIn('[data-test-message-text]', message);
+  click('[data-test-send-message-button]');
 
   assert.dom('[data-test-message-text]').hasValue('');
   assert.dom('[data-test-message-list]').hasText(message);
