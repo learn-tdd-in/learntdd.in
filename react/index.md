@@ -130,7 +130,7 @@ Expected to find element: '[data-testid='messageText']', but never found it.
 
 The next step of TDD is to **write only enough production code to fix the current error or test failure.** In our case, all we need to do is add a message text field.
 
-A common principle in TDD is to **write the code you wish you had.** We could just add an `<input type="text">` element to the `<App>` directly. But say we want to keep our `<App>` simple and wrap everything related to the input in a custom component. We might call that component `<NewMessageForm>`. We wish we had it, so let's go ahead and add it to `App.js`:
+A common principle in TDD is to **write the code you wish you had.** We could just add an `<input type="text">` element to the `App` directly. But say we want to keep our `App` simple and wrap everything related to the input in a custom component. We might call that component `NewMessageForm`. We wish we had it, so let's go ahead and add it to `App.js`:
 
 ```diff
  import React, { Component } from 'react';
