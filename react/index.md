@@ -328,7 +328,7 @@ Add another test case to `NewMessageForm.spec.js`:
 +    let sendHandler;
 +
      beforeEach(() => {
-+      sendHandler = jest.fn();
++      sendHandler = jest.fn().mockName('sendHandler');
 -      ({ getByTestId } = render(<NewMessageForm />));
 +      ({ getByTestId } = render(<NewMessageForm onSend={sendHandler} />));
 
@@ -352,7 +352,7 @@ You may recall that this isn't what we did in the end-to-end test, though. Gener
 Run the component test again. You'll see the "clears the text field" test pass, and the new 'emits the "send" event' test fail with the error:
 
 ```bash
-expect(jest.fn()).toHaveBeenCalledWith(...expected)
+expect(sendHandler).toHaveBeenCalledWith(...expected)
 
 Expected: "New message"
 
