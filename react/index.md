@@ -49,7 +49,7 @@ Add an NPM script for opening Cypress into your `package.json`:
  }
 ```
 
-Now open Cypress and it will initialize your app:
+Now open Cypress and it will initialize Cypress within your app, creating some files:
 
 ```bash
 $ yarn cypress:open
