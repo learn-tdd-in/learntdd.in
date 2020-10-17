@@ -289,11 +289,11 @@ Now, we can add the behavior to the component to get this test to pass. To accom
 Next, we want to clear out `inputText` when the send button is clicked:
 
 ```diff
-   handleTextChange = event => {
+   const handleTextChange = event => {
      setInputText(event.target.value);
    }
 
-+  handleSend = () => {
++  const handleSend = () => {
 +    setInputText('');
 +  }
 +
