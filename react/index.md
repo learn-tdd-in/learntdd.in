@@ -404,7 +404,7 @@ We no longer get the `onSend` error--now we're back to the same assertion failur
 
 ## A List
 
-Next, we need to save the message in state in the App component. Let's add it to an array:
+Next, we need to save the message in state in the `App` component. Let's add it to an array:
 
 ```diff
 -import React from 'react';
@@ -418,7 +418,7 @@ Next, we need to save the message in state in the App component. Let's add it to
    };
 ```
 
-Next, to display the messages, let's create another custom component to keep our App component nice and simple. We'll call it MessageList. We'll write the code we wish we had in `App.js`:
+Next, to display the messages, let's create another custom component to keep our `App` component nice and simple. We'll call it `MessageList`. We'll write the code we wish we had in `App.js`:
 
 ```diff
  import React, { Component } from 'react';
@@ -447,7 +447,7 @@ const MessageList = ({ data }) => (
 export default MessageList;
 ```
 
-Rerun the tests, and, as we expect, we still aren't displaying the message. But now that we have a MessageList component, we're ready to finally implement that and make the test pass:
+Rerun the tests, and, as we expect, we still aren't displaying the message. But now that we have a `MessageList` component, we're ready to finally implement that and make the test pass:
 
 ```diff
  import React from 'react';
