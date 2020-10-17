@@ -44,7 +44,7 @@ Add an NPM script for opening Cypress into your `package.json`:
    "scripts": {
      ...
 +    "cypress:open": "cypress open"
-   }
+   },
    ...
  }
 ```
