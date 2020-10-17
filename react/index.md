@@ -28,11 +28,7 @@ $ cd learn-tdd-in-react
 $ yarn start
 ```
 
-`create-react-app` comes with Jest preinstalled, so all we need to add for component testing is React Testing Library:
-
-```bash
-$ yarn add --dev @testing-library/react
-```
+Apps created with `create-react-app` come with Jest and React Testing Library preinstalled, so we already have all we need for component testing.
 
 Next, we need to add Cypress:
 
