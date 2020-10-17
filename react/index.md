@@ -455,7 +455,7 @@ Rerun the tests, and, as we expect, we still aren't displaying the message. But 
  const MessageList = ({ data }) => (
 -  <div />
 +  <ul>
-+    { data.map(message => <li key={message}>{message}</li>) }
++    {data.map(message => <li key={message}>{message}</li>)}
 +  </ul>
  );
 
