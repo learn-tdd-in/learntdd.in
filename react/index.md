@@ -219,32 +219,22 @@ Create a `src/__tests__` folder, then create a file `src/__tests__/NewMessageFor
 
 ```javascript
 import React from 'react';
-import {
-  render,
-  fireEvent,
-  cleanup,
-} from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import NewMessageForm from '../NewMessageForm';
 
 describe('<NewMessageForm />', () => {
   let getByTestId;
 
-  afterEach(cleanup);
-
   describe('clicking the send button', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       ({ getByTestId } = render(<NewMessageForm />));
 
-      fireEvent.change(
+      await userEvent.type(
         getByTestId('messageText'),
-        {
-          target: {
-            value: 'New message',
-          },
-        },
+        'New message',
       );
-
-      fireEvent.click(getByTestId('sendButton'));
+      userEvent.click(getByTestId('sendButton'));
     });
 
     it('clears the text field', () => {
