@@ -185,7 +185,7 @@ Rerun the tests. The error has changed! The tests are now able to find the "mess
 Expected to find element: ‘[data-testid=’sendButton’]’, but never found it.
 ```
 
-Now there's a different element we can't find: the element with attribute `data-test=’sendButton’`.
+Now there's a different element we can't find: the element with attribute `data-testid=’sendButton’`.
 
 We want the send button to be part of our `NewMessageForm`, so fixing this error is easy. We just add a `<button>` to our component:
 
