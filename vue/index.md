@@ -98,7 +98,7 @@ Open Cypress with:
 $ yarn test:e2e
 ```
 
-Run the Cypress test by clicking `creating_a_message.js` in the Cypress window. A Chrome window should open, you should see the test run, then in the left-hand test step column you should see the following error:
+Run the Cypress test by clicking `creating_a_message.spec.js` in the Cypress window. A Chrome window should open, you should see the test run, then in the left-hand test step column you should see the following error:
 
 ```bash
 Expected to find element: '[data-test='messageText']', but never found it.
