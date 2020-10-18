@@ -223,7 +223,7 @@ describe("NewMessageForm", () => {
 });
 ```
 
-vue-test-util's API is different from Cypress's, but a lot of the test seems the same as the end-to-end test: we still enter a new message and click the send button. But this is testing something very different. Instead of testing the whole app running together, we're testing just the NewMessageForm by itself.
+Vue Test Util's API is different from Cypress's, but a lot of the test seems the same as the end-to-end test: we still enter a new message and click the send button. But this is testing something very different. Instead of testing the whole app running together, we're testing just the `NewMessageForm` by itself.
 
 Run `yarn test:unit` to run the component test. We get the following error:
 
