@@ -472,7 +472,7 @@ To learn more about TDD, I recommend:
 
 [cypress]: https://www.cypress.io/
 [feature-tours]: https://iamvery.com/2018/11/14/feature-tours.html
-[mocha]: https://mochajs.org/
+[jest]: https://jestjs.io/
 [outsideindev]: https://outsidein.dev/
 [vue]: https://vuejs.org/v2/guide/index.html
 [vue-cli]: https://cli.vuejs.org/
