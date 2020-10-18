@@ -315,14 +315,13 @@ To add this event handler behavior to `NewMessageForm`, we want to step back dow
 Add another test case to `NewMessageForm.spec.js`:
 
 ```diff
-     it('clears the text field', () => {
-       expect(
-         wrapper.find('[data-test="messageText"]').element.value,
-       ).to.equal('');
+     it("clears the text field", () => {
+       const { value } = wrapper.find("[data-test='messageText']").element;
+       expect(value).toEqual("");
      });
 +
-+    it('emits the "send" event', () => {
-+      expect(wrapper.emitted().send[0]).to.deep.equal(['New message']);
++    it("emits the 'send' event", () => {
++      expect(wrapper.emitted().send[0]).toEqual(["New message"]);
 +    });
    });
  });
