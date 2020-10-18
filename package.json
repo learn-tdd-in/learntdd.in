@@ -1,0 +1,18 @@
+{
+  "name": "learn-tdd",
+  "version": "0.0.1",
+  "description": "Learn Test-Driven Development in the framework of your choice.",
+  "main": "index.js",
+  "authors": {
+    "name": "Josh Justice",
+    "email": "tdd@codingitwrong.com"
+  },
+  "scripts": {
+    "start": "vuepress dev src",
+    "build": "vuepress build src"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "vuepress": "^1.5.3"
+  }
+}
