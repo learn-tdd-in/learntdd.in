@@ -347,9 +347,9 @@ Let's emit that event in the `send()` method:
    },
    methods: {
      send() {
-+      this.$emit('send', this.inputText);
-       this.inputText = '';
-     },
++      this.$emit("send", this.inputText);
+       this.inputText = "";
+     }
    },
 ```
 
@@ -382,14 +382,14 @@ Next, we add the messages data property, and add the message to it when `addMess
    },
 +  data() {
 +    return {
-+      messages: [],
++      messages: []
 +    };
 +  },
 +  methods: {
 +    addMessage(text) {
 +      this.messages.unshift(text);
-+    },
-+  },
++    }
++  }
  };
  </script>
 ```
@@ -405,14 +405,14 @@ Next, to display the messages, let's create another custom component to keep our
  </template>
 
  <script>
- import NewMessageForm from './components/NewMessageForm';
+ import NewMessageForm from "./components/NewMessageForm";
 +import MessageList from './components/MessageList';
 
  export default {
    name: 'app',
    components: {
      NewMessageForm,
-+    MessageList,
++    MessageList
    },
 ```
 
@@ -425,8 +425,8 @@ Next, we'll create `MessageList.vue` and add an empty implementation:
 
 <script>
 export default {
-  name: 'MessageList',
-  props: ['messages'],
+  name: "MessageList",
+  props: ["messages"]
 };
 </script>
 ```
