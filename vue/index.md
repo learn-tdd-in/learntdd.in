@@ -55,7 +55,7 @@ Replace the contents of `src/App.vue` with the following:
 
 <script>
 export default {
-  name: 'App',
+  name: "App",
 };
 </script>
 ```
@@ -64,23 +64,20 @@ export default {
 
 When performing outside-in TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.** For our simple messaging app, the first feature we want is to be able to enter a message, send it, and see it in the list.
 
-Create a file `tests/e2e/specs/creating_a_message.js` and enter the following contents:
+Create a file `tests/e2e/specs/creating_a_message.spec.js` and enter the following contents:
 
 ```javascript
-describe('Creating a message', () => {
-  it('Displays the message in the list', () => {
-    cy.visit('/');
+describe("Creating a message", () => {
+  it("Displays the message in the list", () => {
+    cy.visit("/");
 
-    cy.get('[data-test="messageText"]')
-      .type('New message');
+    cy.get("[data-test='messageText']").type("New message");
 
-    cy.get('[data-test="sendButton"]')
-      .click();
+    cy.get("[data-test='sendButton']").click();
 
-    cy.get('[data-test="messageText"]')
-      .should('have.value', '');
+    cy.get("[data-test='messageText']").should("have.value", "");
 
-    cy.contains('New message');
+    cy.contains("New message");
   });
 });
 ```
@@ -121,7 +118,7 @@ A common principle in TDD is to **write the code you wish you had.** We could ju
  </template>
 
  <script>
-+import NewMessageForm from './components/NewMessageForm';
++import NewMessageForm from "./components/NewMessageForm";
 +
  export default {
    name: 'App',
@@ -142,7 +139,7 @@ Next, let's create `src/components/NewMessageForm.vue` with the following conten
 
 <script>
 export default {
-  name: 'NewMessageForm',
+  name: "NewMessageForm",
 };
 </script>
 ```
