@@ -18,7 +18,7 @@ The feature we'll build is a simple list of messages.
 First, ensure you have [`Vue CLI`][vue-cli] version 4.5.7 or later installed:
 
 ```bash
-$ yarn global add @vue/cli
+$ npm install -g @vue/cli
 $ vue --version
 @vue/cli 4.5.7
 ```
