@@ -308,9 +308,9 @@ Expected to find content: 'New message' but never did.
 
 Now, finally, the test will drive us to implement the real meat of our feature: storing the message entered and displaying it.
 
-The NewMessageForm won't be responsible for displaying this message, though: we'll create a separate MessageList component that also exists in the parent App component. The way we can send data to the parent component is by taking in an event handler and calling it.
+The `NewMessageForm` won't be responsible for displaying this message, though: we'll create a separate `MessageList` component that also exists in the parent `App` component. The way we can send data to the parent component is by taking in an event handler and calling it.
 
-To add this event handler behavior to NewMessageForm, we want to step back down to the component test. In this case, the component test won't be asserting exactly the same thing as the end-to-end test. The end-to-end test is looking for the 'New message' content on the screen, but the component test will only be asserting the behavior that the NewMessageForm component is responsible for: that it calls the event handler.
+To add this event handler behavior to `NewMessageForm`, we want to step back down to the component test. In this case, the component test won't be asserting exactly the same thing as the end-to-end test. The end-to-end test is looking for the 'New message' content on the screen, but the component test will only be asserting the behavior that the NewMessageForm component is responsible for: that it calls the event handler.
 
 Add another test case to `NewMessageForm.spec.js`:
 
