@@ -228,10 +228,10 @@ Vue Test Util's API is different from Cypress's, but a lot of the test seems the
 Run `yarn test:unit --watch` to run the component test. We get the following error:
 
 ```bash
-AssertionError: expected 'New message' to equal ''
-+ expected - actual
+expect(received).toEqual(expected) // deep equality
 
--New message
+Expected: ""
+Received: "New message"
 ```
 
 Now, we can add the behavior to the component to get this test to pass. First, we add an `inputText` data property and bind it to the input with `v-model`:
