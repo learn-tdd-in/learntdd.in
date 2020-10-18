@@ -32,18 +32,12 @@ $ vue create learn-tdd-in-vue
 Choose the following options from the prompts:
 
 - Please pick a preset: Manually select features
-- Check the features needed for your project: add Unit and E2E Testing
-- Pick a unit testing solution: Mocha + Chai
+- Check the features needed for your project: pick whatever settings you like, but be sure to add Unit and E2E Testing
+- Pick a unit testing solution: Jest
 - Pick a E2E testing solution: Cypress (Chrome only)
 - Where do you prefer placing config for Babel, PostCSS, ESLint, etc.? In dedicated config files
-- If you're prompted to pick the package manager to use when installing dependencies, you can pick what you like; this tutorial will use Yarn
 
-Next let's add `vue-test-utils` for component testing:
-
-```bash
-$ cd learn-tdd-in-vue
-$ yarn add --dev @vue/test-utils vue-template-compiler
-```
+Along with Jest, Vue CLI will preinstall Vue Test Utils.
 
 As our last setup step, let's clear out some of the default code to get a clean starting point. Delete the following files:
 
