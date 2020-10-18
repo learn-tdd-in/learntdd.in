@@ -216,8 +216,8 @@ describe("NewMessageForm", () => {
     });
 
     it("clears the text field", () => {
-      const { value } = wrapper.find("[data-test='messageText']").element;
-      expect(value).toEqual("");
+      const { element } = wrapper.find("[data-test='messageText']");
+      expect(element.value).toEqual("");
     });
   });
 });
@@ -316,8 +316,8 @@ Add another test case to `NewMessageForm.spec.js`:
 
 ```diff
      it("clears the text field", () => {
-       const { value } = wrapper.find("[data-test='messageText']").element;
-       expect(value).toEqual("");
+       const { element } = wrapper.find("[data-test='messageText']");
+       expect(element.value).toEqual("");
      });
 +
 +    it("emits the 'send' event", () => {
