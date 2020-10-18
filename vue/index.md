@@ -327,13 +327,13 @@ Add another test case to `NewMessageForm.spec.js`:
  });
 ```
 
-The wrapper's `emitted()` function returns an object recording each event that was emitted. If a `send` event is emitted, the object will have a `send` property that is an array of each time it was emitted. The value of each element is the payload passed with the emitted event. So to test that a `send` event was emitted with payload "New message", we check that `wrapper.emitted().send[0]` is equal to `['New message']`.
+The wrapper's `emitted()` function returns an object recording each event that was emitted. If a `send` event is emitted, the object will have a `send` property that is an array of each time it was emitted. The value of each element is the payload passed with the emitted event. So to test that a `send` event was emitted with payload "New message", we check that `wrapper.emitted().send[0]` is equal to `["New message"]`.
 
 Notice that we **make one assertion per test in component tests.** Having separate test cases for each behavior of the component makes it easy to understand what it does, and easy to see what went wrong if one of the assertions fails. The `beforeEach` block will run through the same steps for each of the two test cases below.
 
 You may recall that this isn't what we did in the end-to-end test, though. Generally you **make *multiple* assertions per test in end-to-end tests.** Why? End-to-end tests are slower, so the overhead of the repeating the steps would significantly slow down our suite as it grows. In fact, larger end-to-end tests tend to turn into "[feature tours][feature-tours]:" you perform some actions, do some assertions, perform some more actions, do more assertions, etc.
 
-Run the component test again. You'll see the "clears the text field" test pass, and the new 'emits the "send" event' test fail with the error:
+Run the component test again. You'll see the "clears the text field" test pass, and the new 'emits the 'send' event' test fail with the error:
 
 ```bash
 TypeError: Cannot read property '0' of undefined
