@@ -7,7 +7,7 @@ logo_alt: Vue logo
 
 {% include tutorial-intro.md %}
 
-To see how TDD works in Vue, let's walk through a simple real-world example of building a feature. We'll be using Vue 2.6 with Vue CLI 3, with built-in support to use [Cypress][cypress] for end-to-end tests and [Mocha][mocha] for unit tests. We'll also use [vue-test-utils][vue-test-utils] for component tests. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/vue) that shows the process step-by-step. This tutorial assumes you have some [familiarity with Vue][vue] and with [automated testing concepts](/concepts).
+To see how TDD works in Vue, let's walk through a simple real-world example of building a feature. We'll be using Vue 2.6 with Vue CLI 4, with built-in support to use [Cypress][cypress] for end-to-end tests and [Jest][jest] for unit tests. We'll also use [Vue Test Utils][vue-test-utils] for component tests. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/vue) that shows the process step-by-step. This tutorial assumes you have some [familiarity with Vue][vue] and with [automated testing concepts](/concepts).
 
 You can also watch a [conference talk](https://www.vuemastery.com/conferences/connect-tech-2018/Test-Driven-Development-in-Vue-with-Cypress/) version of this tutorial.
 
@@ -15,13 +15,12 @@ The feature we'll build is a simple list of messages.
 
 ## Setup
 
-First, ensure you have [`Vue CLI`][vue-cli] version 3.4.0 or later installed:
+First, ensure you have [`Vue CLI`][vue-cli] version 4.5.7 or later installed:
 
 ```bash
 $ yarn global add @vue/cli
 $ vue --version
-
-3.4.0
+@vue/cli 4.5.7
 ```
 
 Create a new Vue app with the Vue CLI:
