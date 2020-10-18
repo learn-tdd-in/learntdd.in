@@ -257,7 +257,7 @@ Now, we can add the behavior to the component to get this test to pass. First, w
    name: 'NewMessageForm',
 +  data() {
 +    return {
-+      inputText: '',
++      inputText: "",
 +    };
 +  },
  };
@@ -285,16 +285,16 @@ Next, we add a `send()` method that sets the `inputText` data property to the em
 
  <script>
  export default {
-   name: 'NewMessageForm',
+   name: "NewMessageForm",
    data() {
      return {
-       inputText: '',
+       inputText: ""
      };
    },
 +  methods: {
 +    send() {
-+      this.inputText = '';
-+    },
++      this.inputText = "";
++    }
 +  },
  };
  </script>
