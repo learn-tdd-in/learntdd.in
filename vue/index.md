@@ -339,7 +339,7 @@ Run the component test again. You'll see the "clears the text field" test pass, 
 TypeError: Cannot read property '0' of undefined
 ```
 
-We try to access property "0" on `wrapper.emitted().send`, so this means that no "send" event was emitted.
+We try to access property "0" on `wrapper.emitted().send`, so this means that the "send" event was not emitted.
 
 Let's emit that event in the `send()` method:
 
