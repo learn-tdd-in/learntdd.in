@@ -1,15 +1,11 @@
 ---
 home: true
-heroImage: https://v1.vuepress.vuejs.org/hero.png
 tagline: Learn Test-Driven Development in the framework of your choice.
-actionText: Quick Start →
-actionLink: /guide/
-features:
-- title: Feature 1 Title
-  details: Feature 1 Description
-- title: Feature 2 Title
-  details: Feature 2 Description
-- title: Feature 3 Title
-  details: Feature 3 Description
-footer: Made by Josh Justice with ❤️
+footer: (c) Josh Justice
 ---
+
+- [Ember](/ember/)
+- [Rails](/rails/)
+- [React](/react/)
+- [React Native](/react-native/)
+- [Vue](/vue/)
