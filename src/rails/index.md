@@ -93,10 +93,13 @@ The acceptance test can now find the controller, but not a "new" action on it.
 
 Again, we only add enough code to get the test to pass.
 
-Red: BlogPostsController#new is missing a template for this request format and variant.
+```sh
+Red: BlogPostsController#new is missing a template for this request format and
+variant.
 
-       request.formats: ["text/html"]
-       request.variant: []
+  request.formats: ["text/html"]
+  request.variant: []
+```
 
 Even though we didn't ask to render a template, Rails' default behavior for a controller action is to render a corresponding template, so that's the error it's running across next.
 
