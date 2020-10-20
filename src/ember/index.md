@@ -562,6 +562,6 @@ To learn more about TDD, I recommend:
 * ["Outside In TDD"](https://vimeo.com/146953048) meetup talk (video)
 * [*Growing Object-Oriented Software, Guided by Tests*](http://www.informit.com/store/growing-object-oriented-software-guided-by-tests-9780321503626) - The original work on the style of TDD we describe here, mockist TDD. It has a lot of great detail, not just about testing, but also how it influences design and project methodology.
 
-{% include tutorial-contact.md %}
+If you have any questions or suggestions, reach out to [@CodingItWrong](https://twitter.com/CodingItWrong) on Twitter or <tdd@codingitwrong.com> and we'll be glad to help!
 
 [feature-tours]: https://iamvery.com/2018/11/14/feature-tours.html
