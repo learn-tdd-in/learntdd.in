@@ -149,8 +149,8 @@ $ ember g route index
 Then replace its template with an invocation of the new message component that we wish we had:
 
 ```diff
-{% raw %}-{{outlet}}
-+<NewMessageForm />{% endraw %}
+-{{outlet}}
++<NewMessageForm />
 ```
 
 Next, generate the NewMessageForm component:
@@ -169,7 +169,7 @@ Delete `tests/integration/components/new-message-form-test.js` for now--we won't
 
 Now enter the following contents in `app/templates/components/new-message-form.hbs`.
 
-```html
+```handlebars
 <input
   type="text"
   data-test-message-text
@@ -263,18 +263,18 @@ Now, we can add the behavior to the component to get this test to pass.
 Change the `<input>` tag to an `<Input>` component (note the capital letter "I") and have it bind its value to a `message` property of the component:
 
 ```diff
-{% raw %}-<input
+-<input
 +<Input
    type="text"
 +  @value={{this.message}}
    data-test-message-text
- />{% endraw %}
+ />
 ```
 
 Then wrap the input and button in a `<form>` tag that calls a `handleSend` action, and change the button into a submit button:
 
 ```diff
-{% raw %}+<form onSubmit={{this.handleSend}}>
++<form onSubmit={{this.handleSend}}>
    <Input
      type="text"
      @value={{this.message}}
@@ -286,7 +286,7 @@ Then wrap the input and button in a `<form>` tag that calls a `handleSend` actio
    >
      Send
    </button>
-+</form>{% endraw %}
++</form>
 ```
 
 Now, to provide this `message` property and `handleSend` action, we'll need a class for the `NewMessageForm` component. Generate one:
@@ -341,7 +341,7 @@ $ ember g component MessageList
 
 Open `app/components/message-list.hbs` and add the following:
 
-```html
+```handlebars
 <ul data-test-message-list>
 </ul>
 ```
@@ -364,7 +364,7 @@ To add this event handler behavior to NewMessageForm, we want to step back down 
 Add another test case to `new-message-form-test.js`:
 
 ```diff
-{% raw %} import { hbs } from 'ember-cli-htmlbars';
+ import { hbs } from 'ember-cli-htmlbars';
 +import sinon from 'sinon';
 
  module('Integration | Component | new-message-form', function(hooks) {
@@ -385,7 +385,7 @@ Add another test case to `new-message-form-test.js`:
 +
 +    assert.ok(handleSend.calledWith(message));
 +  });
- });{% endraw %}
+ });
 ```
 
 Notice that we **make one assertion per test in component tests.** Having separate test cases for each behavior of the component makes it easy to understand what it does, and easy to see what went wrong if one of the assertions fails.
@@ -469,9 +469,9 @@ We access the Ember Data `store` that's made available to controllers automatica
 Next, let's pass that action to the NewMessageForm:
 
 ```diff
-{% raw %}-<NewMessageForm />
+-<NewMessageForm />
 +<NewMessageForm @onSend={{this.handleSend}} />
- <MessageList />{% endraw %}
+ <MessageList />
 ```
 
 Now that we should have message records created, let's update our route to load them. Add the following to `app/routes/index.js`:
@@ -491,17 +491,17 @@ Next, pass the loaded model into the MessageList:
 ```diff
 {%raw %} <NewMessageForm @onSend={{this.handleSend}} />
 -<MessageList />
-+<MessageList @messages={{@model}} />{% endraw %}
++<MessageList @messages={{@model}} />
 ```
 
 Finally, let's update the MessageList template to display these messages:
 
 ```diff
-{% raw %} <ul data-test-message-list>
+ <ul data-test-message-list>
 +  {{#each @messages as |message|}}
 +    <li>{{message.text}}</li>
 +  {{/each}}
- </ul>{% endraw %}
+ </ul>
 ```
 
 Now when our acceptance test runs, Mirage gives us an error:
