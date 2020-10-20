@@ -1,6 +1,6 @@
 # Learn TDD in Vue
 
-<img src="../images/vue.svg" alt="Vue logo" style="width: 100px; height: 100px; float: right" />
+<img src="../images/vue.svg" alt="Vue logo" class="page-logo" />
 
 Test-Driven Development (TDD) is an approach to automated software testing that involves writing a failing test before writing the production code to make it pass. TDD helps you develop a robust test suite to catch bugs, as well as guiding you to more modular, flexible code.
 
