@@ -4,5 +4,35 @@
  * ref：https://v1.vuepress.vuejs.org/config/#index-styl
  */
 
-.home .hero img
-  max-width 450px!important
+.framework-card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.framework-card {
+  border: solid 1px gray;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 0 10px 20px;
+}
+
+.framework-card__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.framework-card__logo {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 10px;
+}
+
+.page-logo {
+  float: right;
+  width: 100px;
+  height: 100px;
+  margin: 0 0 20px 20px;
+}
