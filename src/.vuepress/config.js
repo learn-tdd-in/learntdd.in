@@ -33,6 +33,8 @@ module.exports = {
     editLinkText: '',
     lastUpdated: false,
     search: false,
+    nextLinks: false,
+    prevLinks: false,
     sidebar: [
       ['/ember/', 'Ember'],
       ['/react/', 'React'],
