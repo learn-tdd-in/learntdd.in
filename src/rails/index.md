@@ -4,85 +4,175 @@
 
 Test-Driven Development (TDD) is an approach to automated software testing that involves writing a failing test before writing the production code to make it pass. TDD helps you develop a robust test suite to catch bugs, as well as guiding you to more modular, flexible code.
 
-To see how TDD works in Rails, let's walk through a simple real-world example of building a feature. We'll be using Rails 5.2 and RSpec, one of the most popular test frameworks for Ruby. Each section of the article is linked to a corresponding commit in the [Git repo](https://github.com/learn-tdd-in/rails) that shows the process step-by-step. This tutorial assumes you have some [familiarity with Rails](http://guides.rubyonrails.org/) and with [automated testing concepts](/concepts).
+To see how TDD works in Rails, let's walk through a simple real-world example of building a feature. We'll be using Rails 6.0 along with RSpec and Capybara, two popular test libraries for Ruby. Each section of the article is linked to a corresponding commit in the [Git repo](https://github.com/learn-tdd-in/rails) that shows the process step-by-step. This tutorial assumes you have some [familiarity with Rails](http://guides.rubyonrails.org/) and with [automated testing concepts](/concepts).
 
 You can also watch a [meetup presentation video](https://youtu.be/fXlLbhuIc34) of this tutorial.
 
 The feature we'll build is the age-old tutorial feature: creating a blog post.
 
-### Specify the feature for creating a blog post [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/a5cea8f9c947f8f417a39d55c34b4b0393d18d40)
+## Setup
 
-#### spec/features/creating_a_blog_post_spec.rb
+First, create the new Rails app:
 
-```ruby
-require 'rails_helper'
-
-describe 'Creating a blog post' do
-
-  it 'saves and displays the resulting blog post' do
-    visit '/blog_posts/new'
-
-    fill_in 'Title', with: 'Hello, World!'
-    fill_in 'Body', with: 'Hello, I say!'
-
-    click_on 'Create Blog Post'
-
-    expect(page).to have_content('Hello, World!')
-    expect(page).to have_content('Hello, I say!')
-
-    blog_post = BlogPost.order("id").last
-    expect(blog_post.title).to eq('Hello, World!')
-    expect(blog_post.body).to eq('Hello, I say!')
-  end
-
-end
+```sh
+$ rails new --skip-test learn_tdd_in_rails
+$ cd learn_tdd_in_rails
 ```
 
-We start by writing out an acceptance test for the full feature we want to implement. In this case, we want to visit a blog post creation page, enter a title and body, save it, and then see on the results page that title and body, as well as confirming it’s in the database.
+Next, we need to add some testing gems. Add the following to your `Gemfile`:
 
-Red: No route matches [GET] "/blog_posts/new"
+```diff
+ group :development, :test do
+   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
++  gem 'rspec-rails'
+ end
++
++group :test do
++  gem 'capybara'
++  gem 'selenium-webdriver'
++end
 
-The first error we get is that there is no blog-posts/new route.
+ group :development do
+```
+
+Install the gems:
+
+```sh
+$ bundle install
+```
+
+Then set up RSpec:
+
+```sh
+$ rails generate rspec:install
+```
+
+## The Feature Test
+
+When performing outside-in TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.** For our simple messaging app, the first feature we want is to be able to enter a message, send it, and see it in the list.
+
+In Rails, end-to-end tests are referred to as system tests. Generate a new system test:
+
+```sh
+$ rails g rspec:system creating_blog_posts
+```
+
+This will create a file `spec/system/creating_blog_posts_spec.rb`. Open it and make the following changes:
+
+```diff
+ require 'rails_helper'
+
+ RSpec.describe "CreatingBlogPosts", type: :system do
+   before do
+     driven_by(:rack_test)
+   end
+
+-  pending "add some scenarios (or delete) #{__FILE__}"
++  it 'saves and displays the resulting blog post' do
++    visit '/blog_posts/new'
++
++    fill_in 'Title', with: 'Hello, World!'
++    fill_in 'Body', with: 'Hello, I say!'
++
++    click_on 'Create Blog Post'
++
++    expect(page).to have_content('Hello, World!')
++    expect(page).to have_content('Hello, I say!')
++
++    blog_post = BlogPost.order("id").last
++    expect(blog_post.title).to eq('Hello, World!')
++    expect(blog_post.body).to eq('Hello, I say!')
++  end
+ end
+```
+
+The code describes the steps a user would take interacting with our app:
+
+- Visiting the new blog post page
+- Entering a title and body into form fields
+- Clicking a "Create Blog Post" button
+- Confirming that the blog post appears on the screen
+
+We also confirm that the blog post is saved into the database, to make sure we aren't just displaying the data on the screen but that we've also persisted it.
+
+After we've created our test, the next step in TDD is to **run the test and watch it fail.**  This test will fail (be "red") at first because we haven't yet implemented the functionality.
+
+Run the test:
+
+```sh
+$ rspec
+```
+
+You should see the following error:
+
+```sh
+F
+
+Failures:
+
+  1) CreatingBlogPosts saves and displays the resulting blog post
+     Failure/Error: visit '/blog_posts/new'
+
+     ActionController::RoutingError:
+       No route matches [GET] "/blog_posts/new"
 
 
-### Add blog posts resource route [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/650c1a5d9598c1d61d17d0172ef01f66b01dfb23)
 
-#### config/routes.rb
+     # ./spec/system/creating_blog_posts_spec.rb:9:in `block (2 levels) in <top (required)>'
+
+Finished in 0.03064 seconds (files took 0.89609 seconds to load)
+1 example, 1 failure
+
+Failed examples:
+
+rspec ./spec/system/creating_blog_posts_spec.rb:8 # CreatingBlogPosts saves and displays the resulting blog post
+```
+
+## Write The Code You Wish You Had
+
+The next step of TDD is to **write only enough production code to fix the current error or test failure.** In our case, all we need to do is add a route for `/blog_posts/new`.
+
+A common principle in TDD is to **write the code you wish you had.** We could add a `get 'blog_posts/new'` route to implment just this one route. But say we want to stick with Rails conventions and create a resourceful controller instead. In `config/routes.rb`, let's add a more standard `resources` instead:
 
 ```diff
  Rails.application.routes.draw do
+   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 +  resources :blog_posts
  end
 ```
 
-We add the route, but we don’t just write the simplest code possible to get the test to pass; we “write the code we wish we had.” In this case, we wish we had a resourceful blog posts controller, so we create a resource route, which corresponds to a resourceful controller of the same name..
-
 Rails allows you to "unit test" routes, but for trivial configuration like this, it's fine to let the acceptance test cover it without stepping down to the unit level.
 
-Red: uninitialized constant BlogPostsController
+Rerun the test. Now we get a new error:
 
-The next error we get is that that controller doesn’t exist.
+```sh
+1) CreatingBlogPosts saves and displays the resulting blog post
+   Failure/Error: visit '/blog_posts/new'
 
+   ActionController::RoutingError:
+     uninitialized constant BlogPostsController
+```
 
-### Add empty blog posts controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/61f863fb0c9ed9030a5952608374dff7b35b9a5e)
+The error says that the controller doesn’t exist. To write only enough production code to fix this error, let's create an empty controller class. In `app/controllers/`, create a `blog_posts_controller.rb` file and add the following contents:
 
-#### app/controllers/blog_posts_controller.rb
-
-```diff
-+class BlogPostsController < ApplicationController
-+end
+```ruby
+class BlogPostsController < ApplicationController
+end
 ```
 
 We add an empty controller that inherits from our app’s base controller class. We could have gotten past this error message by creating a class that didn’t inherit from anything, but in this case we’re so sure we’ll inherit from the base controller class that we can go ahead and do it.
 
-Red: The action 'new' could not be found for BlogPostsController
+Rerun the tests and the next error we get is:
 
-The acceptance test can now find the controller, but not a "new" action on it.
+```sh
+Failure/Error: visit '/blog_posts/new'
 
+AbstractController::ActionNotFound:
+  The action 'new' could not be found for BlogPostsController
+```
 
-### Add `new` action to blog posts controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/8772d7d5f3ae39bfff6380d9e00fc8fca2241e5a)
-
-#### app/controllers/blog_posts_controller.rb
+Let's add it:
 
 ```diff
  class BlogPostsController < ApplicationController
@@ -91,63 +181,97 @@ The acceptance test can now find the controller, but not a "new" action on it.
  end
 ```
 
-Again, we only add enough code to get the test to pass.
+The next error we get is:
 
 ```sh
-Red: BlogPostsController#new is missing a template for this request format and
-variant.
+Failure/Error: visit '/blog_posts/new'
 
-  request.formats: ["text/html"]
-  request.variant: []
+ActionController::MissingExactTemplate:
+  BlogPostsController#new is missing a template for request formats: text/html
 ```
 
 Even though we didn't ask to render a template, Rails' default behavior for a controller action is to render a corresponding template, so that's the error it's running across next.
 
+In `app/views/`, create a `blog_posts` folder, then add an empty `new.html.erb` file.
 
-### Add new blog post template [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/48b6da6ead51b73818e23a7b7138c88fc3433fec)
+The next error is:
 
-#### app/views/blog_posts/new.html.erb
+```sh
+Failure/Error: fill_in 'Title', with: 'Hello, World!'
 
-```diff
-+<%# empty view %>
+Capybara::ElementNotFound:
+  Unable to find field "Title" that is not disabled
 ```
-
-Red: Unable to find field "Title"
 
 The acceptance test is finally able to successfully `visit '/blog_posts/new'` and move on to attempt the next step, which is `fill_in 'Title', with: 'Hello, World!'`.
 
+The simplest code that would fix this error would be to add a plain `<input>` tag to the form. But, once again following the principle of writing the code we wish we had, we want to use Rails' form helpers, so let's do so. Enter the following contents in `new.html.erb`:
 
-### Add fields and submit button to form template [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/7144bb1974d136762e16f0b398a1a3eb2902e0ba)
+```erb
+<%= form_with do |f| %>
+  <div>
+    <%= f.label :title %>
+    <%= f.text_field :title %>
+  </div>
+<% end %>
+```
 
-#### app/views/blog_posts/new.html.erb
+Rerun the tests and now they are able to fill in that field, and we get the next error:
+
+```sh
+Failure/Error: fill_in 'Body', with: 'Hello, I say!'
+
+Capybara::ElementNotFound:
+  Unable to find field "Body" that is not disabled
+```
+
+So let's add the body field to the form as well:
 
 ```diff
--<%# empty view %>
-+<%= form_for @blog_post do |f| %>
-+  <div>
-+    <%= f.label :title %>
-+    <%= f.text_field :title %>
-+  </div>
+ <%= form_with do |f| %>
+   <div>
+     <%= f.label :title %>
+     <%= f.text_field :title %>
+   </div>
 +  <div>
 +    <%= f.label :body %>
 +    <%= f.text_area :body %>
 +  </div>
-+  <%= f.submit 'Create Blog Post' %>
-+<% end %>
+ <% end %>
 ```
 
-This is another case where all we needed to add to get the test to pass was the title field. But this is a reasonable case where you know what the form will consist of, so you can go ahead and create it all. Plus, your tests will never drive out the full markup of your templates, so you'll need to do that by hand anyway.
+The next error is:
 
-Red: First argument in form cannot contain nil or be empty
+```sh
+Failure/Error: click_on 'Create Blog Post'
 
-<%= form_for @blog_post do |f| %>
+Capybara::ElementNotFound:
+  Unable to find link or button "Create Blog Post"
+```
 
-In other words, @blog_post is nil but needs to be a model.
+Let's add a submit button:
 
+```diff
+   <div>
+     <%= f.label :body %>
+     <%= f.text_area :body %>
+   </div>
++  <%= f.submit 'Create Blog Post' %>
+ <% end %>
+```
 
-### Assign blog post in controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/6eb92b24f90c4663de45c685f23b32f14cb6a4ea)
+Our next error is:
 
-#### app/controllers/blog_posts_controller.rb
+```sh
+Failure/Error: click_on 'Create Blog Post'
+
+ActionController::RoutingError:
+  No route matches [POST] "/blog_posts/new"
+```
+
+What's going on here is that the default form submission behavior for Rails' form helper is to POST back to the current route you're on. The app is attempting to do that, and isn't finding a route that accepts a POST at that URL. This is because resourceful controllers accept a POST at the collection URL, in this case `/blog_posts`.
+
+Usually with Rails form helpers we get this behavior by passing a model object in. Let's instantiate a model in the controller action. We don't actually have a `BlogPost` model class yet, but let's write the code we wish we had:
 
 ```diff
  class BlogPostsController < ApplicationController
@@ -157,130 +281,61 @@ In other words, @blog_post is nil but needs to be a model.
  end
 ```
 
-We attempt to make the acceptance test pass by assigning the @blog_post instance variable in the controller. Note that we don't create a unit test for the controller. Many developers discourage controller tests because controller behavior is so closely related to acceptance test cases. Also, Rails 5 removes some controller test features that result in limiting how effective they can be.
-
-Red: uninitialized constant BlogPostsController::BlogPost
-
-The line of code we added isn't actually able to succeed because there is no class named BlogPost defined yet.
-
-
-### Add blog post model [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/259c646650e79f95d3ea16535d71f0999d309df3)
-
-#### app/models/blog_post.rb
+Then in the template we pass the model instance into the form helper:
 
 ```diff
-+class BlogPost < ApplicationRecord
-+end
+-<%= form_with do |f| %>
++<%= form_with model: @blog_post do |f| %>
+   <div>
+     <%= f.label :title %>
 ```
 
-We add the BlogPost model class. Although we don't strictly need to subclass `ApplicationRecord` to get the acceptance test error to pass, we're sure enough that this will be an Active Record model that it's safe for us to go ahead and subclass it.
+Now we get the error:
 
-Note that we will soon step down from our acceptance test to create a model test, but we don't do it just yet. We write model tests and other lower-level tests to specify behavior, but we haven't reached a behavioral error yet. This is just a structural error: there is no `BlogPost` class. That's simple enough that we can just implement it directly.
+```sh
+Failure/Error: @blog_post = BlogPost.new
 
-Red: PG::UndefinedTable: ERROR:  relation "blog_posts" does not exist
+NameError:
+  uninitialized constant BlogPostsController::BlogPost
+```
 
-Because we subclass `ApplicationRecord`, our call to `BlogPost.new` checks for the existence of a `blog_posts` table (a "relation"), and doesn't find one.
+By writing the code we wish we had, we got our tests to tell us that we don't have a `BlogPost` model yet. So let's generate it to get past the error. We could create it with no fields, but generating a Rails model with initial fields specified is so typical that we can go ahead and do that:
 
+```sh
+$ rails g model BlogPost title:string body:text
+```
 
-### Specify model should be instantiable [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/2dbc3e6df70403f5f1d098603f746a2e9e42186f)
+We get the following output:
 
-#### spec/models/blog_post_spec.rb
+```sh
+invoke  active_record
+create    db/migrate/20201020122843_create_blog_posts.rb
+create    app/models/blog_post.rb
+invoke    rspec
+create      spec/models/blog_post_spec.rb
+```
+
+Notice that a blog post model test was generated. We won't need it for this exercise because our use of the model is so trivial; you can delete it. We would use it if we were adding more complex methods to the model.
+
+Go ahead and migrate the database:
+
+```sh
+$ rails db:migrate
+```
+
+Rerun the tests and we get this error:
+
+```sh
+Failure/Error: click_on 'Create Blog Post'
+
+AbstractController::ActionNotFound:
+  The action 'create' could not be found for BlogPostsController
+```
+
+Now that the form is provided with a model object, it is successfully POSTing to the route that corresponds to the `create` action. But our controller doesn't have that action yet. Let's add it:
 
 ```diff
-+require 'rails_helper'
-+
-+describe BlogPost do
-+
-+  it "is instantiable" do
-+    expect{ blog_post = BlogPost.new }.not_to raise_error
-+  end
-+
-+end
-```
-
-The previous error wasn't enough for us to want to create a `BlogPost` model test, because it was just a structural error: there was no `BlogPost` class. But now we have an error that a `BlogPost` can't be instantiated, which is a logic error: and that means we should create a model test. It's not strictly a unit test because it's not isolated from the database, but it _is_ following the outside-in-testing principle of stepping down from the acceptance test to the test of an individual class.
-
-We reproduce the error that occurred in the acceptance test in the model test: the error of being unable to find the `blog_posts` table when creating a new instance.
-
-Inner red: PG::UndefinedTable: ERROR:  relation "blog_posts" does not exist
-
-
-### Create blog posts table [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/0301d014e5a06d42a5bcad57c335247646c38c31)
-
-#### db/migrate/20180110120127_create_blog_posts.rb
-
-```diff
-+class CreateBlogPosts < ActiveRecord::Migration[5.1]
-+  def change
-+    create_table :blog_posts do |t|
-+    end
-+  end
-+end
-```
-
-We fix the model test error by creating the `blog_posts` table.
-
-```
-Inner green; outer red: undefined method `title' for #<BlogPost id: nil>
-```
-
-Now the `BlogPost` can be instantiated, so the model test passes. We step back up to the acceptance test level and rerun it, and it's gotten past that error.
-
-The next acceptance test error occurs when Rails attempts to render the form. The form helper tries to get the current value of the `title` field on the model, but there is no `title` method to retrieve it. Since we want `title` to be a database-persisted field on our model, the problem is that there is no `title` column in our database table.
-
-
-### Specify blog post accessors [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/ebca7c3cebe62a3d225ef8aee012cfc2f294400b)
-
-#### spec/models/blog_post_spec.rb
-
-```diff
-     expect{ blog_post = BlogPost.new }.not_to raise_error
-   end
-
-+  it "defaults fields to nil" do
-+    blog_post = BlogPost.new
-+
-+    expect(blog_post.title).to be_nil
-+    expect(blog_post.body).to be_nil
-+  end
-+
- end
-```
-
-Once again, rather than fixing the acceptance error directly, we drop down to the model test level to reproduce the error. We specify that we want a `title` field--as well as a `body` field, since we know we'll need that and it feels safe to go ahead and add it. The behavior we want is that we want those fields to be `nil` for a new model instance.
-
-```
-Inner red: undefined method `title' for #<BlogPost id: nil>
-```
-
-With this specification, we've reproduced the error from the acceptance test.
-
-
-### Add columns to blog posts [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/ca241c13493d5d7b242163b898684cf07c96d81e)
-
-#### db/migrate/20160614163119_add_title_and_body_to_blog_posts.rb
-
-```diff
-+class AddTitleAndBodyToBlogPosts < ActiveRecord::Migration[5.1]
-+  def change
-+    add_column :blog_posts, :title, :string, null: false
-+    add_column :blog_posts, :body, :text, null: false
-+  end
-+end
-```
-
-We create a new migration to add the title and body column to the blog posts table.
-
-Inner green; outer red: The action 'create' could not be found for BlogPostsController
-
-With this, the model test passes, so we step back up to the acceptance test level and rerun it. The acceptance test moves on to the next error: the form is rendered, the fields are populated, it submits the form, but Rails doesn't find a `create` action on the controller to submit it to.
-
-
-### Add create method to blog post controller [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/3a3c51755b7b77d34662abaaff1753e52392b310)
-
-#### app/controllers/blog_posts_controller.rb
-
-```diff
+ class BlogPostsController < ApplicationController
    def new
      @blog_post = BlogPost.new
    end
@@ -290,65 +345,55 @@ With this, the model test passes, so we step back up to the acceptance test leve
  end
 ```
 
-We add the `create` method to the blog post controller directly, then rerun the acceptance test.
+The next error is:
 
-Outer red: Unable to find xpath "/html"
+```sh
+Failure/Error: expect(page).to have_content('Hello, World!')
 
-The error we get is a bit obscure, but effectively it means the acceptance test can't even find an HTML document returned to search within. Unlike with the `new` action, with the `create` action, if no explicit render or redirect happens, Rails 5 does not return an error that a template is missing; it just returns empty content.
-
-
-### Add blog post create template [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/f1f3772463e4e7a86155e093c02c837cb1280b45)
-
-#### app/views/blog_posts/create.html.erb
-
-```diff
-+<%# empty view %>
+Capybara::ElementNotFound:
+  Unable to find xpath "/html"
 ```
 
-Usually a `create` action would redirect to another route instead of rendering a template directly. But for the sake of keeping this tutorial simple, we'll just go ahead and render it--so we add a `create` template file. We leave it empty since that's all we need to do to get past the current error.
+This error message isn't the most obvious, but what it means is that no HTML was rendered in response to the action. There is no default rendering for `create` actions.
 
-Outer red: expected to find text "Hello, World!" in ""
+Usually a `create` action would redirect to another route instead of rendering a template directly. But for the sake of keeping this tutorial simple, we'll just go ahead and render it. Create a `create.html.erb` file in `app/views/blog_posts`.
 
-The next error is that, after submitting the blog post, the acceptance test expects to see the title of the post somewhere on the page, but it doesn't see it--because we haven't actually rendered any content at all.
+Rerun the tests and we get this error:
 
+```sh
+Failure/Error: expect(page).to have_content('Hello, World!')
+  expected to find text "Hello, World!" in ""
+```
 
-### Render blog post on create page [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/edfcb21d7b7028517adc000cc246a6646ccfcde7)
+The test is now able to successfully POST the form submission. After that, the test expects to see the title of the post somewhere on the page, but it doesn't see it--because we haven't actually rendered any content at all.
 
-#### app/controllers/blog_posts_controller.rb
+The simplest way to get past this failure is actually to *not* save the blog post to the database, but just instantiate it in-memory. Let's do that; we'll see later how we ensure it's persisted.
+
+In the `create` we create the blog post:
 
 ```diff
-   end
-
    def create
 +    @blog_post = BlogPost.new(params[:blog_post])
    end
  end
 ```
 
+Then in the template we render out the title:
 
-#### app/views/blog_posts/create.html.erb
-
-```diff
--<%# empty view %>
-+<h1><%= @blog_post.title %></h1>
-+
-+<div>
-+  <%= @blog_post.body %>
-+</div>
+```erb
+<h1><%= @blog_post.title %></h1>
 ```
 
-To get the blog post content rendered in the view, we attempt to create a new BlogPost instance with the passed-in form params.
+We rerun the test and now the error is:
 
-We don't yet attempt to save it to the database because the acceptance test hasn't led us there yet. All it's said is that we need an object on the `create` page that responds to a `title` method (and a `body` method). That doesn't require us to save anything to the database: all that requires is us instantiating an object.
+```sh
+Failure/Error: @blog_post = BlogPost.new(params[:blog_post])
 
-Outer red: ActiveModel::ForbiddenAttributesError
+ActiveModel::ForbiddenAttributesError:
+  ActiveModel::ForbiddenAttributesError
+```
 
-Attempting to instantiate a BlogPost leads to a new error: Rails' "strong parameters" security feature means that we can't just pass user-submitted params directly into a model; that could result in users hacking our system by setting fields they shouldn't be able to, like the user a post belongs to.
-
-
-### Switch to strong params for blog post creation [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/a900a09bfa56b9b8e9bdbebc548464bd46941a82)
-
-#### app/controllers/blog_posts_controller.rb
+Rails' "strong parameters" security feature means that we can't just pass user-submitted params directly into a model; that could result in users hacking our system by setting fields they shouldn't be able to, like the user a post belongs to. Instead, we need to permit the params that are allowed. We'll just permit the title for now:
 
 ```diff
    end
@@ -356,26 +401,54 @@ Attempting to instantiate a BlogPost leads to a new error: Rails' "strong parame
    def create
 -    @blog_post = BlogPost.new(params[:blog_post])
 +    @blog_post = BlogPost.new(blog_post_params)
-+  end
+   end
 +
 +  private
 +
 +  def blog_post_params
-+    params.require(:blog_post).permit(:title, :body)
-   end
++    params.require(:blog_post).permit(:title)
++  end
  end
 ```
 
-We fix the error by using the conventional Rails strong parameters approach of creating a private controller method that specifies which parameters are permitted. Because this is conventionally done in the controller, we don't need to step down to any kind of unit test--letting the acceptance test drive this code is fine.
+We use the conventional Rails strong parameters approach of creating a private controller method that specifies which parameters are permitted. Because this is a common pattern, we don't need to step down to any kind of controller unit test--letting the acceptance test drive this code is fine.
 
-Outer red: undefined method `title' for nil:NilClass
+The next error is:
 
-The next error isn't quite as readable as most we've gotten. What's going on is that the acceptance test attempts to load the last-saved `BlogPost` from the database, but none are saved, so we get `nil` back instead. When we try to check the `title` field, we get an error that there is no `title` method on `nil`. So the actual error is that no blog post is found in the database.
+```
+Failure/Error: expect(page).to have_content('Hello, I say!')
+  expected to find text "Hello, I say!" in "Hello, World!"
+```
 
+Now we need to pass the blog post body through to the view as well. In the controller:
 
-### Save blog post to database [<span class="octicon octicon-mark-github"></span>](https://github.com/learn-tdd-in/rails/commit/40ffedd91944fbb675ae72ec16d2e8e51ce15650)
+```diff
+ def blog_post_params
+-  params.require(:blog_post).permit(:title)
++  params.require(:blog_post).permit(:title, :body)
+ end
+```
 
-#### app/controllers/blog_posts_controller.rb
+And in the view:
+
+```diff
+ <h1><%= @blog_post.title %></h1>
++
++<div>
++  <%= @blog_post.body %>
++</div>
+```
+
+The next error is:
+
+```sh
+Failure/Error: expect(blog_post.title).to eq('Hello, World!')
+
+NoMethodError:
+  undefined method `title' for nil:NilClass
+```
+
+Now we've successfully found the title and body displayed on the page, but when the test checks for the record in the database, the record is `nil`. This means it hasn't been saved. This is just a small change to make in the `create` action:
 
 ```diff
    end
@@ -388,11 +461,9 @@ The next error isn't quite as readable as most we've gotten. What's going on is 
    private
 ```
 
-We fix this error by `create`ing a `BlogPost` in the database instead of just instantiating one in memory.
+With this, our acceptance test is passing. Notice that the check of the `body` field passed as soon as we got the `title` field passed as well. This is fine, and is extra safety.
 
-Outer green
-
-With thise, our acceptance test is passing. We've successfully allowed the acceptance test to drive us through implementing a complete feature!
+We've successfully allowed the acceptance test to drive us through implementing a complete feature!
 
 ## More Resources
 
