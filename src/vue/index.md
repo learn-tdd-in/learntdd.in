@@ -461,7 +461,7 @@ End-to-end testing has had major payoffs for server-rendered apps, and with Cypr
 To learn more about TDD, I recommend:
 
 * [Outside-In Frontend Development in Vue][outsideindev] - a free online book walking through this style of TDD.
-* [*Growing Object-Oriented Software, Guided by Tests*](http://www.informit.com/store/growing-object-oriented-software-guided-by-tests-9780321503626) - The original work on the style of TDD we describe here, mockist TDD. It has a lot of great detail, not just about testing, but also how it influences design and project methodology.
+* <a href="https://click.linksynergy.com/link?id=JlUaUff9Alw&offerid=145238.681793&type=2&murl=https%3A%2F%2Fwww.informit.com%2Ftitle%2F9780321503626"><em>Growing Object-Oriented Software, Guided by Tests</em></a><IMG border=0 width=1 height=1 src="https://ad.linksynergy.com/fs-bin/show?id=JlUaUff9Alw&bids=145238.681793&type=2&subid=0" /> - The original work on the style of TDD we describe here, mockist TDD. It has a lot of great detail, not just about testing, but also how it influences design and project methodology.
 * ["Unit Testing Vue Components"](https://www.youtube.com/watch?v=LxXsGNXsMo8) (video) - a talk by Edd Yerburgh that provides a detailed perspective on writing valuable Vue component tests
 * [_Testing Vue.js Applications_](https://www.manning.com/books/testing-vuejs-applications) - a book by Edd that goes into more detail on the above
 
