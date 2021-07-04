@@ -438,7 +438,7 @@ This creates the file `app/models/messages.js`. Open it and add an attribute for
 
 ```diff
 -import Model from '@ember-data/model';
-+import Model, {attr} from '@ember-data/model';
++import Model, { attr } from '@ember-data/model';
 
  export default class MessageModel extends Model {
 +  @attr text;
