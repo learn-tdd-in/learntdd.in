@@ -32,6 +32,8 @@ To hook up ember-sinon-qunit, we need to call a setup function in our `tests/tes
 +import setupSinon from 'ember-sinon-qunit';
 
  setApplication(Application.create(config.APP));
+
+ setup(QUnit.assert);
 +
 +setupSinon();
 
