@@ -519,7 +519,7 @@ Our route is attempting to load the messages from a backend server, which we've 
 ```diff
  export default function() {
 +  this.get('/messages');
-
++
    // These comments are here to help you get started. Feel free to delete them.
 ```
 
