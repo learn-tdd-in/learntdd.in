@@ -380,7 +380,7 @@ Add another test case to `new-message-form-test.js`:
 +    const handleSend = sinon.spy();
 +    this.set('handleSend', handleSend);
 +
-+    await render(hbs`<NewMessageForm @onSend={{handleSend}} />`);
++    await render(hbs`<NewMessageForm @onSend={{this.handleSend}} />`);
 +
 +    await fillIn('[data-test-message-text]', message);
 +    await click('[data-test-send-message-button]');
