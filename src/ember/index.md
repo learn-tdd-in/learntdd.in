@@ -5,7 +5,7 @@
 Test-Driven Development (TDD) is an approach to automated software testing that involves writing a failing test before writing the production code to make it pass. TDD helps you develop a robust test suite to catch bugs, as well as guiding you to more modular, flexible code.
 
 To see how TDD works in Ember, let's walk through a simple real-world example of building a feature.
-We'll be using Ember 3.15 and its built-in testing tools, along with [ember-sinon-qunit](https://github.com/elwayman02/ember-sinon-qunit) for mocking functions and [Mirage](http://www.ember-cli-mirage.com/) for mocking web service requests.
+We'll be using Ember 3.27 and its built-in testing tools, along with [ember-sinon-qunit](https://github.com/elwayman02/ember-sinon-qunit) for mocking functions and [Mirage](http://www.ember-cli-mirage.com/) for mocking web service requests.
 This tutorial assumes you have some [familiarity with Ember](https://guides.emberjs.com/release/) and with [automated testing concepts](/concepts).
 
 The feature we'll build is a simple list of messages.
