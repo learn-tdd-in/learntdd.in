@@ -57,10 +57,10 @@ import { module, test } from 'qunit';
 import { visit, currentURL } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 
-module('Acceptance | sending a message', function(hooks) {
+module('Acceptance | sending a message', function (hooks) {
   setupApplicationTest(hooks);
 
-  test('visiting /sending-a-message', async function(assert) {
+  test('visiting /sending-a-message', async function (assert) {
     await visit('/sending-a-message');
 
     assert.equal(currentURL(), '/sending-a-message');
@@ -74,17 +74,17 @@ Set up Mirage to mock out the back end:
  import { setupApplicationTest } from 'ember-qunit';
 +import { setupMirage } from 'ember-cli-mirage/test-support';
 
- module('Acceptance | sending a message', function(hooks) {
+ module('Acceptance | sending a message', function (hooks) {
    setupApplicationTest(hooks);
 +  setupMirage(hooks);
 
-   test('visiting /sending-a-message', async function(assert) {
+   test('visiting /sending-a-message', async function (assert) {
 ```
 
 Now, replace the `test` with the following test:
 
 ```js
-test('it shows the message in the list', async function(assert) {
+test('it shows the message in the list', async function (assert) {
   const message = 'Hello World';
   await visit('/');
 
@@ -230,10 +230,10 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render, fillIn, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-module('Integration | Component | new-message-form', function(hooks) {
+module('Integration | Component | new-message-form', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it clears the message', async function(assert) {
+  test('it clears the message', async function (assert) {
     const message = 'Hello World';
 
     await render(hbs`<NewMessageForm />`);
@@ -369,12 +369,12 @@ Add another test case to `new-message-form-test.js`:
  import { hbs } from 'ember-cli-htmlbars';
 +import sinon from 'sinon';
 
- module('Integration | Component | new-message-form', function(hooks) {
+ module('Integration | Component | new-message-form', function (hooks) {
 ...
      assert.dom('[data-test-message-text]').hasValue('');
    });
 +
-+  test('it calls the onSend argument with the message', async function(assert) {
++  test('it calls the onSend argument with the message', async function (assert) {
 +    const message = 'Hello World';
 +
 +    const handleSend = sinon.spy();
