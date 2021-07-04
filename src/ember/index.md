@@ -89,7 +89,7 @@ test('it shows the message in the list', async function(assert) {
   await visit('/');
 
   await fillIn('[data-test-message-text]', message);
-  click('[data-test-send-message-button]');
+  await click('[data-test-send-message-button]');
 
   assert.dom('[data-test-message-text]').hasValue('');
   assert.dom('[data-test-message-list]').hasText(message);
