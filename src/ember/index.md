@@ -164,12 +164,12 @@ $ ember g component NewMessageForm
 This will create the following files:
 
 - `app/components/new-message-form.js`
-- `app/templates/components/new-message-form.hbs`
+- `app/components/new-message-form.hbs`
 - `tests/integration/components/new-message-form-test.js`
 
 Delete `tests/integration/components/new-message-form-test.js` for now--we won't be using it yet, and its test failures will clutter up our output.
 
-Now enter the following contents in `app/templates/components/new-message-form.hbs`.
+Now enter the following contents in `app/components/new-message-form.hbs`.
 
 ```handlebars
 <input
