@@ -155,7 +155,7 @@ One of the files this creates is the template for this route at `app/templates/i
 +<NewMessageForm />
 ```
 
-Next, generate the NewMessageForm component:
+Next, generate the `NewMessageForm` component:
 
 ```sh
 $ ember g component NewMessageForm
@@ -246,7 +246,7 @@ module('Integration | Component | new-message-form', function (hooks) {
 });
 ```
 
-A lot of the test seems the same as the acceptance test: we still enter a new message and click the send button. But this is testing something very different. Instead of testing the whole app running together, we're testing just the NewMessageForm by itself.
+A lot of the test seems the same as the acceptance test: we still enter a new message and click the send button. But this is testing something very different. Instead of testing the whole app running together, we're testing just the `NewMessageForm` by itself.
 
 Note that since both Ember's acceptance and component tests use the same rendering functionality, we use the same `fillIn` and `click` helpers and the same assertions. Nice!
 
@@ -326,9 +326,9 @@ Acceptance | sending a message: it shows the message in the list
 
 Now, finally, the test will drive us to implement the real meat of our feature: storing the message entered and displaying it.
 
-The NewMessageForm won't be responsible for displaying this message, though: we'll create a separate MessageList component that also exists in the route.
+The `NewMessageForm` won't be responsible for displaying this message, though: we'll create a separate `MessageList` component that also exists in the route.
 
-Following the principle of writing the code we wish we had, we wish we had a MessageList component to display the messages, so let's write that code in `app/templates/index.hbs`:
+Following the principle of writing the code we wish we had, we wish we had a `MessageList` component to display the messages, so let's write that code in `app/templates/index.hbs`:
 
 ```diff
  <NewMessageForm />
@@ -357,11 +357,11 @@ Acceptance | sending a message: it shows the message in the list
 
 The test expected to find the text of our message, "Hello World", somewhere in the message list, but it didn't.
 
-How will we send our message between the NewMessageForm and MessageList? Well, messages are the core data item of our application. We want to use Ember Data to store our data. So, when we submit the form, we want to create a new message record in Ember Data. And we want our index route to load all messages from Ember Data and pass them to MessageList to display.
+How will we send our message between the `NewMessageForm` and `MessageList`? Well, messages are the core data item of our application. We want to use Ember Data to store our data. So, when we submit the form, we want to create a new message record in Ember Data. And we want our index route to load all messages from Ember Data and pass them to `MessageList` to display.
 
-What part does NewMessageForm play in all this? For the sake of creating nice decoupled components, let's say that we don't want our form to know about Ember Data directly. Instead, we just want it to call a passed-in function with the results of the form.
+What part does `NewMessageForm` play in all this? For the sake of creating nice decoupled components, let's say that we don't want our form to know about Ember Data directly. Instead, we just want it to call a passed-in function with the results of the form.
 
-To add this event handler behavior to NewMessageForm, we want to step back down to the component test. In this case, the component test won't be asserting exactly the same thing as the acceptance test. The acceptance test is looking for the 'New message' content on the screen, but the component test will only be asserting the behavior that the NewMessageForm component is responsible for: that it calls the event handler.
+To add this event handler behavior to `NewMessageForm`, we want to step back down to the component test. In this case, the component test won't be asserting exactly the same thing as the acceptance test. The acceptance test is looking for the 'New message' content on the screen, but the component test will only be asserting the behavior that the `NewMessageForm` component is responsible for: that it calls the event handler.
 
 Add another test case to `new-message-form-test.js`:
 
@@ -445,13 +445,13 @@ This creates the file `app/models/messages.js`. Open it and add an attribute for
  }
 ```
 
-Since our NewMessageForm is embedded directly into a route, the place we can make an action to pass to it is a controller for that route. Generate an index controller:
+Since our `NewMessageForm` is embedded directly into a route, the place we can make an action to pass to it is a controller for that route. Generate an index controller:
 
 ```sh
 $ ember g controller index
 ```
 
-Then add a handleSend action to it:
+Then add a `handleSend` action to it:
 
 ```diff
  import Controller from '@ember/controller';
@@ -468,7 +468,7 @@ Then add a handleSend action to it:
 
 We access the Ember Data `store` that's made available to controllers automatically and use it to create a new message record, passing it the provided text. Then we save that record.
 
-Next, let's pass that action to the NewMessageForm:
+Next, let's pass that action to the `NewMessageForm`:
 
 ```diff
 -<NewMessageForm />
@@ -488,7 +488,7 @@ Now that we should have message records created, let's update our route to load 
  }
 ```
 
-Next, pass the loaded model into the MessageList:
+Next, pass the loaded model into the `MessageList`:
 
 ```diff
 {%raw %} <NewMessageForm @onSend={{this.handleSend}} />
@@ -496,7 +496,7 @@ Next, pass the loaded model into the MessageList:
 +<MessageList @messages={{@model}} />
 ```
 
-Finally, let's update the MessageList template to display these messages:
+Finally, let's update the `MessageList` template to display these messages:
 
 ```diff
  <ul data-test-message-list>
