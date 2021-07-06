@@ -341,6 +341,8 @@ Now let's generate that component:
 $ ember g component MessageList
 ```
 
+Delete `tests/integration/components/message-list-test.js`--we won't be using it, and our changes will break it.
+
 Open `app/components/message-list.hbs` and add the following:
 
 ```handlebars
