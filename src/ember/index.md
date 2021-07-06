@@ -164,7 +164,6 @@ $ ember g component NewMessageForm
 
 This will create the following files:
 
-- `app/components/new-message-form.js`
 - `app/components/new-message-form.hbs`
 - `tests/integration/components/new-message-form-test.js`
 
