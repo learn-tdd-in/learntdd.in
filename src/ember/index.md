@@ -148,9 +148,10 @@ We wish we had these things, so let's go ahead and create them. Generate an inde
 $ ember g route index
 ```
 
-One of the files this creates is the template for this route at `app/templates/index.hbs`. Replace the contents of this file with an invocation of the new message component that we wish we had:
+One of the files this creates is the template for this route at `app/templates/index.hbs`. Replace the `outlet` in this file with an invocation of the new message component that we wish we had:
 
 ```diff
+ {{page-title "Index"}}
 -{{outlet}}
 +<NewMessageForm />
 ```
