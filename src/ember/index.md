@@ -207,7 +207,7 @@ We want the send button to be part of our `NewMessageForm`, so fixing this error
 +</button>
 ```
 
-# Implementiong Component Behavior
+# Implementing Component Behavior
 
 Rerun the tests. Now we get a new kind of test failure:
 
