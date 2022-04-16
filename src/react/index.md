@@ -240,7 +240,7 @@ describe('<NewMessageForm />', () => {
 });
 ```
 
-React Testing Library has a different API than Cypress, but a lot of the test seems the same as the end-to-end test: we still enter a new message and click the send button. But this is testing something very different. Instead of testing the whole app running together, we're testing just the NewMessageForm by itself.
+React Testing Library has a different API than Cypress, but a lot of the test seems the same as the end-to-end test: we still enter a new message and click the send button. But this is testing something very different. Instead of testing the whole app running together, we're testing just the `NewMessageForm` by itself.
 
 Run `yarn test` to run the component test. We get the same error as we did with the end-to-end test:
 
@@ -370,7 +370,7 @@ Now the component test passes. That's great! Now we step back up again to run ou
 
 > (uncaught exception) TypeError: onSend is not a function
 
-We changed NewMessageForm to use an onSend event handler, but we haven't passed one to our NewMessageForm in our production code. Let's add an empty one to get past this error:
+We changed `NewMessageForm` to use an `onSend` event handler, but we haven't passed one to our `NewMessageForm` in our production code. Let's add an empty one to get past this error:
 
 ```diff
  const App = () => {
