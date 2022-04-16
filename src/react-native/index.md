@@ -31,10 +31,27 @@ $ yarn ios
 
 After a few minutes you should see the welcome screen of the app in the iOS Simulator.
 
-Now we'll add `react-native-testing-library` to enable component testing:
+Now we'll add React Native Testing Library (RNTL) and Jest Native to enable component testing:
 
 ```sh
-$ yarn add --dev react-native-testing-library
+$ yarn add --dev @testing-library/react-native@9.1.0 \
+                 @testing-library/jest-native@4.0.4
+```
+
+RNTL doesn't require any additional setup, but for Jest Native does. In `package.json`, add the following:
+
+```diff
+ "jest": {
+-  "preset": "react-native"
++  "preset": "react-native",
++   "setupFilesAfterEnv": ["./jest-setup-after-env.js"]
+  }
+```
+
+Then create a file `jest-setup-after-env.js` at the root of your project with the following contents:
+
+```js
+import '@testing-library/jest-native/extend-expect';
 ```
 
 Next, to get Detox working, let's first install the global Detox CLI tool:
