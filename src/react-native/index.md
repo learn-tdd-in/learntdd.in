@@ -170,6 +170,10 @@ Create a file `e2e/creating_a_message.e2e.js` and enter the following contents:
 
 ```js
 describe('Creating a message', () => {
+  beforeAll(async () => {
+    await device.launchApp();
+  });
+
   beforeEach(async () => {
     await device.reloadReactNative();
   });
