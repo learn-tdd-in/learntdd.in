@@ -203,7 +203,7 @@ We want the send button to be part of our `NewMessageForm`, so fixing this error
 
 ## Implementing Component Behavior
 
-Rerun the tests. Now we get a new kind of test failure:
+Rerun the Cypress test. Now we get a new kind of test failure:
 
 > Timed out retrying after 4000ms: expected '&lt;input&gt;' to have value '', but the value was 'New message'
 
