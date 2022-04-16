@@ -167,7 +167,7 @@ export default function NewMessageForm() {
 Now rerun the tests in Cypress. We're still getting the same error, because we haven't actually added a text input. But we're a step closer because we've written the code we wish we had: a component to wrap it. Now we can add the input tag directly. We give it a `data-testid` attribute of "messageText": that's the attribute that our test uses to find the component.
 
 ```diff
- const NewMessageForm = () => {
+ export default function NewMessageForm() {
 -  return null;
 +  return (
 +    <input
@@ -175,6 +175,7 @@ Now rerun the tests in Cypress. We're still getting the same error, because we h
 +      data-testid="messageText"
 +    />
 +  );
+ }
 ```
 
 Rerun the tests. The error has changed! The tests are now able to find the "messageText" element. The new error is:
@@ -286,11 +287,11 @@ Now, we can add the behavior to the component to get this test to pass. To accom
 Next, we want to clear out `inputText` when the send button is clicked:
 
 ```diff
-   const handleTextChange = event => {
+   function handleTextChange(event) {
      setInputText(event.target.value);
    }
 
-+  const handleSend = () => {
++  function handleSend() {
 +    setInputText('');
 +  }
 +
@@ -362,10 +363,10 @@ So the `sendHandler` isn't being called. Let's fix that:
 +export default function NewMessageForm({onSend}) {
    const [inputText, setInputText] = useState('');
 ...
-   const handleSend = () => {
+   function handleSend() {
 +    onSend(inputText);
      setInputText('');
-   };
+   }
 ```
 
 Now the component test passes. That's great! Now we step back up again to run our feature test and we get:
@@ -401,7 +402,7 @@ Next, we need to save the message in state in the `App` component. Let's add it 
 +  const [messages, setMessages] = useState([]);
 +  function handleSend(newMessage) {
 +    setMessages([newMessage, ...messages]);
-+  };
++  }
 -  function handleSend() {}
 ```
 
