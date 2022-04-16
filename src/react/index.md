@@ -96,8 +96,6 @@ export default function App() {
 }
 ```
 
-Note that for this tutorial we'll use function components and hooks. But the tests we'll write will work just the same if you write class components instead. That's one of the great things about tests that aren't coupled to implementation details.
-
 ## The Feature Test
 
 When performing outside-in TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.** For our simple messaging app, the first feature we want is to be able to enter a message, send it, and see it in the list.
