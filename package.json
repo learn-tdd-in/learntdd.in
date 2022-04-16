@@ -9,7 +9,8 @@
   },
   "scripts": {
     "start": "vuepress dev src",
-    "build": "vuepress build src"
+    "build": "vuepress build src",
+    "deploy": "yarn build && netlify deploy --prod"
   },
   "license": "MIT",
   "devDependencies": {
