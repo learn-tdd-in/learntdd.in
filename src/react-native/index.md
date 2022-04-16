@@ -597,11 +597,9 @@ To learn more about TDD, I recommend:
 
 If you have any questions or suggestions, reach out to <tdd@codingitwrong.com> or any contact mechanism on [codingitwrong.](https://codingitwrong.com) and we'll be glad to help!
 
-[controlled-component]: https://facebook.github.io/react-native/docs/handling-text-input.html
-[detox]: https://github.com/wix/detox/blob/master/docs/README.md#detox-documentation
-[detox-getting-started]: https://github.com/wix/detox/blob/master/docs/Introduction.GettingStarted.md
-[expo]: https://expo.io
+[detox]: https://wix.github.io/Detox/
 [feature-tours]: https://iamvery.com/2018/11/14/feature-tours.html
 [jest]: https://jestjs.io/
+[jest-native]: https://github.com/testing-library/jest-native#readme
 [react-native]: https://facebook.github.io/react-native/docs/getting-started.html
-[react-native-testing-library]: https://github.com/callstack/react-native-testing-library
+[react-native-testing-library]: https://callstack.github.io/react-native-testing-library/
