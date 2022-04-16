@@ -4,7 +4,7 @@
 
 Test-Driven Development (TDD) is an approach to automated software testing that involves writing a failing test before writing the production code to make it pass. TDD helps you develop a robust test suite to catch bugs, as well as guiding you to more modular, flexible code.
 
-To see how TDD works in Vue, let's walk through a simple real-world example of building a feature. We'll be using Vue 2.6 with Vue CLI 4, with built-in support to use [Cypress][cypress] for end-to-end tests and [Jest][jest] for unit tests. We'll also use [Vue Test Utils][vue-test-utils] for component tests. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/vue) that shows the process step-by-step. This tutorial assumes you have some [familiarity with Vue][vue] and with [automated testing concepts](/concepts).
+To see how TDD works in Vue, let's walk through a simple real-world example of building a feature. We'll be using Vue 2.6 with Vue CLI 4, with built-in support to use [Cypress][cypress] for end-to-end tests and [Jest][jest] for unit tests. We'll also use [Vue Test Utils][vue-test-utils] for component tests. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/vue) that shows the process step-by-step. This tutorial assumes you have some [familiarity with Vue][vue] and with [automated testing concepts](https://jestjs.io/docs/getting-started).
 
 You can also watch a [conference talk](https://www.vuemastery.com/conferences/connect-tech-2018/Test-Driven-Development-in-Vue-with-Cypress/) version of this tutorial.
 

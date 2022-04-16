@@ -4,7 +4,7 @@
 
 Test-Driven Development (TDD) is an approach to automated software testing that involves writing a failing test before writing the production code to make it pass. TDD helps you develop a robust test suite to catch bugs, as well as guiding you to more modular, flexible code.
 
-To see how TDD works in Rails, let's walk through a simple real-world example of building a feature. We'll be using Rails 6.0 along with RSpec and Capybara, two popular test libraries for Ruby. Each section of the article is linked to a corresponding commit in the [Git repo](https://github.com/learn-tdd-in/rails) that shows the process step-by-step. This tutorial assumes you have some [familiarity with Rails](http://guides.rubyonrails.org/) and with [automated testing concepts](/concepts).
+To see how TDD works in Rails, let's walk through a simple real-world example of building a feature. We'll be using Rails 6.0 along with RSpec and Capybara, two popular test libraries for Ruby. Each section of the article is linked to a corresponding commit in the [Git repo](https://github.com/learn-tdd-in/rails) that shows the process step-by-step. This tutorial assumes you have some [familiarity with Rails](http://guides.rubyonrails.org/) and with [automated testing concepts](https://rspec.info/documentation/3.10/rspec-core/#basic-structure).
 
 You can also watch a [meetup presentation video](https://youtu.be/fXlLbhuIc34) of this tutorial.
 

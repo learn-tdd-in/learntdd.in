@@ -6,9 +6,9 @@ Test-Driven Development (TDD) is an approach to automated software testing that 
 
 To see how TDD works in React Native, let's walk through a simple real-world example of building a feature. We'll be using React Native 0.68, the [Jest][jest] test runner, and several testing libraries: [React Native Testing Library][react-native-testing-library] and [Jest Native][jest-native] for component tests and [Detox][detox] for end-to-end tests.
 
-This tutorial assumes you have some [familiarity with React Native][react-native] and with [automated testing concepts](/concepts).
+This tutorial assumes you have some [familiarity with React Native][react-native] and with [automated testing concepts](https://jestjs.io/docs/getting-started).
 
-You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react-native) that shows the process step-by-step. You can also watch a [live stream recording](https://www.youtube.com/watch?v=iyfsE2f1Q4Y&list=PLXXnezSEtvNPZroRdvjhEVzOhURl572Lf&index=3&t=0s) of this tutorial with slightly different tooling.
+If you like, you can follow along in the [Git repo](https://github.com/learn-tdd-in/react-native) that shows the process step-by-step. You can also watch a [live stream recording](https://www.youtube.com/watch?v=iyfsE2f1Q4Y&list=PLXXnezSEtvNPZroRdvjhEVzOhURl572Lf&index=3&t=0s) of this tutorial with slightly different tooling.
 
 The feature we'll build is a simple list of messages.
 
