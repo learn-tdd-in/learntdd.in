@@ -166,7 +166,7 @@ Finally, let's update our `test` NPM script so it won't try to run our Detox tes
 
 When performing TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.** For our simple messaging app, the first feature we want is to be able to enter a message, send it, and see it in the list.
 
-Create a file `e2e/creating_a_message.spec.js` and enter the following contents:
+Create a file `e2e/creating_a_message.e2e.js` and enter the following contents:
 
 ```js
 describe('Creating a message', () => {
