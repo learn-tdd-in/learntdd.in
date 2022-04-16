@@ -331,7 +331,7 @@ Instead of adding the behavior directly, let's **step down from the "outside" le
 
 Inside the `src` folder, create a `NewMessageForm.spec.js` file. Add the following contents:
 
-```javascript
+```js
 import React from 'react';
 import {render, fireEvent} from '@testing-library/react-native';
 import NewMessageForm from './NewMessageForm';
