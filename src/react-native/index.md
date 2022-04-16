@@ -153,14 +153,14 @@ export default function App() {
 };
 ```
 
-Fiinally, let's update our `test` NPM script so it won't try to run our Detox tests, since those need to be run separately using the `detox` command:
+This provides a status bar and keeps the content in the phone's safe area, but other than that the app is empty.
+
+Finally, let's update our `test` NPM script so it won't try to run our Detox tests, since those need to be run separately using the `detox` command:
 
 ```diff
 -"test": "jest",
 +"test": "jest src",
 ```
-
-This provides a status bar and keeps the content in the phone's safe area, but other than that the app is empty.
 
 ## The Feature Test
 
