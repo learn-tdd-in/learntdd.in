@@ -418,7 +418,7 @@ Now the field is successfully taking in the typed value; it just isn't clearing 
 
 Rerun the component test. This gets us past the assertion failure.
 
-**Once a component test passes, step back up to the outer end-to-end test to see what the next error is.** Rerun `detox test`. Now our final assertion fails: it can't find a UI element that has `accessibilityLabel('New message')`.
+**Once a component test passes, step back up to the outer end-to-end test to see what the next error is.** Rerun `detox test -c ios`. Now our final assertion fails: it can't find a UI element that has `label('New message')`.
 
 Now, finally, the test will drive us to implement the real meat of our feature: storing the message entered and displaying it.
 
