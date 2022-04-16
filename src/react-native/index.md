@@ -75,23 +75,28 @@ Then initialize Detox in the project, specifying Jest as the test runner:
 $ detox init -r jest
 ```
 
-After this, we need to add some config for Detox to our `package.json`:
+This creates several files, including `.detoxrc.json`.
+
+After this, we need to add some extra config to `.detoxrc.json`. Add the following:
 
 ```diff
  {
+   "testRunner": "jest",
+   "runnerConfig": "e2e/config.json",
+   "skipLegacyWorkersInjection": true,
+   "apps": {
+     "ios": {
+       "type": "ios.simulator",
+-      "binaryPath": "SPECIFY_PATH_TO_YOUR_APP_BINARY",
++      "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/ReactNativeTDD.app",
++      "build": "xcodebuild -workspace ios/ReactNativeTDD.xcworkspace -scheme ReactNativeTDD -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build"
+     },
+     "android": {
+       "type": "android.apk",
+       "binaryPath": "SPECIFY_PATH_TO_YOUR_APP_BINARY"
+     }
+   },
    ...
-   "detox": {
--    "test-runner": "jest"
-+    "test-runner": "jest",
-+    "configurations": {
-+      "ios.sim.debug": {
-+        "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/ReactNativeTDD.app",
-+        "build": "xcodebuild -workspace ios/ReactNativeTDD.xcworkspace -scheme ReactNativeTDD -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
-+        "type": "ios.simulator",
-+        "name": "iPhone 11"
-+      }
-+    }
-   }
  }
 ```
 
