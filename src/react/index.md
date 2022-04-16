@@ -251,11 +251,9 @@ Expected: ""
 Received: "New message"
 ```
 
-Now, we can add the behavior to the component to get this test to pass. To accomplish this, we'll need to make the input a [controlled component][controlled-component], so its text is available in the parent component's state:
+Leave `yarn test` running for the duration of this tutorial; it will automatically rerun each time you save changes to a test or production code file.
 
-```diff
--import React from 'react';
-+import React, { useState } from 'react';
+Now, we can add the behavior to the component to get this test to pass. To accomplish this, we'll need to make the input a controlled component, so its text is available in the parent component's state:
 
  const NewMessageForm = () => {
 +  const [inputText, setInputText] = useState('');
@@ -479,7 +477,6 @@ To learn more about TDD, I recommend:
 
 If you have any questions or suggestions, reach out to [@CodingItWrong](https://twitter.com/CodingItWrong) on Twitter or <tdd@codingitwrong.com> and we'll be glad to help!
 
-[controlled-component]: https://reactjs.org/docs/forms.html#controlled-components
 [create-react-app]: https://github.com/facebook/create-react-app
 [cypress]: https://www.cypress.io/
 [feature-tours]: https://iamvery.com/2018/11/14/feature-tours.html
