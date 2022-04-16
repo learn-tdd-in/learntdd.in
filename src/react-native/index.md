@@ -103,14 +103,19 @@ After this, we need to add some extra config to `.detoxrc.json`. Add the followi
 Now, let's run it and see that the initial test fails. If React Native and the iOS Simulator are not still running, start them:
 
 ```sh
-$ react-native run-ios
+$ yarn ios
 ```
 
-Then, build the Detox version of the binary, and run the tests:
+Then, build the Detox version of the binary:
 
 ```sh
-$ detox build
-$ detox test
+$ detox build -c ios
+```
+
+The build will take a little while, but you should only have to do it once for this tutorial. When it finishes, run the tests:
+
+```sh
+$ detox test -c ios
 ```
 
 You should see the React Native app launched in a simulator, then you should see output including something like the following:
