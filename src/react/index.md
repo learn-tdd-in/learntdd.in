@@ -255,15 +255,18 @@ Leave `yarn test` running for the duration of this tutorial; it will automatical
 
 Now, we can add the behavior to the component to get this test to pass. To accomplish this, we'll need to make the input a controlled component, so its text is available in the parent component's state:
 
- const NewMessageForm = () => {
+```diff
++import {useState} from 'react';
++
+ export default function NewMessageForm() {
 +  const [inputText, setInputText] = useState('');
 +
-+  const handleTextChange = event => {
++  function handleTextChange(event) {
 +    setInputText(event.target.value);
-+  };
++  }
 +
    return (
-     <div>
+     <>
        <input
          type="text"
          data-testid="messageText"
@@ -275,7 +278,7 @@ Now, we can add the behavior to the component to get this test to pass. To accom
        >
          Send
        </button>
-     </div>
+     </>
    );
  };
 ```
@@ -354,8 +357,8 @@ Number of calls: 0
 So the `sendHandler` isn't being called. Let's fix that:
 
 ```diff
--const NewMessageForm = () => {
-+const NewMessageForm = ({ onSend }) => {
+-export default function NewMessageForm() {
++export default function NewMessageForm({onSend}) {
    const [inputText, setInputText] = useState('');
 ...
    const handleSend = () => {
@@ -371,17 +374,12 @@ Now the component test passes. That's great! Now we step back up again to run ou
 We changed `NewMessageForm` to use an `onSend` event handler, but we haven't passed one to our `NewMessageForm` in our production code. Let's add an empty one to get past this error:
 
 ```diff
- const App = () => {
-+  const handleSend = newMessage => {};
+ export default function App() {
++  function handleSend() {}
 +
-   render() {
-     return (
-       <div>
--        <NewMessageForm />
-+        <NewMessageForm onSend={handleSend} />
-       </div>
-     );
-   }
++  return <NewMessageForm onSend={handleSend} />;
+-  return <NewMessageForm />;
+ }
 ```
 
 Rerun the e2e test and we get:
@@ -395,59 +393,60 @@ We no longer get the `onSend` error--now we're back to the same assertion failur
 Next, we need to save the message in state in the `App` component. Let's add it to an array:
 
 ```diff
--import React from 'react';
-+import React, { useState } from 'react';
++import {useState} from 'react';
  import NewMessageForm from './NewMessageForm';
 
- const App = () => {
+ export default function App() {
 +  const [messages, setMessages] = useState([]);
-   const handleSend = newMessage => {
++  function handleSend(newMessage) {
 +    setMessages([newMessage, ...messages]);
-   };
++  };
+-  function handleSend() {}
 ```
 
 Next, to display the messages, let's create another custom component to keep our `App` component nice and simple. We'll call it `MessageList`. We'll write the code we wish we had in `App.js`:
 
 ```diff
- import React, { Component } from 'react';
+ import {useState} from 'react';
  import NewMessageForm from './NewMessageForm';
 +import MessageList from './MessageList';
 
- const App = () => {
-...
-   return (
-     <div>
-       <NewMessageForm onSend={handleSend} />
+ export default function App() {
+   const [messages, setMessages] = useState([]);
+   function handleSend(newMessage) {
+     setMessages([newMessage, ...messages]);
+   }
+
+-  return <NewMessageForm onSend={handleSend} />;
++  return (
++    <>
++      <NewMessageForm onSend={handleSend} />
 +      <MessageList data={messages} />
-     </div>
-   );
++    </>
++  );
+ }
 ```
 
 Next, we'll create `MessageList.js` and add an empty implementation:
 
 ```jsx
-import React from 'react';
-
-const MessageList = ({ data }) => (
-  <div />
-);
-
-export default MessageList;
+export default function MessageList() {
+  return null;
+}
 ```
 
 Rerun the tests, and, as we expect, we still aren't displaying the message. But now that we have a `MessageList` component, we're ready to finally implement that and make the test pass:
 
 ```diff
- import React from 'react';
-
- const MessageList = ({ data }) => (
--  <div />
-+  <ul>
-+    {data.map(message => <li key={message}>{message}</li>)}
-+  </ul>
- );
-
- export default MessageList;
+-export default function MessageList() {
+-  return null;
++export default function MessageList({data}) {
++  return (
++    <ul>
++      {data.map(message => <li key={message}>{message}</li>)}
++    </ul>
++  );
+ }
 ```
 
 Rerun the tests and they pass. We've let the tests drive our first feature!
