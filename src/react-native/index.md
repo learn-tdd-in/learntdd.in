@@ -16,12 +16,6 @@ The feature we'll build is a simple list of messages.
 
 It takes a little work to get our testing setup in place, but it'll be worth it!
 
-First, if you don't have the React Native CLI installed, install it:
-
-```sh
-$ npm install -g react-native-cli
-```
-
 Create a new React Native app:
 
 ```sh
