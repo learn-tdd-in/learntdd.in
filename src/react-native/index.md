@@ -441,9 +441,10 @@ To add this event handler behavior to `NewMessageForm`, we want to step back dow
 
        fireEvent.changeText(getByTestId('messageText'), messageText);
        fireEvent.press(getByTestId('sendButton'));
-...
+     });
+
      it('clears the message field', () => {
-       expect(getByTestId('messageText').props.value).toEqual('');
+       expect(getByTestId('messageText')).toHaveProp('value', '');
      });
 +
 +    it('calls the send handler', () => {
