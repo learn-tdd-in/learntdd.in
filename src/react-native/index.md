@@ -269,20 +269,17 @@ Now rerun the tests with `detox test`. We're still getting the same error, becau
 Rerun the tests. The error has changed! The new error is:
 
 ```bash
-Failed: Error: Error: Cannot find UI element.
-Exception with Action: {
-  "Action Name":  "Tap",
-  "Element Matcher":  "((!(kindOfClass('RCTScrollView')) && (respondsToSelector(accessibilityIdentif
-ier) && accessibilityID('sendButton'))) || (((kindOfClass('UIView') || respondsToSelector(accessibil
-ityContainer)) && parentThatMatches(kindOfClass('RCTScrollView'))) && ((kindOfClass('UIView') || res
-pondsToSelector(accessibilityContainer)) && parentThatMatches((respondsToSelector(accessibilityIdent
-ifier) && accessibilityID('sendButton'))))))",
-  "Recovery Suggestion":  "Check if the element exists in the UI hierarchy printed below. If it exis
-ts, adjust the matcher so that it accurately matches element."
-}
+DetoxRuntimeError: Test Failed: No elements found for “MATCHER(identifier == “sendButton”)”
+
+HINT: To print view hierarchy on failed actions/matches, use log-level verbose or higher.
+
+  10 |   it('should add the message to the list', async () => {
+  11 |     await element(by.id('messageText')).typeText('New message');
+> 12 |     await element(by.id('sendButton')).tap();
+     |                                        ^
 ```
 
-Now there's a different element we can't find: the element with `accessibilityID('sendButton')`.
+Now there's a different element we can't find: an element with `testID="sendButton"`.
 
 We want the send button to be part of our `NewMessageForm`, so fixing this error is easy. We just add a `Button` to our component:
 
@@ -313,23 +310,20 @@ We want the send button to be part of our `NewMessageForm`, so fixing this error
 Rerun the tests. Now we get a new kind of test failure:
 
 ```bash
-Failed: Error: Error: An assertion failed.
-Exception with Assertion: {
-  "Assertion Criteria":  "assertWithMatcher:(((kindOfClass('UILabel') || kindOfClass('UITextField')
-|| kindOfClass('UITextView')) && hasText('')) || (kindOfClass('RCTTextView') && an object with acces
-sibilityLabel ""))",
-  "Element Matcher":  "((!(kindOfClass('RCTScrollView')) && (respondsToSelector(accessibilityIdentif
-ier) && accessibilityID('messageText'))) || (((kindOfClass('UIView') || respondsToSelector(accessibi
-lityContainer)) && parentThatMatches(kindOfClass('RCTScrollView'))) && ((kindOfClass('UIView') || re
-spondsToSelector(accessibilityContainer)) && parentThatMatches((respondsToSelector(accessibilityIden
-tifier) && accessibilityID('messageText'))))))"
-}
+    DetoxRuntimeError: Test Failed: Failed expectation: TOHAVETEXT(text == “”) WITH MATCHER(identifier == “messageText”)
+
+    HINT: To print view hierarchy on failed actions/matches, use log-level verbose or higher.
+
+      12 |     await element(by.id('sendButton')).tap();
+      13 |
+    > 14 |     await expect(element(by.id('messageText'))).toHaveText('');
+         |                                                 ^
 ```
 
 The important parts are:
 
-- `"Assertion Criteria" : "…hasText('')…"` - The element should not have any text in it.
-- `"Element Matcher" : "…accessibilityID('messageText')…"` - The element that should be empty is the message text box.
+- `TOHAVETEXT(text == “”)` - The element should not have any text in it.
+- `MATCHER(identifier == “messageText”)` - The element that should be empty is the message text box.
 
 We've made it to our first assertion, which is that the message text box should be empty -- but it isn't. We haven't yet added the behavior to our app to clear out the message text box.
 
@@ -398,8 +392,10 @@ RNTL is finding the `value` prop of the `TextInput` to be `null`; this is becaus
 Now when we rerun `yarn test` we get a different error:
 
 ```bash
-  Expected: ""
-  Received: "Hello world"
+Expected the element to have prop:
+  value=""
+Received:
+  value="Hello world"
 ```
 
 Now the field is successfully taking in the typed value; it just isn't clearing it out when Send is tapped. Let's fix that:
