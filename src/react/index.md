@@ -32,7 +32,7 @@ Apps created with `create-react-app` come with Jest and React Testing Library pr
 Next, we need to add Cypress:
 
 ```bash
-$ yarn add --dev cypress
+$ yarn add --dev cypress@9.5.4
 ```
 
 Add an NPM script for opening Cypress into your `package.json`:
