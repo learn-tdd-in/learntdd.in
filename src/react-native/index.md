@@ -38,7 +38,7 @@ $ yarn add --dev @testing-library/react-native@9.1.0 \
                  @testing-library/jest-native@4.0.4
 ```
 
-RNTL doesn't require any additional setup, but for Jest Native does. In `package.json`, add the following:
+RNTL doesn't require any additional setup, but Jest Native does. In `package.json`, add the following:
 
 ```diff
  "jest": {
