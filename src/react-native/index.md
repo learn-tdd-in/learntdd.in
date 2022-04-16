@@ -281,7 +281,7 @@ HINT: To print view hierarchy on failed actions/matches, use log-level verbose o
 
 Now there's a different element we can't find: an element with `testID="sendButton"`.
 
-We want the send button to be part of our `NewMessageForm`, so fixing this error is easy. We just add a `Button` to our component:
+We want the send button to be part of our `NewMessageForm`, so fixing this error is easy. We just add a `Pressable` to our component. Since we're now returning two JSX elements instead of one, we wrap them in a React fragment:
 
 ```diff
  import React, { Component } from 'react';
