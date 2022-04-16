@@ -434,7 +434,7 @@ To add this event handler behavior to `NewMessageForm`, we want to step back dow
      let getByTestId;
 
      beforeEach(() => {
-+      sendHandler = jest.fn();
++      sendHandler = jest.fn().mockName('sendHandler');
 
 -      ({getByTestId} = render(<NewMessageForm />));
 +      ({getByTestId} = render(<NewMessageForm onSend={sendHandler} />));
