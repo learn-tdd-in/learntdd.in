@@ -175,7 +175,6 @@ describe('Creating a message', () => {
   });
 
   it('should add the message to the list', async () => {
-    await element(by.id('messageText')).tap();
     await element(by.id('messageText')).typeText('New message');
     await element(by.id('sendButton')).tap();
 
