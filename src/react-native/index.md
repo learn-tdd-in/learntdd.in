@@ -57,8 +57,9 @@ import '@testing-library/jest-native/extend-expect';
 Next, to get Detox working, let's first install the global Detox CLI tool:
 
 ```sh
+$ xcode-select --install
 $ brew tap wix/brew
-$ brew install --HEAD applesimutils
+$ brew install applesimutils
 $ npm install -g detox-cli
 ```
 
