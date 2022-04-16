@@ -15,8 +15,10 @@ The feature we'll build is a simple list of messages.
 First, create a new React app:
 
 ```bash
-$ npx create-react-app learn-tdd-in-react
+$ yarn create react-app --scripts-version 5.0.1 learn-tdd-in-react
 ```
+
+(The `--scripts-version` option should ensure you get the same version of the `react-scripts` package as this guide, to minimize the chances of incompatibilities.)
 
 Now, run your app and leave it open for the duration of the process:
 
