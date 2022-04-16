@@ -4,7 +4,7 @@
 
 Test-Driven Development (TDD) is an approach to automated software testing that involves writing a failing test before writing the production code to make it pass. TDD helps you develop a robust test suite to catch bugs, as well as guiding you to more modular, flexible code.
 
-To see how TDD works in React, let's walk through a simple real-world example of building a feature. We'll be using React 16.14 via [Create React App](https://github.com/facebook/create-react-app). We'll implement end-to-end tests with [Cypress][cypress] and component tests with [Jest][jest] and [React Testing Library][react-testing-library]. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react) that shows the process step-by-step. This tutorial assumes you have some [familiarity with React][react] and with [automated testing concepts](/concepts).
+To see how TDD works in React, let's walk through a simple real-world example of building a feature. We'll be using React 18 via [Create React App](https://github.com/facebook/create-react-app). We'll implement end-to-end tests with [Cypress][cypress] and component tests with [Jest][jest] and [React Testing Library][react-testing-library]. You can also follow along in the [Git repo](https://github.com/learn-tdd-in/react) that shows the process step-by-step. This tutorial assumes you have some [familiarity with React][react] and with [automated testing concepts](/concepts).
 
 You can also watch a [conference talk](https://vimeo.com/298277470) version of this tutorial.
 
