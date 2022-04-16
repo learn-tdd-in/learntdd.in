@@ -238,7 +238,7 @@ A common principle in TDD is to **write the code you wish you had.** We could ju
 +      <NewMessageForm />
      </SafeAreaView>
    );
- };
+ }
 ```
 
 Next, let's create a `src` folder, then a `NewMessageForm.js` inside it with the following contents. It's tempting to fully build out this component. But we want to wait until the test guides us in what to build. Let's just make it an empty but functioning component:
