@@ -150,7 +150,7 @@ export default function App() {
       <StatusBar barStyle="dark-content" />
     </SafeAreaView>
   );
-};
+}
 ```
 
 This provides a status bar and keeps the content in the phone's safe area, but other than that the app is empty.
