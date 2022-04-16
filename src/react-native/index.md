@@ -197,29 +197,23 @@ After we've created our test, the next step in TDD is to **run the test and watc
 Run `detox test -c ios`. You should see the following error:
 
 ```bash
-Creating a message
-  ✕ should add the message to the list (12841ms)
+ FAIL  e2e/creating_a_message.e2e.js (7.65 s)
+  Creating a message
+    ✕ should add the message to the list (1115 ms)
 
-● Creating a message › should add the message to the list
+  ● Creating a message › should add the message to the list
 
+    DetoxRuntimeError: Test Failed: No elements found for “MATCHER(identifier == “messageText”)”
 
-  Failed: Error: Error: Cannot find UI element.
-  Exception with Action: {
-    "Action Name":  "Tap",
-    "Element Matcher":  "((!(kindOfClass('RCTScrollView')) && (respondsToSelector(accessibilityIde
-ntifier) && accessibilityID('messageText'))) || (((kindOfClass('UIView') || respondsToSelector(acces
-sibilityContainer)) && parentThatMatches(kindOfClass('RCTScrollView'))) && ((kindOfClass('UIView') |
-| respondsToSelector(accessibilityContainer)) && parentThatMatches((respondsToSelector(accessibility
-Identifier) && accessibilityID('messageText'))))))",
-    "Recovery Suggestion":  "Check if the element exists in the UI hierarchy printed below. If it
-exists, adjust the matcher so that it accurately matches element."
-  }
+    HINT: To print view hierarchy on failed actions/matches, use log-level verbose or higher.
+
+       9 |
+      10 |   it('should add the message to the list', async () => {
+    > 11 |     await element(by.id('messageText')).typeText('New message');
+         |                                         ^
 ```
 
-The important parts of the output are:
-
-- `"Error: Cannot find UI element"`: the test tried to find something in the UI but couldn't.
-- `"Element Matcher: …accessibilityID('messageText')"`: it was trying to find an element by accessibility ID "messageText".
+The important part of the output is `No elements found for “MATCHER(identifier == “messageText”)”`. The test tried to find an element with testID "messageText" but couldn't. This makes sense, as we haven't created that element yet.
 
 ## Write The Code You Wish You Had
 
