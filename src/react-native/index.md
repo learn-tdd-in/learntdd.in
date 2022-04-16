@@ -329,7 +329,7 @@ We've made it to our first assertion, which is that the message text box should 
 
 Instead of adding the behavior directly, let's **step down from the "outside" level of end-to-end tests to an "inside" component test.** This allows us to more precisely specify the behavior of each piece. Also, since end-to-end tests are slow, component tests prevent us from having to write an end-to-end test for every rare edge case.
 
-Create a new `src/__tests__` folder, then a `NewMessageForm.spec.js` file inside it. Add the following contents:
+Inside the `src` folder, create a `NewMessageForm.spec.js` file. Add the following contents:
 
 ```javascript
 import React from 'react';
@@ -538,7 +538,7 @@ Next, to display the messages, let's create another custom component to keep our
      </SafeAreaView>
 ```
 
-Next, we'll create `MessageList.js` and add an empty implementation:
+Next, we'll create `src/MessageList.js` and add an empty implementation:
 
 ```jsx
 import React from 'react';
