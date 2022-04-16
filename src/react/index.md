@@ -42,7 +42,9 @@ Add an NPM script for opening Cypress into your `package.json`:
    ...
    "scripts": {
      ...
-+    "cypress:open": "cypress open"
+     "test": "react-scripts test",
++    "cypress": "cypress open",
+     "eject": "react-scripts eject"
    },
    ...
  }
