@@ -134,14 +134,12 @@ After we've created our test, the next step in TDD is to **run the test and watc
 If you've closed Cypress, reopen it with:
 
 ```bash
-$ yarn cypress:open
+$ yarn cypress
 ```
 
 Run the Cypress test by clicking `creating_a_message.spec.js` in the Cypress window. A Chrome window should open, you should see the test run, then in the left-hand test step column you should see the following error:
 
-```bash
-Expected to find element: '[data-testid='messageText']', but never found it.
-```
+> Timed out retrying after 4000ms: Expected to find element: [data-testid="messageText"], but never found it.
 
 ## Write The Code You Wish You Had
 
@@ -326,9 +324,7 @@ Next, we want to clear out `inputText` when the send button is clicked:
 
 Rerun the component test and it passes. **Once a component test passes, step back up to the outer end-to-end test to see what the next error is.** Rerun `creating_a_message.spec.js`. Now our final assertion fails:
 
-```bash
-Expected to find content: 'New message' but never did.
-```
+> Timed out retrying after 4000ms: Expected to find content: 'New message' but never did.
 
 Now, finally, the test will drive us to implement the real meat of our feature: storing the message entered and displaying it.
 
@@ -391,9 +387,7 @@ So the `sendHandler` isn't being called. Let's fix that:
 
 Now the component test passes. That's great! Now we step back up again to run our feature test and we get:
 
-```bash
-Uncaught TypeError: onSend is not a function
-```
+> (uncaught exception) TypeError: onSend is not a function
 
 We changed NewMessageForm to use an onSend event handler, but we haven't passed one to our NewMessageForm in our production code. Let's add an empty one to get past this error:
 
@@ -413,9 +407,7 @@ We changed NewMessageForm to use an onSend event handler, but we haven't passed 
 
 Rerun the e2e test and we get:
 
-```bash
-Expected to find content: ‘New message’ but never did.
-```
+> Timed out retrying after 4000ms: Expected to find content: 'New message' but never did.
 
 We no longer get the `onSend` error--now we're back to the same assertion failure, because we're still not displaying the message. But we're a step closer!
 
