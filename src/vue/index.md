@@ -465,7 +465,7 @@ To learn more about TDD, I recommend:
 * ["Unit Testing Vue Components"](https://www.youtube.com/watch?v=LxXsGNXsMo8) (video) - a talk by Edd Yerburgh that provides a detailed perspective on writing valuable Vue component tests
 * [_Testing Vue.js Applications_](https://www.manning.com/books/testing-vuejs-applications) - a book by Edd that goes into more detail on the above
 
-If you have any questions or suggestions, reach out to [@CodingItWrong](https://twitter.com/CodingItWrong) on Twitter or <tdd@codingitwrong.com> and we'll be glad to help!
+If you have any questions or suggestions, reach out to <tdd@codingitwrong.com> or any contact mechanism on [codingitwrong.](https://codingitwrong.com) and we'll be glad to help!
 
 [cypress]: https://www.cypress.io/
 [feature-tours]: https://iamvery.com/2018/11/14/feature-tours.html
