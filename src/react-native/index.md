@@ -19,7 +19,7 @@ It takes a little work to get our testing setup in place, but it'll be worth it!
 Create a new React Native app:
 
 ```sh
-$ react-native init ReactNativeTDD
+$ npx react-native init --version 0.68.1 ReactNativeTDD
 ```
 
 Let's run it to confirm it works:
