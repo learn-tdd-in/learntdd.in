@@ -304,7 +304,7 @@ Next, we want to clear out `inputText` when the send button is clicked:
          </button>
 ```
 
-Rerun the component test and it passes. **Once a component test passes, step back up to the outer end-to-end test to see what the next error is.** Rerun `creating_a_message.spec.js`. Now our final assertion fails:
+When you save the file, the component test reruns and passes. **Once a component test passes, step back up to the outer end-to-end test to see what the next error is.** Rerun `creating_a_message.spec.js`. Now our final assertion fails:
 
 > Timed out retrying after 4000ms: Expected to find content: 'New message' but never did.
 
