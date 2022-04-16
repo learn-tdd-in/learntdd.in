@@ -42,8 +42,8 @@ RNTL doesn't require any additional setup, but Jest Native does. In `package.jso
 
 ```diff
  "jest": {
--  "preset": "react-native"
-+  "preset": "react-native",
+-   "preset": "react-native"
++   "preset": "react-native",
 +   "setupFilesAfterEnv": ["./jest-setup-after-env.js"]
   }
 ```
