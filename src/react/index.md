@@ -215,27 +215,24 @@ Instead of adding the behavior directly, let's **step down from the "outside" le
 Create a file `src/NewMessageForm.spec.js` and add the following:
 
 ```javascript
-import React from 'react';
-import { render } from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import NewMessageForm from '../NewMessageForm';
+import NewMessageForm from './NewMessageForm';
 
 describe('<NewMessageForm />', () => {
-  let getByTestId;
-
   describe('clicking the send button', () => {
     beforeEach(async () => {
-      ({ getByTestId } = render(<NewMessageForm />));
+      render(<NewMessageForm />);
 
       await userEvent.type(
-        getByTestId('messageText'),
+        screen.getByTestId('messageText'),
         'New message',
       );
-      userEvent.click(getByTestId('sendButton'));
+      userEvent.click(screen.getByTestId('sendButton'));
     });
 
     it('clears the text field', () => {
-      expect(getByTestId('messageText').value).toEqual('');
+      expect(screen.getByTestId('messageText').value).toEqual('');
     });
   });
 });
