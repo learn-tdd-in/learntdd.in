@@ -50,15 +50,16 @@ Add an NPM script for opening Cypress into your `package.json`:
  }
 ```
 
-Now open Cypress and it will initialize Cypress within your app, creating some files:
+Now run that command:
 
 ```bash
-$ yarn cypress:open
+$ yarn cypress
 ```
+
+A Cypress window will open. You'll see a blue message that says "We've created some sample test files…". Click "No thanks, delete example files", then "Yes, delete files".
 
 As our last setup step, let's clear out some of the default code to get a clean starting point. Delete all the following files and folders:
 
-- `cypress/integration/examples/`
 - `src/App.css`
 - `src/App.test.js`
 - `src/logo.svg`
