@@ -194,7 +194,7 @@ The code describes the steps a user would take interacting with our app:
 
 After we've created our test, the next step in TDD is to **run the test and watch it fail.**  This test will fail (be "red") at first because we haven't yet implemented the functionality.
 
-Run `detox test`. You’ll get a lot of output, but if you scroll up, you should see the following error:
+Run `detox test -c ios`. You should see the following error:
 
 ```bash
 Creating a message
