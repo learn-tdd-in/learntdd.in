@@ -219,7 +219,7 @@ The important part of the output is `No elements found for “MATCHER(identifier
 
 The next step of TDD is to **write only enough production code to fix the current error or test failure.** In our case, all we need to do is add a message text field.
 
-A common principle in TDD is to **write the code you wish you had.** We could just add a `<TextInput>` element to the `<App>` directly. But say we want to keep our `<App>` simple and wrap everything related to the input in a custom component. We might call that component `<NewMessageForm>`. We wish we had it, so let's go ahead and add it to `App.js`:
+A common principle in TDD is to **write the code you wish you had.** We could just add a `TextInput` element to the `App` directly. But say we want to keep our `App` simple and wrap everything related to the input in a custom component. We might call that component `NewMessageForm`. We wish we had it, so let's go ahead and add it to `App.js`:
 
 ```diff
  import {
@@ -248,7 +248,7 @@ export default function NewMessageForm() {
 }
 ```
 
-Now rerun the tests with `detox test`. We're still getting the same error, because we haven't actually added a text input. But we're a step closer because we've written the code we wish we had: a component to wrap it. Now we can add the TextInput directly. We give it a `testID` of "messageText": that's the ID that the Detox test uses to find the component.
+Now rerun the tests with `detox test -c ios`. We're still getting the same error, because we haven't actually added a text input. But we're a step closer because we've written the code we wish we had: a component to wrap it. Now we can add the `TextInput` directly. We give it a `testID` of "messageText": that's the ID that the Detox test uses to find the component.
 
 ```diff
  import React from 'react';
@@ -398,7 +398,7 @@ Received:
   value="Hello world"
 ```
 
-Now the field is successfully taking in the typed value; it just isn't clearing it out when Send is tapped. Let's fix that:
+Now the field is successfully taking in the typed value; it just isn't clearing it out when "Send" is tapped. Let's fix that:
 
 ```diff
  export default function NewMessageForm() {
@@ -424,7 +424,7 @@ Now, finally, the test will drive us to implement the real meat of our feature: 
 
 The `NewMessageForm` won't be responsible for displaying this message, though: we'll create a separate `MessageList` component that also exists in the parent `App` component. The way we have `NewMessageForm` send data to the parent component is by taking in a function prop and calling it.
 
-To add this event handler behavior to NewMessageForm, we want to step back down to the component test. In this case, the component test won't be asserting exactly the same thing as the end-to-end test. The end-to-end test is looking for the "New message" content on the screen, but the component test will only be asserting the behavior that the `NewMessageForm` component is responsible for: that it calls the function prop.
+To add this event handler behavior to `NewMessageForm`, we want to step back down to the component test. In this case, the component test won't be asserting exactly the same thing as the end-to-end test. The end-to-end test is looking for the "New message" content on the screen, but the component test will only be asserting the behavior that the `NewMessageForm` component is responsible for: that it calls the function prop.
 
 ```diff
    describe('clicking send', () => {
@@ -490,7 +490,7 @@ Rerun the component tests and they will pass. Next, rerun the end-to-end tests. 
 onSend is not a function. (In 'onSend(inputText)', 'onSend' is undefined…)
 ```
 
-Our NewMessageForm is calling `onSend`, but we haven't yet passed a valid function into our component in our production code. Let's do so now. Again, we don't want to fully implement that event handler, only add only enough code to get past the current error. Add the following to `App.js`:
+Our `NewMessageForm` is calling `onSend`, but we haven't yet passed a valid function into our component in our production code. Let's do so now. Again, we don't want to fully implement that event handler, only add only enough code to get past the current error. Add the following to `App.js`:
 
 ```diff
  export default function App() {
