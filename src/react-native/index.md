@@ -26,7 +26,7 @@ Let's run it to confirm it works:
 
 ```sh
 $ cd ReactNativeTDD
-$ react-native run-ios
+$ yarn ios
 ```
 
 After a few minutes you should see the welcome screen of the app in the iOS Simulator.
