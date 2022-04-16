@@ -148,89 +148,70 @@ The next step of TDD is to **write only enough production code to fix the curren
 A common principle in TDD is to **write the code you wish you had.** We could just add an `<input type="text">` element to the `App` directly. But say we want to keep our `App` simple and wrap everything related to the input in a custom component. We might call that component `NewMessageForm`. We wish we had it, so let's go ahead and add it to `App.js`:
 
 ```diff
- import React, { Component } from 'react';
 +import NewMessageForm from './NewMessageForm';
 
- const App = () => {
-   return (
-     <div>
-+      <NewMessageForm />
-     </div>
-   );
- };
+ export default function App() {
+-  return null;
++  return <NewMessageForm />;
+ }
 ```
 
-Next, let's create `NewMessageForm.js` with the following contents. It's tempting to fully build out this component. But we want to wait until the test guides us in what to build. Let's just make it an empty but functioning component:
+Next, let's create `src/NewMessageForm.js` with the following contents. It's tempting to fully build out this component. But we want to wait until the test guides us in what to build. Let's just make it an empty but functioning component:
 
 ```jsx
-import React from 'react';
-
-const NewMessageForm = () => {
-  return (
-    <div>
-    </div>
-  );
-};
-
-export default NewMessageForm;
+export default function NewMessageForm() {
+  return null;
+}
 ```
 
 Now rerun the tests in Cypress. We're still getting the same error, because we haven't actually added a text input. But we're a step closer because we've written the code we wish we had: a component to wrap it. Now we can add the input tag directly. We give it a `data-testid` attribute of "messageText": that's the attribute that our test uses to find the component.
 
 ```diff
  const NewMessageForm = () => {
-   return (
-     <div>
-+      <input
-+        type="text"
-+        data-testid="messageText"
-+      />
-     </div>
-   );
- };
+-  return null;
++  return (
++    <input
++      type="text"
++      data-testid="messageText"
++    />
++  );
 ```
 
 Rerun the tests. The error has changed! The tests are now able to find the "messageText" element. The new error is:
 
-```bash
-Expected to find element: ‘[data-testid=’sendButton’]’, but never found it.
-```
+> Timed out retrying after 4000ms: Expected to find element: [data-testid="sendButton"], but never found it.
 
-Now there's a different element we can't find: the element with attribute `data-testid=’sendButton’`.
+Now there's a different element we can't find: the element with attribute `data-testid="sendButton"`.
 
-We want the send button to be part of our `NewMessageForm`, so fixing this error is easy. We just add a `<button>` to our component:
+We want the send button to be part of our `NewMessageForm`, so fixing this error is easy. We just add a `<button>` to our component. Since we're now returning two JSX elements instead of one, we wrap them in a React fragment:
 
 ```diff
- const NewMessageForm = () => {
-   return (
-     <div>
-       <input
-         type="text"
-         data-testid="messageText"
-       />
-+      <button
-+        data-testid="sendButton"
-+      >
-+        Send
-+      </button>
-     </div>
-   );
- };
+ return (
++  <>
+     <input
+       type="text"
+       data-testid="messageText"
+     />
++    <button
++      data-testid="sendButton"
++    >
++      Send
++    </button>
++  </>
+ );
 ```
 
 ## Implementing Component Behavior
 
 Rerun the tests. Now we get a new kind of test failure:
 
-```bash
-expected '<input />' to have value '', but the value was 'New message'
-```
+> Timed out retrying after 4000ms: expected '&lt;input&gt;' to have value '', but the value was 'New message'
 
 We've made it to our first assertion, which is that the message text box should be empty -- but it isn't. We haven't yet added the behavior to our app to clear out the message text box.
 
 Instead of adding the behavior directly, let's **step down from the "outside" level of end-to-end tests to an "inside" component test.** This allows us to more precisely specify the behavior of each piece. Also, since end-to-end tests are slow, component tests prevent us from having to write an end-to-end test for every rare edge case.
 
-Create a `src/__tests__` folder, then create a file `src/__tests__/NewMessageForm.spec.js` and add the following:
+Create a file `src/NewMessageForm.spec.js` and add the following:
 
 ```javascript
 import React from 'react';
