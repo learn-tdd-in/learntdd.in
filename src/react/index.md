@@ -62,21 +62,38 @@ As our last setup step, let's clear out some of the default code to get a clean 
 
 - `src/App.css`
 - `src/App.test.js`
+- `src/index.css`
 - `src/logo.svg`
+- `src/reportWebVitals.js`
 
-Replace the contents of `src/App.js` with the following:
+Make the following changes to `src/index.js`:
+
+```diff
+ import React from 'react';
+ import ReactDOM from 'react-dom';
+-import './index.css';
+ import App from './App';
+-import reportWebVitals from './reportWebVitals';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+);
+-
+-// If you want to start measuring performance in your app, pass a function
+-// to log results (for example: reportWebVitals(console.log))
+-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+-reportWebVitals();
+```
+
+Replace the contents of `src/App.js` with the following empty component:
 
 ```jsx
-import React from 'react';
-
-const App = () => {
-  return (
-    <div>
-    </div>
-  );
-};
-
-export default App;
+export default function App() {
+  return null;
+}
 ```
 
 Note that for this tutorial we'll use function components and hooks. But the tests we'll write will work just the same if you write class components instead. That's one of the great things about tests that aren't coupled to implementation details.
