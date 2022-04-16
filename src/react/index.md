@@ -324,13 +324,14 @@ Add another test case to `NewMessageForm.spec.js`:
 +
      beforeEach(() => {
 +      sendHandler = jest.fn().mockName('sendHandler');
--      ({ getByTestId } = render(<NewMessageForm />));
-+      ({ getByTestId } = render(<NewMessageForm onSend={sendHandler} />));
++
++      render(<NewMessageForm onSend={sendHandler} />);
+-      render(<NewMessageForm />));
 
-       fireEvent.change(
+       await userEvent.type(
 ...
      it('clears the text field', () => {
-       expect(getByTestId('messageText').value).toEqual('');
+       expect(screen.getByTestId('messageText').value).toEqual('');
      });
 +
 +    it('calls the send handler', () => {
