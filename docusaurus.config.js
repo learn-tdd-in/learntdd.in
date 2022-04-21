@@ -69,6 +69,10 @@ const config = {
                 label: 'Ember',
               },
               {
+                to: '/rails',
+                label: 'Ruby on Rails',
+              },
+              {
                 to: '/vue',
                 label: 'Vue',
               },
