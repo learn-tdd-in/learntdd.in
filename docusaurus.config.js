@@ -123,7 +123,7 @@ const config = {
           //   ],
           // },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} Josh Justice. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Josh Justice.`,
       },
       prism: {
         theme: lightCodeTheme,
