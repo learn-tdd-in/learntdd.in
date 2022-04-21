@@ -44,17 +44,16 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: 'Learn TDD',
+        title: 'Learn TDD in…',
         // logo: {
         //   alt: 'My Site Logo',
         //   src: 'img/logo.svg',
         // },
         items: [
           {
-            type: 'doc',
-            docId: 'intro',
+            to: '/react',
+            label: 'React',
             position: 'left',
-            label: 'Tutorial',
           },
           // {to: '/blog', label: 'Blog', position: 'left'},
           // {
