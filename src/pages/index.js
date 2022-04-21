@@ -52,10 +52,10 @@ function FrameworkCardContainer() {
 function FrameworkCard({name, logo, href}) {
   return (
     <div className="framework-card">
-      <a href={href} className="framework-card__link">
+      <Link to={href} className="framework-card__link">
         {logo}
         {name}
-      </a>
+      </Link>
     </div>
   );
 }
@@ -67,13 +67,13 @@ function OlderFrameworkList() {
         <h2>Older Tutorials</h2>
         <ul>
           <li>
-            <a href="/ember">Ember</a>
+            <Link to="/ember">Ember</Link>
           </li>
           <li>
-            <a href="/rails">Ruby on Rails</a>
+            <Link to="/rails">Ruby on Rails</Link>
           </li>
           <li>
-            <a href="/vue">Vue</a>
+            <Link to="/vue">Vue</Link>
           </li>
         </ul>
       </div>
