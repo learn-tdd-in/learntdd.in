@@ -3,6 +3,7 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import clsx from 'clsx';
 import React from 'react';
+import ReactLogo from '../assets/react.svg';
 import styles from './index.module.css';
 
 function HomepageHeader() {
@@ -17,6 +18,34 @@ function HomepageHeader() {
   );
 }
 
+function FrameworkCardContainer() {
+  return (
+    <div className="framework-card-container">
+      <FrameworkCard
+        name="React"
+        href="/react/"
+        logo={<ReactLogo alt="React logo" className="framework-card__logo" />}
+      />
+      <FrameworkCard
+        name="React Native"
+        href="/react-native/"
+        logo={<ReactLogo alt="React logo" className="framework-card__logo" />}
+      />
+    </div>
+  );
+}
+
+function FrameworkCard({name, logo, href}) {
+  return (
+    <div className="framework-card">
+      <a href={href} className="framework-card__link">
+        {logo}
+        {name}
+      </a>
+    </div>
+  );
+}
+
 export default function Home() {
   const {siteConfig} = useDocusaurusContext();
   return (
@@ -25,6 +54,7 @@ export default function Home() {
       description="Description will go into a meta tag in <head />"
     >
       <HomepageHeader />
+      <FrameworkCardContainer />
     </Layout>
   );
 }
