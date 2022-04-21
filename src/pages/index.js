@@ -37,12 +37,12 @@ function FrameworkCardContainer() {
     <div className="framework-card-container">
       <FrameworkCard
         name="React"
-        href="/react/"
+        href="/react"
         logo={<ReactLogo alt="React logo" className="framework-card__logo" />}
       />
       <FrameworkCard
         name="React Native"
-        href="/react-native/"
+        href="/react-native"
         logo={<ReactLogo alt="React logo" className="framework-card__logo" />}
       />
     </div>
