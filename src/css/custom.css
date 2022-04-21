@@ -64,6 +64,12 @@
   margin-bottom: 10px;
 }
 
+.older-tutorials-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 .page-logo {
   float: right;
   width: 100px;
