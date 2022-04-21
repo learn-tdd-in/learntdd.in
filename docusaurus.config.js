@@ -60,12 +60,16 @@ const config = {
             label: 'React Native',
             position: 'left',
           },
-          // {to: '/blog', label: 'Blog', position: 'left'},
-          // {
-          //   href: 'https://github.com/facebook/docusaurus',
-          //   label: 'GitHub',
-          //   position: 'right',
-          // },
+          {
+            type: 'dropdown',
+            label: 'Older Tutorials',
+            items: [
+              {
+                to: '/vue',
+                label: 'Vue',
+              },
+            ],
+          },
         ],
       },
       footer: {
