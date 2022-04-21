@@ -65,6 +65,10 @@ const config = {
             label: 'Older Tutorials',
             items: [
               {
+                to: '/ember',
+                label: 'Ember',
+              },
+              {
                 to: '/vue',
                 label: 'Vue',
               },
