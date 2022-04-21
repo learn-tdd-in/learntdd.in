@@ -55,6 +55,11 @@ const config = {
             label: 'React',
             position: 'left',
           },
+          {
+            to: '/react-native',
+            label: 'React Native',
+            position: 'left',
+          },
           // {to: '/blog', label: 'Blog', position: 'left'},
           // {
           //   href: 'https://github.com/facebook/docusaurus',
