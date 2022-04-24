@@ -10,8 +10,8 @@ export default function Home() {
   const {siteConfig} = useDocusaurusContext();
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />"
+      title="Home"
+      description="Learn Test-Driven Development in the framework of your choice."
     >
       <HomepageHeader />
       <FrameworkCardContainer />
