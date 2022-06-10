@@ -38,7 +38,7 @@ Now we'll add React Native Testing Library (RNTL) and Jest Native to enable comp
 
 ```sh
 $ yarn add --dev @testing-library/react-native@9.1.0 \
-                 @testing-library/jest-native@4.0.4
+                 @testing-library/jest-native@4.0.5
 ```
 
 RNTL doesn't require any additional setup, but Jest Native does. In `package.json`, add the following:
@@ -63,13 +63,13 @@ Next, to get Detox working, let's first install the global Detox CLI tool:
 $ xcode-select --install
 $ brew tap wix/brew
 $ brew install applesimutils
-$ npm install -g detox-cli
+$ npm install -g detox-cli@19.0.0
 ```
 
 Next, we need to add Detox to our project:
 
 ```sh
-$ yarn add --dev detox
+$ yarn add --dev detox@19.7.1
 ```
 
 Then initialize Detox in the project, specifying Jest as the test runner:
