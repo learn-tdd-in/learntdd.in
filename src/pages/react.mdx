@@ -37,7 +37,7 @@ Apps created with `create-react-app` come with Jest and React Testing Library pr
 Next, we need to add Cypress:
 
 ```bash
-$ yarn add --dev cypress@9.5.4
+$ yarn add --dev cypress@10.1.0
 ```
 
 Add an NPM script for opening Cypress into your `package.json`:
@@ -61,7 +61,7 @@ Now run that command:
 $ yarn cypress
 ```
 
-A Cypress window will open. You'll see a blue message that says "We've created some sample test files…". Click "No thanks, delete example files", then "Yes, delete files".
+A Cypress window will open. Choose "E2E Testing". You'll see a message that says "We added the following files to your project"--scroll down and click "Continue". Next, you'll see "Choose a Browser". For this tutorial we'll stick with the default, Chrome. If Chrome isn't already selected, click it. Then click "Start E2E Testing in Chrome". The Cypress test runner will open.
 
 As our last setup step, let's clear out some of the default code to get a clean starting point. Delete all the following files and folders:
 
@@ -105,7 +105,7 @@ export default function App() {
 
 When performing outside-in TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.** For our simple messaging app, the first feature we want is to be able to enter a message, send it, and see it in the list.
 
-Create a file `cypress/integration/creating_a_message.spec.js` and enter the following contents:
+In the `cypress` folder, create an `e2e` folder, then inside it create a file `creating_a_message.cy.js` and enter the following contents:
 
 ```javascript
 describe('Creating a message', () => {
@@ -142,7 +142,7 @@ If you've closed Cypress, reopen it with:
 $ yarn cypress
 ```
 
-Run the Cypress test by clicking `creating_a_message.spec.js` in the Cypress window. A Chrome window should open, you should see the test run, then in the left-hand test step column you should see the following error:
+Run the Cypress test by clicking `creating_a_message` in the Cypress window. A Chrome window should open, you should see the test run, then in the left-hand test step column you should see the following error:
 
 > Timed out retrying after 4000ms: Expected to find element: [data-testid="messageText"], but never found it.
 
@@ -226,7 +226,7 @@ import NewMessageForm from './NewMessageForm';
 
 describe('<NewMessageForm />', () => {
   describe('clicking the send button', () => {
-    beforeEach(async () => {
+    async function sendMessage() {
       render(<NewMessageForm />);
 
       await userEvent.type(
@@ -234,9 +234,10 @@ describe('<NewMessageForm />', () => {
         'New message',
       );
       userEvent.click(screen.getByTestId('sendButton'));
-    });
+    }
 
-    it('clears the text field', () => {
+    it('clears the text field', async () => {
+      await sendMessage();
       expect(screen.getByTestId('messageText').value).toEqual('');
     });
   });
@@ -320,12 +321,10 @@ To add this event handler behavior to `NewMessageForm`, we want to step back dow
 Add another test case to `NewMessageForm.spec.js`:
 
 ```diff
-   afterEach(cleanup);
-
    describe('clicking the send button', () => {
 +    let sendHandler;
 +
-     beforeEach(() => {
+     async function sendMessage() {
 +      sendHandler = jest.fn().mockName('sendHandler');
 +
 +      render(<NewMessageForm onSend={sendHandler} />);
@@ -337,7 +336,8 @@ Add another test case to `NewMessageForm.spec.js`:
        expect(screen.getByTestId('messageText').value).toEqual('');
      });
 +
-+    it('calls the send handler', () => {
++    it('calls the send handler', async () => {
++      await sendMessage();
 +      expect(sendHandler).toHaveBeenCalledWith('New message');
 +    });
    });
