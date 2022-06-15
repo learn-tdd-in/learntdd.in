@@ -425,7 +425,7 @@ Next, to display the messages, let's create another custom component to keep our
 ```diff
  import {useState} from 'react';
  import NewMessageForm from '../components/NewMessageForm';
-+import MessageList from './MessageList';
++import MessageList from '../components/MessageList';
 
  export default function Home() {
    const [messages, setMessages] = useState([]);
