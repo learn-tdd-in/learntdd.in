@@ -3,6 +3,7 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import clsx from 'clsx';
 import React from 'react';
+import NextLogo from '../assets/next.svg';
 import ReactLogo from '../assets/react.svg';
 import styles from './index.module.css';
 
@@ -39,6 +40,11 @@ function FrameworkCardContainer() {
         name="React"
         href="/react"
         logo={<ReactLogo alt="React logo" className="framework-card__logo" />}
+      />
+      <FrameworkCard
+        name="Next.js"
+        href="/next"
+        logo={<NextLogo alt="Next.js logo" className="framework-card__logo" />}
       />
       <FrameworkCard
         name="React Native"

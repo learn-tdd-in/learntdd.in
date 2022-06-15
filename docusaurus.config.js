@@ -50,6 +50,11 @@ const config = {
             position: 'left',
           },
           {
+            to: '/next',
+            label: 'Next.js',
+            position: 'left',
+          },
+          {
             to: '/react-native',
             label: 'React Native',
             position: 'left',
