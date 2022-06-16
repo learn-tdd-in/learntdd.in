@@ -142,7 +142,7 @@ If you've closed Cypress, reopen it with:
 $ yarn cypress
 ```
 
-Run the Cypress test by clicking `creating_a_message` in the Cypress window. A Chrome window should open, you should see the test run, then in the left-hand test step column you should see the following error:
+Run the Cypress test by clicking `creating_a_message` in the Cypress window. You should see the test run, then in the left-hand test step column you should see the following error:
 
 > Timed out retrying after 4000ms: Expected to find element: [data-testid="messageText"], but never found it.
 
@@ -308,7 +308,7 @@ Next, we want to clear out `inputText` when the send button is clicked:
          </button>
 ```
 
-When you save the file, the component test reruns and passes. **Once a component test passes, step back up to the outer end-to-end test to see what the next error is.** Rerun `creating_a_message.spec.js`. Now our final assertion fails:
+When you save the file, the component test reruns and passes. **Once a component test passes, step back up to the outer end-to-end test to see what the next error is.** Rerun `creating_a_message.cy.js`. Now our final assertion fails:
 
 > Timed out retrying after 4000ms: Expected to find content: 'New message' but never did.
 
