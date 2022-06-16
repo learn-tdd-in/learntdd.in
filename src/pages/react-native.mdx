@@ -144,10 +144,7 @@ As our last setup step, let's clear out some of the default code to get a clean 
 
 ```jsx
 import React from 'react';
-import {
-  SafeAreaView,
-  StatusBar,
-} from 'react-native';
+import {SafeAreaView, StatusBar} from 'react-native';
 
 export default function App() {
   return (
@@ -230,10 +227,7 @@ The next step of TDD is to **write only enough production code to fix the curren
 A common principle in TDD is to **write the code you wish you had.** We could just add a `TextInput` element to the `App` directly. But say we want to keep our `App` simple and wrap everything related to the input in a custom component. We might call that component `NewMessageForm`. We wish we had it, so let's go ahead and add it to `App.js`:
 
 ```diff
- import {
-   SafeAreaView,
-   StatusBar,
- } from 'react-native';
+ import {SafeAreaView, StatusBar} from 'react-native';
 +import NewMessageForm from './src/NewMessageForm';
 
  export default function App() {
