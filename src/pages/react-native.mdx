@@ -7,7 +7,7 @@ import ReactLogo from '../assets/react.svg';
 
 Test-Driven Development (TDD) is an approach to automated software testing that involves writing a failing test before writing the production code to make it pass. TDD helps you develop a robust test suite to catch bugs, as well as guiding you to more modular, flexible code.
 
-To see how TDD works in React Native, let's walk through a simple real-world example of building a feature. We'll be using React Native 0.68, the [Jest][jest] test runner, and several testing libraries: [React Native Testing Library][react-native-testing-library] and [Jest Native][jest-native] for component tests and [Detox][detox] for end-to-end tests.
+To see how TDD works in React Native, let's walk through a simple real-world example of building a feature. We'll be using React Native 0.69, the [Jest][jest] test runner, and several testing libraries: [React Native Testing Library][react-native-testing-library] and [Jest Native][jest-native] for component tests and [Detox][detox] for end-to-end tests.
 
 This tutorial assumes you have some [familiarity with React Native][react-native] and with [automated testing concepts](https://jestjs.io/docs/getting-started).
 
@@ -22,7 +22,7 @@ It takes a little work to get our testing setup in place, but it'll be worth it!
 Create a new React Native app:
 
 ```sh
-$ npx react-native init ReactNativeTDD --version 0.68.2
+$ npx react-native init ReactNativeTDD --version 0.69.0
 ```
 
 Let's run it to confirm it works:
@@ -37,7 +37,7 @@ After a few minutes you should see the welcome screen of the app in the iOS Simu
 Now we'll add React Native Testing Library (RNTL) and Jest Native to enable component testing:
 
 ```sh
-$ yarn add --dev @testing-library/react-native@9.1.0 \
+$ yarn add --dev @testing-library/react-native@10.0.0 \
                  @testing-library/jest-native@4.0.5
 ```
 
