@@ -269,8 +269,6 @@ A common principle in TDD is to **write the code you wish you had.** We could ju
 Next, let's create a `src` folder, then a `NewMessageForm.js` inside it with the following contents. It's tempting to fully build out this component. But we want to wait until the test guides us in what to build. Let's just make it an empty but functioning component:
 
 ```jsx
-import React from 'react';
-
 export default function NewMessageForm() {
   return null;
 }
@@ -279,7 +277,7 @@ export default function NewMessageForm() {
 Now rerun the tests with `detox test -c ios`. We're still getting the same error, because we haven't actually added a text input. But we're a step closer because we've written the code we wish we had: a component to wrap it. Now we can add the `TextInput` directly. We give it a `testID` of "messageText": that's the ID that the Detox test uses to find the component.
 
 ```diff
- import React from 'react';
++import React from 'react';
 +import {
 +  TextInput,
 +} from 'react-native';
@@ -570,8 +568,6 @@ Next, to display the messages, let's create another custom component to keep our
 Next, we'll create `src/MessageList.js` and add an empty implementation:
 
 ```jsx
-import React from 'react';
-
 export default function MessageList() {
   return null;
 }
@@ -580,7 +576,7 @@ export default function MessageList() {
 Rerun the tests, and, as we expect, we still aren't displaying the message. But now that we have a MessageList component, we're ready to finally implement that and make the test pass:
 
 ```diff
- import React from 'react';
++import React from 'react';
 +import {
 +  FlatList,
 +  Text,
