@@ -140,6 +140,32 @@ Example: should show world screen after tap [FAIL]
     ✕ should show world screen after tap (865ms)
 ```
 
+If your editor has ESLint integration, your Detox tests will show a lot of errors unless you configure ESlint to recognize Detox. To do so, add the Detox plugin:
+
+```bash
+$ yarn add --dev eslint-plugin-detox
+```
+
+Then add the detox plugin and environment to `.eslintrc.js`:
+
+```diff
+ module.exports = {
+   root: true,
+   extends: '@react-native-community',
++  plugins: ['detox'],
++  overrides: [
++    {
++      files: ['*.e2e.js'],
++      env: {
++        'detox/detox': true,
++        jest: true,
++        'jest/globals': true,
++      },
++    },
++  ],
+ };
+```
+
 As our last setup step, let's clear out some of the default code to get a clean starting point. Delete `e2e/firstTest.spec.js` and `__tests__`, and replace the contents of `App.js` with this app skeleton:
 
 ```jsx
