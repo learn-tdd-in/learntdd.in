@@ -22,7 +22,7 @@ It takes a little work to get our testing setup in place, but it'll be worth it!
 Create a new React Native app:
 
 ```sh
-$ npx react-native init ReactNativeTDD --version 0.69.0
+$ npx react-native init ReactNativeTDD --version 0.69.4
 ```
 
 Let's run it to confirm it works:
@@ -37,8 +37,8 @@ After a few minutes you should see the welcome screen of the app in the iOS Simu
 Now we'll add React Native Testing Library (RNTL) and Jest Native to enable component testing:
 
 ```sh
-$ yarn add --dev @testing-library/react-native@10.0.0 \
-                 @testing-library/jest-native@4.0.5
+$ yarn add --dev @testing-library/react-native@11.0.0 \
+                 @testing-library/jest-native@4.0.10
 ```
 
 RNTL doesn't require any additional setup, but Jest Native does. In `package.json`, add the following:
@@ -69,7 +69,7 @@ $ npm install -g detox-cli@19.0.0
 Next, we need to add Detox to our project, as well as updating the version of Jest:
 
 ```sh
-$ yarn add --dev detox@19.7.1 \
+$ yarn add --dev detox@19.9.1 \
                  jest@27.5.1 \
                  babel-jest@27.5.1
 ```
@@ -143,7 +143,7 @@ Example: should show world screen after tap [FAIL]
 If your editor has ESLint integration, your Detox tests will show a lot of errors unless you configure ESlint to recognize Detox. To do so, add the Detox plugin:
 
 ```bash
-$ yarn add --dev eslint-plugin-detox
+$ yarn add --dev eslint-plugin-detox@1.0.0
 ```
 
 Then add the detox plugin and environment to `.eslintrc.js`:
