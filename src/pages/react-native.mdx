@@ -133,7 +133,7 @@ Example: should show hello screen after tap [FAIL]
 Example: should show world screen after tap
 Example: should show world screen after tap [FAIL]
 
- FAIL  e2e/firstTest.spec.js (90.608s)
+ FAIL  e2e/firstTest.e2e.js (90.608s)
   Example
     ✕ should have welcome screen (936ms)
     ✕ should show hello screen after tap (867ms)
@@ -166,7 +166,7 @@ Then add the detox plugin and environment to `.eslintrc.js`:
  };
 ```
 
-As our last setup step, let's clear out some of the default code to get a clean starting point. Delete `e2e/firstTest.spec.js` and `__tests__`, and replace the contents of `App.js` with this app skeleton:
+As our last setup step, let's clear out some of the default code to get a clean starting point. Delete `e2e/firstTest.e2e.js` and `__tests__`, and replace the contents of `App.js` with this app skeleton:
 
 ```jsx
 import React from 'react';
