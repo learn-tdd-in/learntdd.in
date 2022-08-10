@@ -183,13 +183,6 @@ export default function App() {
 
 This provides a status bar and keeps the content in the phone's safe area, but other than that the app is empty.
 
-Finally, let's update our `test` NPM script so it won't try to run our Detox tests, since those need to be run separately using the `detox` command:
-
-```diff
--"test": "jest",
-+"test": "jest src",
-```
-
 ## The Feature Test
 
 When practicing outside-in TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.** For our simple messaging app, the first feature we want is to be able to enter a message, send it, and see it in the list.
