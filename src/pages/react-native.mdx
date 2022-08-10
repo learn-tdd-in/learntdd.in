@@ -352,24 +352,22 @@ Inside the `src` folder, create a `NewMessageForm.spec.js` file. Add the followi
 
 ```js
 import React from 'react';
-import {render, fireEvent} from '@testing-library/react-native';
+import {fireEvent, render, screen} from '@testing-library/react-native';
 import NewMessageForm from './NewMessageForm';
 
 describe('NewMessageForm', () => {
   describe('clicking send', () => {
     const messageText = 'Hello world';
 
-    let getByTestId;
-
     beforeEach(() => {
-      ({getByTestId} = render(<NewMessageForm />));
+      render(<NewMessageForm />);
 
-      fireEvent.changeText(getByTestId('messageText'), messageText);
-      fireEvent.press(getByTestId('sendButton'));
+      fireEvent.changeText(screen.getByTestId('messageText'), messageText);
+      fireEvent.press(screen.getByTestId('sendButton'));
     });
 
     it('clears the message field', () => {
-      expect(getByTestId('messageText')).toHaveProp('value', '');
+      expect(screen.getByTestId('messageText')).toHaveProp('value', '');
     });
   });
 });
@@ -448,22 +446,21 @@ To add this event handler behavior to `NewMessageForm`, we want to step back dow
 ```diff
    describe('clicking send', () => {
      const messageText = 'Hello world';
-
++
 +    let sendHandler;
-     let getByTestId;
 
      beforeEach(() => {
 +      sendHandler = jest.fn().mockName('sendHandler');
 
--      ({getByTestId} = render(<NewMessageForm />));
-+      ({getByTestId} = render(<NewMessageForm onSend={sendHandler} />));
+-      render(<NewMessageForm />));
++      render(<NewMessageForm onSend={sendHandler} />);
 
-       fireEvent.changeText(getByTestId('messageText'), messageText);
-       fireEvent.press(getByTestId('sendButton'));
+       fireEvent.changeText(screen.getByTestId('messageText'), messageText);
+       fireEvent.press(screen.getByTestId('sendButton'));
      });
 
      it('clears the message field', () => {
-       expect(getByTestId('messageText')).toHaveProp('value', '');
+       expect(screen.getByTestId('messageText')).toHaveProp('value', '');
      });
 +
 +    it('calls the send handler', () => {
