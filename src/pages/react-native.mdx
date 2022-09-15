@@ -536,6 +536,7 @@ Next, we need to save the message in state in the App component. Let's add it to
 ...
  export default function App() {
 +  const [messages, setMessages] = useState([]);
++
 +  function handleSend(newMessage) {
 +    setMessages([newMessage, ...messages]);
 +  }
