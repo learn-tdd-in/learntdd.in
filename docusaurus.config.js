@@ -86,10 +86,6 @@ const config = {
             title: 'More',
             items: [
               {
-                label: 'Community',
-                to: 'https://discord.gg/D5464TpvaU',
-              },
-              {
                 label: 'Contact',
                 to: 'mailto:tdd@codingitwrong.com',
               },
